@@ -1,7 +1,7 @@
 # Sprint 01 – Planning Document
 
 ## 1. Sprint Goal
-Configurar el repositori de GitHub i del projecte d'Android. Fer les bases de l'aplicació (Home Screen i navegació bàsica), tant la programació bàsica com el diagrama de classes.
+Configurar el repositori de GitHub i del projecte d'Android. Fer les bases de l'aplicació (Home Screen i navegació bàsica), tant la programació bàsica com el diagrama de classes. Fer les primeres releases.
 
 ---
 
@@ -21,15 +21,15 @@ Configurar el repositori de GitHub i del projecte d'Android. Fer les bases de l'
 | T2.5  | Públic!                                           | Aleix Ràfols | 0.1            | Mitja     |
 | T2.6  | Crear branches                                    | Aleix Ràfols | 0.2              | Alta      |
 | T2.7  | Hacer first release (V0.1.0)                      | Aleix Ràfols | 0.5              | Alta      |
-| T3.0  | **PROGRAMAR I DISSENYAR**                                | Aleix Ràfols | **14**              | Alta      |
-| T3.1  | Decidir funcions app                              | Aleix Ràfols | 1              | Alta      |
+| T3.0  | **PROGRAMAR (IA) I DISSENYAR**                                | Aleix Ràfols | **14**              | Alta      |
+| T3.1  | Decidir funcions app i mirar exemples                             | Aleix Ràfols | 1              | Alta      |
 | T3.2  | Investigar/repassar Model Control Vista           | Aleix Ràfols | 1              | Mitja     |
 | T3.3  | Fer diagrama de classes (design.md)                          | Aleix Ràfols | 2              | Mitja     |
 | T3.4  | Crear classes Android Studio (sense funcions)     | Aleix Ràfols | 1              | Alta      |
 | T3.5  | Fer Splash Screen i icona                         |	 Aleix Ràfols | 1              | Mitja     |
 | T3.6  | Programar pantalla de preferències, about i terms | Aleix Ràfols | 2              | Mitja     |
 | T3.7  | Decidir què necessita HomeScreen                  | Aleix Ràfols | 1              | Alta      |
-| T3.8  | Programar HomeScreen (IA)                      | Aleix Ràfols | 3              | Alta      |
+| T3.8  | Programar HomeScreen                      | Aleix Ràfols | 3              | Alta      |
 | T3.9  | Navigation                                        | Aleix Ràfols | 2              | Alta      |
 | T4.0 | Sprint Log Final                                  | Aleix Ràfols | 2              |  Alta   |
 
@@ -38,14 +38,24 @@ Configurar el repositori de GitHub i del projecte d'Android. Fer les bases de l'
 
 ## 3. Definition of Done (DoD)
 
-- [ ] Fer el primer commit
-- [ ] Tenir el repositori de GitHub configurat
+- [ ] Tenir el repositori de GitHub configurat (públic)
+- [ ] Llicència (LICENSE) assignada
 - [ ] Projecte Android creat (nom, API version, estructura de carpetes i fitxers)	
+-  [ ] Fer primer el release 0.1.0
 - [ ] Logo creado
 - [ ] Modelo de dominio implementado en carpeta domain
+- [ ] Classes creades
 - [ ] Paleta aplicada a Theme
 - [ ] README actualitzat
-- [ ] Release publicada
+- [ ] CONTRIBUTING.md definit
+- [ ] HomeScreen acabat
+- [ ] Pantalla de preferències feta
+- [ ] Pantalla about feta
+- [ ] Pantalla terms feta
+- [ ] Navegació entre pantalles feta
+- [ ] Splash Screen es mostra
+- [ ] Icona establerta
+- [ ] Release final publicada
 
 ---
 
