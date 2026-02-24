@@ -4,7 +4,7 @@ Bienvenido a **Travel like a Sigma**, la app diseñada para que explorar el mund
 
 ## 📖 Quant al projecte
 
-Travel Planner nació con la idea de ayudar a los viajeros a planificar sus rutas de forma sencilla y personalizada. Queríamos crear algo que **nosotros mismos usaríamos**. Nosotros, como sigmas que somos, viajamos muy a menudo y necesitabamos una aplicación que nos permitiera organizar la información de los viajes.
+Travel like a Sigma nació con la idea de ayudar a los viajeros a planificar sus rutas de forma sencilla y personalizada. Queríamos crear algo que **nosotros mismos usaríamos**. Nosotros, como sigmas que somos, viajamos muy a menudo y necesitabamos una aplicación que nos permitiera organizar la información de los viajes.
 
 Esta app está construida con **Kotlin + Jetpack Compose**, asegurando una experiencia fluida y moderna. Además, incorpora **navegación intuitiva**, gestión de preferencias y muchas más funciones para facilitar tu aventura.
 
