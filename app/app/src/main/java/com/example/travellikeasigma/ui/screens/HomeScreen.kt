@@ -52,7 +52,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.travellikeasigma.R
-import com.example.travellikeasigma.model.TripData
+import com.example.travellikeasigma.model.Trip
 import com.example.travellikeasigma.model.sampleTrips
 
 // ---------------------------------------------------------------------------
@@ -272,7 +272,7 @@ private fun TripNavigator(
 // ---------------------------------------------------------------------------
 
 @Composable
-private fun TripHeroCard(trip: TripData) {
+private fun TripHeroCard(trip: Trip) {
     val onHero = if (trip.heroColor.luminance() > 0.35f) Color.Black else Color.White
 
     Card(
@@ -343,7 +343,7 @@ private data class StatItem(
 
 @Composable
 private fun StatGrid(
-    trip:             TripData,
+    trip:             Trip,
     onItineraryClick: () -> Unit,
     onPhotosClick:    () -> Unit,
     onPackingClick:   () -> Unit,

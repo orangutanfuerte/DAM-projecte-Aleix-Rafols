@@ -7,7 +7,7 @@ import androidx.compose.ui.graphics.Color
  * In a real app this would come from a database / ViewModel.
  * For now it is a plain data class used directly in the UI.
  */
-data class TripData(
+data class Trip(
     val name:          String,
     val dates:         String,
     val statusLabel:   String,   // e.g. "Past Trip", "Active Trip", "Upcoming"
@@ -34,9 +34,9 @@ data class TripData(
 // (orange-brown · green · blue-indigo)
 // ─────────────────────────────────────────────────────────────────────────────
 
-val sampleTrips: List<TripData> = listOf(
+val sampleTrips: List<Trip> = listOf(
 
-    TripData(
+    Trip(
         name             = "Rome Weekend",
         dates            = "Jan 10 – Jan 13, 2024 · 3 days",
         statusLabel      = "Past Trip",
@@ -56,7 +56,7 @@ val sampleTrips: List<TripData> = listOf(
         isUpcoming       = false
     ),
 
-    TripData(
+    Trip(
         name             = "Japan Highlights",
         dates            = "Mar 14 – Mar 28, 2025 · 14 days",
         statusLabel      = "Active Trip",
@@ -76,7 +76,7 @@ val sampleTrips: List<TripData> = listOf(
         isUpcoming       = false
     ),
 
-    TripData(
+    Trip(
         name             = "Iceland Road Trip",
         dates            = "Aug 2 – Aug 12, 2025 · 10 days",
         statusLabel      = "Upcoming",
