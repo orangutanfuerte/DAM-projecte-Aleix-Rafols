@@ -1,3 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- App -->
     <string name="app_name">Travel like a Sigma</string>
+    <string name="app_version">0.2.0</string>
+
+    <!-- Bottom Navigation -->
+    <string name="nav_home">Home</string>
+    <string name="nav_itinerary">Itinerary</string>
+    <string name="nav_packing">Packing</string>
+    <string name="nav_photos">Photos</string>
+    <string name="nav_places">Places</string>
+
+    <!-- Home Screen -->
+    <string name="home_greeting">Bon Voyage, Sofia!</string>
+    <string name="home_subtitle">Your trip to Japan is coming up!</string>
+    <string name="home_active_trip_label">Active Trip</string>
+    <string name="home_trip_name">Japan Highlights</string>
+    <string name="home_trip_dates">Mar 14 – Mar 28, 2025 · 14 days</string>
+    <string name="home_planning_progress">Planning progress</string>
+    <string name="home_stat_days">Days planned</string>
+    <string name="home_stat_photos">Photos saved</string>
+    <string name="home_stat_packing">Items packed</string>
+    <string name="home_stat_places">Saved places</string>
+    <string name="home_upcoming_days">Upcoming days</string>
+    <string name="home_new_trip">New Trip</string>
+    <string name="home_day_1_title">Arrival · Tokyo</string>
+    <string name="home_day_1_sub">Narita → Hotel → Shinjuku</string>
+    <string name="home_day_2_title">Shibuya &amp; Harajuku</string>
+    <string name="home_day_2_sub">4 activities · 2 restaurants</string>
+    <string name="home_day_3_title">Day trip to Nikko</string>
+    <string name="home_day_3_sub">Depart 8:00 AM · Shinkansen</string>
+    <string name="home_upcoming_pill">⚡ Upcoming</string>
+    <string name="home_trip_counter">2 / 3</string>
+
+    <!-- Placeholder screens -->
+    <string name="placeholder_coming_soon">Coming soon…</string>
+    <string name="itinerary_title">Itinerary</string>
+    <string name="itinerary_subtitle">Japan Highlights · 14 days</string>
+    <string name="packing_title">Packing List</string>
+    <string name="packing_subtitle">Tap items to check them off</string>
+    <string name="photos_title">Photos</string>
+    <string name="photos_subtitle">Japan Highlights · 6 photos</string>
+    <string name="places_title">Saved Places</string>
+    <string name="places_subtitle">9 places · Tokyo &amp; Kyoto</string>
+
+    <!-- Preferences Screen -->
+    <string name="pref_title">Preferences</string>
+    <string name="pref_user_name">Sofia Martínez</string>
+    <string name="pref_user_email">sofia.martinez@email.com</string>
+    <string name="pref_edit_profile">Edit Profile</string>
+    <string name="pref_section_settings">App Settings</string>
+    <string name="pref_language">Language</string>
+    <string name="pref_language_current">English</string>
+    <string name="pref_notifications">Notifications</string>
+    <string name="pref_notifications_sub">Trip reminders on</string>
+    <string name="pref_section_legal">Support &amp; Legal</string>
+    <string name="pref_terms">Terms &amp; Conditions</string>
+    <string name="pref_terms_sub">Privacy policy &amp; usage</string>
+    <string name="pref_about">About</string>
+    <string name="pref_about_sub">Version %1$s</string>
+    <string name="pref_logout">Log Out</string>
+
+    <!-- Terms Screen -->
+    <string name="terms_title">Terms &amp; Conditions</string>
+    <string name="terms_s1_title">1. Acceptance of Terms</string>
+    <string name="terms_s1_body">By using Travel like a Sigma, you agree to be bound by these Terms and Conditions. If you do not agree, please do not use the app.</string>
+    <string name="terms_s2_title">2. Use of the App</string>
+    <string name="terms_s2_body">This app is intended for personal, non-commercial travel planning. You may not use the app to store or share illegal content or infringe on any third-party rights.</string>
+    <string name="terms_s3_title">3. User Data &amp; Privacy</string>
+    <string name="terms_s3_body">We collect only the data necessary to provide our service — trip details, packing lists, and photos you upload. Your data is stored securely and never sold to third parties.</string>
+    <string name="terms_s4_title">4. Photos &amp; Content</string>
+    <string name="terms_s4_body">Photos you upload remain your property. By uploading, you grant us a limited license to display them within your account only.</string>
+    <string name="terms_s5_title">5. Account Termination</string>
+    <string name="terms_s5_body">We reserve the right to terminate accounts that violate these terms. You may delete your account at any time from the preferences menu.</string>
+    <string name="terms_s6_title">6. Disclaimers</string>
+    <string name="terms_s6_body">Travel like a Sigma is provided \"as is.\" We are not responsible for travel disruptions, errors in third-party data, or any losses arising from use of the app.</string>
+    <string name="terms_s7_title">7. Changes to Terms</string>
+    <string name="terms_s7_body">We may update these terms from time to time. Continued use of the app after changes constitutes acceptance of the new terms. Last updated: January 2025.</string>
+
+    <!-- About Screen -->
+    <string name="about_title">About</string>
+    <string name="about_tagline">Built for explorers who plan smart, travel bold, and leave no destination unchecked.</string>
+    <string name="about_version_label">Version</string>
+    <string name="about_build_label">Build</string>
+    <string name="about_build_value">42</string>
+    <string name="about_platform_label">Platform</string>
+    <string name="about_platform_value">Android</string>
+    <string name="about_min_sdk_label">Min SDK</string>
+    <string name="about_min_sdk_value">Android 8.0+</string>
+    <string name="about_released_label">Released</string>
+    <string name="about_released_value">January 2025</string>
+    <string name="about_developer_label">Developer</string>
+    <string name="about_developer_value">Sigma Travel Labs</string>
+    <string name="about_copyright">© 2025 Sigma Travel Labs. All rights reserved.</string>
+
+    <!-- New Trip Screen -->
+    <string name="new_trip_title">New Trip</string>
+    <string name="new_trip_step_destination_title">Where to? 🌍</string>
+    <string name="new_trip_step_destination_sub">Pick your next destination</string>
+    <string name="new_trip_step_dates_title">When? 📅</string>
+    <string name="new_trip_step_dates_sub">Select your check-in and check-out</string>
+    <string name="new_trip_step_hotel_title">Choose Hotel 🏨</string>
+    <string name="new_trip_step_hotel_sub">Select where you\'ll stay</string>
+    <string name="new_trip_cta_dates">Choose Dates</string>
+    <string name="new_trip_cta_hotel">Pick a Hotel</string>
+    <string name="new_trip_cta_create">Create Trip</string>
+    <string name="new_trip_search_hint">Search city or country…</string>
+    <string name="new_trip_checkin">Check-in</string>
+    <string name="new_trip_checkout">Check-out</string>
+    <string name="new_trip_select_date">Select date</string>
+
+    <!-- Content descriptions (accessibility) -->
+    <string name="cd_avatar">Open preferences</string>
+    <string name="cd_back">Go back</string>
+    <string name="cd_next_trip">Next trip</string>
+    <string name="cd_prev_trip">Previous trip</string>
 </resources>
