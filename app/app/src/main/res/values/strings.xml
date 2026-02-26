@@ -115,4 +115,5 @@
     <string name="cd_back">Go back</string>
     <string name="cd_next_trip">Next trip</string>
     <string name="cd_prev_trip">Previous trip</string>
+    <string name="cd_add_activity">Add activity</string>
 </resources>
