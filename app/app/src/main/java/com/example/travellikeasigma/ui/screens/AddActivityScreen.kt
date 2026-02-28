@@ -2,8 +2,7 @@ package com.example.travellikeasigma.ui.screen
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
-import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
@@ -15,7 +14,6 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.foundation.layout.Row
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -48,7 +46,7 @@ import com.example.travellikeasigma.model.ActivityType
 import com.example.travellikeasigma.model.ItineraryActivity
 import com.example.travellikeasigma.model.displayName
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddActivityScreen(
     dayNumber: Int,
@@ -103,7 +101,7 @@ fun AddActivityScreen(
                 text = stringResource(R.string.add_activity_type),
                 style = MaterialTheme.typography.labelLarge
             )
-            FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 ActivityType.entries.forEach { type ->
                     FilterChip(
                         selected = selectedType == type,
