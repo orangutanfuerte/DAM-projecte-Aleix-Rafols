@@ -38,10 +38,8 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -55,7 +53,7 @@ import com.example.travellikeasigma.model.DayWeather
 import com.example.travellikeasigma.model.ItineraryActivity
 import com.example.travellikeasigma.model.ItineraryDay
 import com.example.travellikeasigma.model.WeatherType
-import com.example.travellikeasigma.model.sampleItinerary
+import com.example.travellikeasigma.ui.viewmodel.ItineraryViewModel
 
 // ---------------------------------------------------------------------------
 // Tag colors (from HTML preview)
@@ -74,9 +72,13 @@ private val TransitTagText = Color(0xFF3A6AC8)
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ItineraryScreen() {
-    var selectedDay by rememberSaveable { mutableIntStateOf(0) }
-    val day = sampleItinerary[selectedDay]
+fun ItineraryScreen(
+    viewModel: ItineraryViewModel,
+    onAddActivityClick: (Int) -> Unit
+) {
+    val days by viewModel.days.collectAsState()
+    val selectedDay by viewModel.selectedDayIndex.collectAsState()
+    val day = days[selectedDay]
 
     Scaffold(
         topBar = {
@@ -102,7 +104,7 @@ fun ItineraryScreen() {
         },
         floatingActionButton = {
             FloatingActionButton(
-                onClick = { /* design-only, no action */ },
+                onClick = { onAddActivityClick(day.dayNumber) },
                 containerColor = MaterialTheme.colorScheme.primary
             ) {
                 Icon(
@@ -120,9 +122,9 @@ fun ItineraryScreen() {
         ) {
             // Day selector
             DaySelectorRow(
-                days = sampleItinerary,
+                days = days,
                 selectedIndex = selectedDay,
-                onDaySelected = { selectedDay = it }
+                onDaySelected = { viewModel.selectDay(it) }
             )
 
             // Weather card
@@ -325,10 +327,13 @@ private fun TimelineItem(
 
 @Composable
 private fun ActivityTag(type: ActivityType) {
+    if (type == ActivityType.OTHERS) return
+
     val (bg, textColor, label) = when (type) {
         ActivityType.FOOD -> Triple(FoodTagBg, FoodTagText, "Food")
         ActivityType.SIGHTSEEING -> Triple(SightTagBg, SightTagText, "Sightseeing")
         ActivityType.TRANSIT -> Triple(TransitTagBg, TransitTagText, "Transit")
+        ActivityType.OTHERS -> return
     }
 
     Text(

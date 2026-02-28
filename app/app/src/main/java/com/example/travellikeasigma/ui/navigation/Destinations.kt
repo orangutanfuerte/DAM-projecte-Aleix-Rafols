@@ -26,6 +26,9 @@ object Routes {
     const val TERMS         = "terms"
     const val ABOUT         = "about"
     const val NEW_TRIP      = "new_trip"
+    const val ADD_ACTIVITY  = "add_activity/{dayNumber}"
+
+    fun addActivityRoute(dayNumber: Int) = "add_activity/$dayNumber"
 }
 
 sealed class BottomNavDestination(

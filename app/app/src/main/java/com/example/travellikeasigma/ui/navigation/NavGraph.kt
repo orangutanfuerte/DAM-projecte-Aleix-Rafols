@@ -2,10 +2,14 @@ package com.example.travellikeasigma.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
 import com.example.travellikeasigma.ui.screen.AboutScreen
+import com.example.travellikeasigma.ui.screen.AddActivityScreen
 import com.example.travellikeasigma.ui.screen.HomeScreen
 import com.example.travellikeasigma.ui.screen.ItineraryScreen
 import com.example.travellikeasigma.ui.screen.NewTripScreen
@@ -14,6 +18,7 @@ import com.example.travellikeasigma.ui.screen.PhotosScreen
 import com.example.travellikeasigma.ui.screen.PlacesScreen
 import com.example.travellikeasigma.ui.screen.PreferencesScreen
 import com.example.travellikeasigma.ui.screen.TermsScreen
+import com.example.travellikeasigma.ui.viewmodel.ItineraryViewModel
 
 // ---------------------------------------------------------------------------
 // Helper — navigate to a bottom-nav tab from anywhere (card clicks, etc.)
@@ -37,6 +42,8 @@ fun NavGraph(
     navController: NavHostController,
     modifier:      Modifier = Modifier
 ) {
+    val itineraryViewModel: ItineraryViewModel = viewModel()
+
     NavHost(
         navController    = navController,
         startDestination = Routes.HOME,
@@ -54,7 +61,12 @@ fun NavGraph(
             )
         }
         composable(Routes.ITINERARY) {
-            ItineraryScreen()
+            ItineraryScreen(
+                viewModel = itineraryViewModel,
+                onAddActivityClick = { dayNumber ->
+                    navController.navigate(Routes.addActivityRoute(dayNumber))
+                }
+            )
         }
         composable(Routes.PACKING) {
             PackingScreen()
@@ -80,6 +92,20 @@ fun NavGraph(
         }
         composable(Routes.NEW_TRIP) {
             NewTripScreen(onBackClick = { navController.popBackStack() })
+        }
+        composable(
+            route = Routes.ADD_ACTIVITY,
+            arguments = listOf(navArgument("dayNumber") { type = NavType.IntType })
+        ) { backStackEntry ->
+            val dayNumber = backStackEntry.arguments?.getInt("dayNumber") ?: 1
+            AddActivityScreen(
+                dayNumber = dayNumber,
+                onBackClick = { navController.popBackStack() },
+                onSave = { activity ->
+                    itineraryViewModel.addActivity(dayNumber, activity)
+                    navController.popBackStack()
+                }
+            )
         }
     }
 }

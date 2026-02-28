@@ -110,6 +110,22 @@
     <string name="new_trip_checkout">Check-out</string>
     <string name="new_trip_select_date">Select date</string>
 
+    <!-- Add Activity Screen -->
+    <string name="add_activity_title">Add Activity</string>
+    <string name="add_activity_day_label">Adding to Day %1$d</string>
+    <string name="add_activity_type">Type</string>
+    <string name="add_activity_title_label">Title</string>
+    <string name="add_activity_title_placeholder">e.g. Visit Tokyo Tower</string>
+    <string name="add_activity_time_label">Time</string>
+    <string name="add_activity_time_placeholder">Tap to select time</string>
+    <string name="add_activity_price_label">Price</string>
+    <string name="add_activity_description_label">Description</string>
+    <string name="add_activity_description_placeholder">e.g. Flight 12, Terminal 8</string>
+    <string name="add_activity_save">Save</string>
+    <string name="add_activity_time_picker_title">Select time</string>
+    <string name="add_activity_time_confirm">OK</string>
+    <string name="add_activity_time_cancel">Cancel</string>
+
     <!-- Content descriptions (accessibility) -->
     <string name="cd_avatar">Open preferences</string>
     <string name="cd_back">Go back</string>
