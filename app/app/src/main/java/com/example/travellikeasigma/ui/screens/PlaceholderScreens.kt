@@ -33,12 +33,3 @@ fun PlacesScreen() {
         subtitle = stringResource(R.string.places_subtitle)
     )
 }
-
-@Composable
-fun NewTripScreen(onBackClick: () -> Unit) {
-    // Will become the multi-step new-trip flow in a future session
-    PlaceholderScreen(
-        title    = stringResource(R.string.new_trip_title),
-        subtitle = stringResource(R.string.new_trip_step_destination_sub)
-    )
-}

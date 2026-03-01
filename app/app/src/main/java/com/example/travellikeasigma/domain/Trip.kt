@@ -34,6 +34,35 @@ data class Trip(
 // (orange-brown · green · blue-indigo)
 // ─────────────────────────────────────────────────────────────────────────────
 
+// ─────────────────────────────────────────────────────────────────────────────
+// New-trip creation models
+// ─────────────────────────────────────────────────────────────────────────────
+
+data class Hotel(
+    val id: Int,
+    val name: String,
+    val pricePerNight: Double
+)
+
+data class NewTripInput(
+    val destination: String,
+    val tripName: String,
+    val persons: Int,
+    val checkInMillis: Long,
+    val checkOutMillis: Long,
+    val hotel: Hotel
+)
+
+val sampleCountries = listOf("Japan", "Iceland", "Italy", "Spain", "Brasil")
+
+val sampleHotels = listOf(
+    Hotel(1, "Papa Hotel",   89.0),
+    Hotel(2, "Pepe Hotel",  124.0),
+    Hotel(3, "Pipi Hotel",   67.0),
+    Hotel(4, "Popo Hotel",  210.0),
+    Hotel(5, "Pupu Hotel",  155.0)
+)
+
 val sampleTrips: List<Trip> = listOf(
 
     Trip(

@@ -110,6 +110,20 @@
     <string name="new_trip_checkout">Check-out</string>
     <string name="new_trip_select_date">Select date</string>
 
+    <!-- New Trip – additional strings -->
+    <string name="new_trip_step_name_title">Trip Name</string>
+    <string name="new_trip_step_name_sub">Give your trip a name</string>
+    <string name="new_trip_step_details_title">Travellers &amp; Dates</string>
+    <string name="new_trip_step_details_sub">Who\'s going and when</string>
+    <string name="new_trip_name_label">Trip name</string>
+    <string name="new_trip_name_placeholder">e.g. Japan Adventure 2025</string>
+    <string name="new_trip_persons_label">Travellers</string>
+    <string name="new_trip_cta_next">Next</string>
+    <string name="new_trip_cta_save">Save Trip</string>
+    <string name="new_trip_per_night">/ night</string>
+    <string name="new_trip_date_confirm">OK</string>
+    <string name="new_trip_date_cancel">Cancel</string>
+
     <!-- Add Activity Screen -->
     <string name="add_activity_title">New Activity</string>
     <string name="add_activity_day_label">Day %1$d</string>
