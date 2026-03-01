@@ -1,6 +1,13 @@
 package com.example.travellikeasigma.model
 
-enum class ActivityType { FOOD, SIGHTSEEING, TRANSIT }
+enum class ActivityType { FOOD, SIGHTSEEING, TRANSIT, OTHERS }
+
+fun ActivityType.displayName(): String = when (this) {
+    ActivityType.FOOD -> "Food"
+    ActivityType.SIGHTSEEING -> "Sightseeing"
+    ActivityType.TRANSIT -> "Transit"
+    ActivityType.OTHERS -> "Others"
+}
 
 enum class WeatherType { SUNNY, PARTLY_CLOUDY, CLOUDY, RAINY }
 

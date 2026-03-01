@@ -3,9 +3,12 @@ package com.example.travellikeasigma.navigation
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
 import com.example.travellikeasigma.ui.screen.AboutScreen
+import com.example.travellikeasigma.ui.screen.AddActivityScreen
 import com.example.travellikeasigma.ui.screen.HomeScreen
 import com.example.travellikeasigma.ui.screen.ItineraryScreen
 import com.example.travellikeasigma.ui.screen.NewTripScreen
@@ -54,7 +57,22 @@ fun NavGraph(
             )
         }
         composable(Routes.ITINERARY) {
-            ItineraryScreen()
+            ItineraryScreen(
+                onAddActivityClick = { dayNumber ->
+                    navController.navigate(Routes.addActivity(dayNumber))
+                }
+            )
+        }
+        composable(
+            route = Routes.ADD_ACTIVITY,
+            arguments = listOf(navArgument("dayNumber") { type = NavType.IntType })
+        ) { backStackEntry ->
+            val dayNumber = backStackEntry.arguments?.getInt("dayNumber") ?: 1
+            AddActivityScreen(
+                dayNumber = dayNumber,
+                onBackClick = { navController.popBackStack() },
+                onSave = { navController.popBackStack() }
+            )
         }
         composable(Routes.PACKING) {
             PackingScreen()
