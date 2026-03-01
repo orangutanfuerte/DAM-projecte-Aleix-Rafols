@@ -147,6 +147,14 @@
     <!-- Photos Screen -->
     <string name="photos_delete">Delete photo</string>
 
+    <!-- Places Screen -->
+    <string name="places_map_placeholder">Map coming soon</string>
+    <string name="places_remove_title">Remove place?</string>
+    <string name="places_remove_message">Are you sure you want to remove %1$s?</string>
+    <string name="places_remove_yes">Yes</string>
+    <string name="places_remove_no">No</string>
+    <string name="places_remove_cd">Remove place</string>
+
     <!-- Content descriptions (accessibility) -->
     <string name="cd_avatar">Open preferences</string>
     <string name="cd_back">Go back</string>
