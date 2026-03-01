@@ -110,9 +110,26 @@
     <string name="new_trip_checkout">Check-out</string>
     <string name="new_trip_select_date">Select date</string>
 
+    <!-- Add Activity Screen -->
+    <string name="add_activity_title">New Activity</string>
+    <string name="add_activity_day_label">Day %1$d</string>
+    <string name="add_activity_type">Activity type</string>
+    <string name="add_activity_title_label">Title</string>
+    <string name="add_activity_title_placeholder">e.g. Visit the Colosseum</string>
+    <string name="add_activity_time_label">Time</string>
+    <string name="add_activity_time_placeholder">Select time</string>
+    <string name="add_activity_price_label">Price</string>
+    <string name="add_activity_description_label">Description</string>
+    <string name="add_activity_description_placeholder">e.g. Remember to try the golden sushi</string>
+    <string name="add_activity_save">Save Activity</string>
+    <string name="add_activity_time_picker_title">Select time</string>
+    <string name="add_activity_time_confirm">OK</string>
+    <string name="add_activity_time_cancel">Cancel</string>
+
     <!-- Content descriptions (accessibility) -->
     <string name="cd_avatar">Open preferences</string>
     <string name="cd_back">Go back</string>
     <string name="cd_next_trip">Next trip</string>
     <string name="cd_prev_trip">Previous trip</string>
+    <string name="cd_add_activity">Add activity</string>
 </resources>
