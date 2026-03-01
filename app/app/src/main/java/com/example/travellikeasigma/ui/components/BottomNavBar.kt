@@ -31,17 +31,12 @@ fun BottomNavBar(navController: NavController) {
                 selected = currentRoute == destination.route,
                 onClick  = {
                     navController.navigate(destination.route) {
-                        // ✅ Use the route STRING (not the int ID) — this is the
-                        // critical fix. Popping up to HOME clears any screens that
-                        // were pushed on top (e.g. from a card click), so the back
-                        // stack is always clean when switching tabs.
-                        popUpTo(Routes.HOME) {
-                            saveState = true
-                        }
+                        // Popping up to HOME clears any screens that were pushed
+                        // on top (e.g. from a card click), so the back stack is
+                        // always clean when switching tabs.
+                        popUpTo(Routes.HOME)
                         // Don't create a new copy if already on this tab
                         launchSingleTop = true
-                        // Restore scroll / state when coming back to a tab
-                        restoreState = true
                     }
                 },
                 icon  = { Icon(imageVector = destination.icon, contentDescription = null) },
