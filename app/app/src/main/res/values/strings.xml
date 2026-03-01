@@ -144,9 +144,13 @@
     <string name="add_activity_time_confirm">OK</string>
     <string name="add_activity_time_cancel">Cancel</string>
 
+    <!-- Photos Screen -->
+    <string name="photos_delete">Delete photo</string>
+
     <!-- Content descriptions (accessibility) -->
     <string name="cd_avatar">Open preferences</string>
     <string name="cd_back">Go back</string>
+    <string name="cd_close">Close</string>
     <string name="cd_next_trip">Next trip</string>
     <string name="cd_prev_trip">Previous trip</string>
     <string name="cd_add_activity">Add activity</string>

@@ -11,14 +11,6 @@ import com.example.travellikeasigma.ui.components.PlaceholderScreen
 // ---------------------------------------------------------------------------
 
 @Composable
-fun PhotosScreen() {
-    PlaceholderScreen(
-        title    = stringResource(R.string.photos_title),
-        subtitle = stringResource(R.string.photos_subtitle)
-    )
-}
-
-@Composable
 fun PlacesScreen() {
     PlaceholderScreen(
         title    = stringResource(R.string.places_title),
