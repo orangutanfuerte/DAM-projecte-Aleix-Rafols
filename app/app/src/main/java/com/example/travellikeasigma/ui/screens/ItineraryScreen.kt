@@ -55,6 +55,7 @@ import com.example.travellikeasigma.model.DayWeather
 import com.example.travellikeasigma.model.ItineraryActivity
 import com.example.travellikeasigma.model.ItineraryDay
 import com.example.travellikeasigma.model.WeatherType
+import com.example.travellikeasigma.model.displayName
 import com.example.travellikeasigma.model.sampleItinerary
 
 // ---------------------------------------------------------------------------
@@ -74,7 +75,7 @@ private val TransitTagText = Color(0xFF3A6AC8)
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ItineraryScreen() {
+fun ItineraryScreen(onAddActivityClick: (dayNumber: Int) -> Unit = {}) {
     var selectedDay by rememberSaveable { mutableIntStateOf(0) }
     val day = sampleItinerary[selectedDay]
 
@@ -102,7 +103,7 @@ fun ItineraryScreen() {
         },
         floatingActionButton = {
             FloatingActionButton(
-                onClick = { /* design-only, no action */ },
+                onClick = { onAddActivityClick(day.dayNumber) },
                 containerColor = MaterialTheme.colorScheme.primary
             ) {
                 Icon(
@@ -325,14 +326,15 @@ private fun TimelineItem(
 
 @Composable
 private fun ActivityTag(type: ActivityType) {
-    val (bg, textColor, label) = when (type) {
-        ActivityType.FOOD -> Triple(FoodTagBg, FoodTagText, "Food")
-        ActivityType.SIGHTSEEING -> Triple(SightTagBg, SightTagText, "Sightseeing")
-        ActivityType.TRANSIT -> Triple(TransitTagBg, TransitTagText, "Transit")
+    val (bg, textColor) = when (type) {
+        ActivityType.FOOD -> FoodTagBg to FoodTagText
+        ActivityType.SIGHTSEEING -> SightTagBg to SightTagText
+        ActivityType.TRANSIT -> TransitTagBg to TransitTagText
+        ActivityType.OTHERS -> return
     }
 
     Text(
-        text = label,
+        text = type.displayName(),
         style = MaterialTheme.typography.labelSmall,
         fontWeight = FontWeight.SemiBold,
         color = textColor,
