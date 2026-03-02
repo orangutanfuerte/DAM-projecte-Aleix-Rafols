@@ -53,6 +53,7 @@ import androidx.compose.ui.unit.dp
 import com.example.travellikeasigma.R
 import com.example.travellikeasigma.model.Trip
 import com.example.travellikeasigma.model.sampleTrips
+import com.example.travellikeasigma.ui.components.ProfileAvatar
 
 // ---------------------------------------------------------------------------
 // HomeScreen
@@ -186,24 +187,13 @@ private fun HomeTopBar(
                 Text(stringResource(R.string.home_new_trip))
             }
 
-            Surface(
+            ProfileAvatar(
+                initials = "S",
+                size = 36.dp,
                 modifier = Modifier
-                    .size(36.dp)
                     .clip(CircleShape)
-                    .clickable(onClickLabel = stringResource(R.string.cd_avatar)) { onAvatarClick() },
-                color    = MaterialTheme.colorScheme.primaryContainer,
-                shape    = CircleShape
-            ) {
-                Box(contentAlignment = Alignment.Center) {
-                    Text(
-                        text       = "S",
-                        style      = MaterialTheme.typography.labelLarge,
-                        fontWeight = FontWeight.Bold,
-                        color      = MaterialTheme.colorScheme.onPrimaryContainer,
-                        textAlign  = TextAlign.Center
-                    )
-                }
-            }
+                    .clickable(onClickLabel = stringResource(R.string.cd_avatar)) { onAvatarClick() }
+            )
             Spacer(modifier = Modifier.width(12.dp))
         }
     )

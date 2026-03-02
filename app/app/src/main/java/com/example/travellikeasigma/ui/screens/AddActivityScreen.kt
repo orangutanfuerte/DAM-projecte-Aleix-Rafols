@@ -1,6 +1,5 @@
 package com.example.travellikeasigma.ui.screen
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -16,15 +15,11 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.AccessTime
 import androidx.compose.material3.Button
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
@@ -32,7 +27,6 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TimePicker
-import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -49,6 +43,8 @@ import com.example.travellikeasigma.R
 import com.example.travellikeasigma.model.ActivityType
 import com.example.travellikeasigma.model.ItineraryActivity
 import com.example.travellikeasigma.model.displayName
+import com.example.travellikeasigma.ui.components.PickerCard
+import com.example.travellikeasigma.ui.components.TripTopAppBar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -68,28 +64,10 @@ fun AddActivityScreen(
 
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = {
-                    Column {
-                        Text(
-                            text = stringResource(R.string.add_activity_title),
-                            style = MaterialTheme.typography.titleLarge
-                        )
-                        Text(
-                            text = stringResource(R.string.add_activity_day_label, dayNumber),
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                    }
-                },
-                navigationIcon = {
-                    IconButton(onClick = onBackClick) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = stringResource(R.string.cd_back)
-                        )
-                    }
-                }
+            TripTopAppBar(
+                title = stringResource(R.string.add_activity_title),
+                subtitle = stringResource(R.string.add_activity_day_label, dayNumber),
+                onBackClick = onBackClick
             )
         },
         contentWindowInsets = WindowInsets(0)
@@ -131,40 +109,14 @@ fun AddActivityScreen(
             )
 
             // Time
-            Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clickable { showTimePicker = true },
-                shape = RoundedCornerShape(12.dp),
-                colors = CardDefaults.cardColors(
-                    containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
-                )
-            ) {
-                Row(
-                    modifier = Modifier.padding(16.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(12.dp)
-                ) {
-                    Icon(
-                        imageVector = Icons.Filled.AccessTime,
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.primary
-                    )
-                    Column(modifier = Modifier.weight(1f)) {
-                        Text(
-                            text = stringResource(R.string.add_activity_time_label),
-                            style = MaterialTheme.typography.labelMedium,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                        Text(
-                            text = time.ifEmpty { stringResource(R.string.add_activity_time_placeholder) },
-                            style = MaterialTheme.typography.bodyLarge,
-                            color = if (time.isEmpty()) MaterialTheme.colorScheme.onSurfaceVariant
-                                    else MaterialTheme.colorScheme.onSurface
-                        )
-                    }
-                }
-            }
+            PickerCard(
+                icon = Icons.Filled.AccessTime,
+                label = stringResource(R.string.add_activity_time_label),
+                value = time,
+                placeholder = stringResource(R.string.add_activity_time_placeholder),
+                onClick = { showTimePicker = true },
+                modifier = Modifier.fillMaxWidth()
+            )
 
             // Price
             OutlinedTextField(

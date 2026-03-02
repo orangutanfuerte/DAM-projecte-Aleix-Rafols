@@ -26,7 +26,6 @@ import androidx.compose.material.icons.filled.Place
 import androidx.compose.material.icons.filled.Remove
 import androidx.compose.material.icons.filled.Restaurant
 import androidx.compose.material.icons.filled.ShoppingBag
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -35,8 +34,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -44,7 +41,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -53,6 +49,10 @@ import com.example.travellikeasigma.R
 import com.example.travellikeasigma.model.Place
 import com.example.travellikeasigma.model.PlaceCategory
 import com.example.travellikeasigma.model.Trip
+import com.example.travellikeasigma.ui.theme.MapPlaceholderBackground
+import com.example.travellikeasigma.ui.components.ConfirmationDialog
+import com.example.travellikeasigma.ui.components.TripTopAppBar
+import com.example.travellikeasigma.ui.theme.MapPlaceholderIcon
 
 private fun iconForCategory(category: PlaceCategory): ImageVector = when (category) {
     PlaceCategory.RESTAURANT -> Icons.Filled.Restaurant
@@ -111,20 +111,9 @@ fun PlacesScreen(trip: Trip) {
     Scaffold(
         contentWindowInsets = WindowInsets(0),
         topBar = {
-            TopAppBar(
-                title = {
-                    Column {
-                        Text(
-                            text = stringResource(R.string.places_title),
-                            style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold)
-                        )
-                        Text(
-                            text = stringResource(R.string.places_subtitle, trip.name, trip.placesCount),
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                    }
-                }
+            TripTopAppBar(
+                title = stringResource(R.string.places_title),
+                subtitle = stringResource(R.string.places_subtitle, trip.name, trip.placesCount)
             )
         }
     ) { innerPadding ->
@@ -138,7 +127,7 @@ fun PlacesScreen(trip: Trip) {
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(220.dp)
-                    .background(Color(0xFFB2E2F0)),
+                    .background(MapPlaceholderBackground),
                 contentAlignment = Alignment.Center
             ) {
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
@@ -146,12 +135,12 @@ fun PlacesScreen(trip: Trip) {
                         imageVector = Icons.Filled.Map,
                         contentDescription = null,
                         modifier = Modifier.size(64.dp),
-                        tint = Color(0xFF5BA3BF)
+                        tint = MapPlaceholderIcon
                     )
                     Text(
                         text = stringResource(R.string.places_map_placeholder),
                         style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                        color = MapPlaceholderIcon
                     )
                 }
             }
@@ -171,20 +160,13 @@ fun PlacesScreen(trip: Trip) {
 
     // Delete confirmation dialog
     placeToDelete?.let { place ->
-        AlertDialog(
-            onDismissRequest = { placeToDelete = null },
-            title = { Text(stringResource(R.string.places_remove_title)) },
-            text = { Text(stringResource(R.string.places_remove_message, place.name)) },
-            confirmButton = {
-                TextButton(onClick = { placeToDelete = null }) {
-                    Text(stringResource(R.string.places_remove_yes))
-                }
-            },
-            dismissButton = {
-                TextButton(onClick = { placeToDelete = null }) {
-                    Text(stringResource(R.string.places_remove_no))
-                }
-            }
+        ConfirmationDialog(
+            title = stringResource(R.string.places_remove_title),
+            message = stringResource(R.string.places_remove_message, place.name),
+            confirmText = stringResource(R.string.places_remove_yes),
+            dismissText = stringResource(R.string.places_remove_no),
+            onConfirm = { placeToDelete = null },
+            onDismiss = { placeToDelete = null }
         )
     }
 }
