@@ -28,7 +28,7 @@ fun BottomNavBar(navController: NavController) {
     ) {
         BottomNavDestination.all.forEach { destination ->
             NavigationBarItem(
-                selected = currentRoute == destination.route,
+                selected = currentRoute?.startsWith(destination.route) == true,
                 onClick  = {
                     navController.navigate(destination.route) {
                         // Popping up to HOME clears any screens that were pushed

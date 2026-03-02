@@ -52,7 +52,7 @@ import androidx.compose.ui.unit.dp
 import com.example.travellikeasigma.R
 import com.example.travellikeasigma.model.Place
 import com.example.travellikeasigma.model.PlaceCategory
-import com.example.travellikeasigma.model.samplePlaces
+import com.example.travellikeasigma.model.Trip
 
 private fun iconForCategory(category: PlaceCategory): ImageVector = when (category) {
     PlaceCategory.RESTAURANT -> Icons.Filled.Restaurant
@@ -105,7 +105,7 @@ private fun PlaceCard(place: Place, onRemove: () -> Unit) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PlacesScreen() {
+fun PlacesScreen(trip: Trip) {
     var placeToDelete: Place? by remember { mutableStateOf(null) }
 
     Scaffold(
@@ -119,7 +119,7 @@ fun PlacesScreen() {
                             style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold)
                         )
                         Text(
-                            text = stringResource(R.string.places_subtitle),
+                            text = stringResource(R.string.places_subtitle, trip.name, trip.placesCount),
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -162,7 +162,7 @@ fun PlacesScreen() {
                 contentPadding = PaddingValues(16.dp),
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                items(samplePlaces) { place ->
+                items(trip.places) { place ->
                     PlaceCard(place, onRemove = { placeToDelete = place })
                 }
             }

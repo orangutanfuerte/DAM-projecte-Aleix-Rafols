@@ -61,15 +61,16 @@ import com.example.travellikeasigma.model.sampleTrips
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
+    trip:             Trip,
     onNewTripClick:   () -> Unit,
     onAvatarClick:    () -> Unit,
     onItineraryClick: () -> Unit = {},
     onPackingClick:   () -> Unit = {},
     onPhotosClick:    () -> Unit = {},
-    onPlacesClick:    () -> Unit = {}
+    onPlacesClick:    () -> Unit = {},
+    onDayClick:       (Int) -> Unit = {}
 ) {
     var tripIndex by rememberSaveable { mutableIntStateOf(0) }
-    val trip  = sampleTrips[tripIndex]
     val total = sampleTrips.size
 
     Scaffold(
@@ -138,9 +139,16 @@ fun HomeScreen(
                 )
                 Spacer(modifier = Modifier.height(8.dp))
 
-                DayCard("01", trip.day1Title, trip.day1Sub, onItineraryClick)
-                DayCard("02", trip.day2Title, trip.day2Sub, onItineraryClick)
-                DayCard("03", trip.day3Title, trip.day3Sub, onItineraryClick)
+                trip.itinerary.take(3).forEachIndexed { index, day ->
+                    val title = day.activities.getOrNull(0)?.title ?: ""
+                    val subtitle = day.activities.getOrNull(1)?.title ?: ""
+                    DayCard(
+                        day = "%02d".format(day.dayNumber),
+                        title = title,
+                        subtitle = subtitle,
+                        onClick = { onDayClick(index) }
+                    )
+                }
             }
         }
     }
@@ -348,10 +356,10 @@ private fun StatGrid(
     onPlacesClick:    () -> Unit
 ) {
     val items = listOf(
-        StatItem("🗓", trip.daysPlanned,   R.string.home_stat_days,    onItineraryClick),
-        StatItem("📸", trip.photoCount,    R.string.home_stat_photos,  onPhotosClick),
-        StatItem("🧳", trip.packingStatus, R.string.home_stat_packing, onPackingClick),
-        StatItem("📍", trip.placesCount,   R.string.home_stat_places,  onPlacesClick)
+        StatItem("🗓", trip.daysCount.toString(),                          R.string.home_stat_days,    onItineraryClick),
+        StatItem("📸", trip.photoCount.toString(),                         R.string.home_stat_photos,  onPhotosClick),
+        StatItem("🧳", "${trip.packedPackingItems}/${trip.totalPackingItems}", R.string.home_stat_packing, onPackingClick),
+        StatItem("📍", trip.placesCount.toString(),                        R.string.home_stat_places,  onPlacesClick)
     )
 
     Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
