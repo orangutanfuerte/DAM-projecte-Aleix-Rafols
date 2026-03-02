@@ -14,10 +14,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowForwardIos
 import androidx.compose.material.icons.filled.Add
@@ -80,70 +79,69 @@ fun HomeScreen(
                 onAvatarClick  = onAvatarClick
             )
         },
-        contentWindowInsets = WindowInsets(0), //  TREU DEPENDENCIES SI NO L'USES
+        contentWindowInsets = WindowInsets(0),
     ) { innerPadding ->
-        Column(
+        LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(innerPadding)          // ← handles top-bar + bottom-nav spacing
-                .verticalScroll(rememberScrollState())
-                .padding(horizontal = 16.dp)
+                .padding(innerPadding),
+            contentPadding = PaddingValues(start = 16.dp, end = 16.dp, bottom = 16.dp)
         ) {
-            Spacer(modifier = Modifier.height(8.dp))
+            item {
+                Spacer(modifier = Modifier.height(8.dp))
 
-            Text(
-                text       = stringResource(R.string.home_greeting),
-                style      = MaterialTheme.typography.headlineSmall,
-                fontWeight = FontWeight.Bold
-            )
-            Text(
-                text  = stringResource(R.string.home_subtitle),
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
+                Text(
+                    text       = stringResource(R.string.home_greeting),
+                    style      = MaterialTheme.typography.headlineSmall,
+                    fontWeight = FontWeight.Bold
+                )
+                Text(
+                    text  = stringResource(R.string.home_subtitle),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
 
-            Spacer(modifier = Modifier.height(12.dp))
+                Spacer(modifier = Modifier.height(12.dp))
 
-            TripNavigator(
-                currentIndex = tripIndex,
-                total        = total,
-                onPrev       = { if (tripIndex > 0) tripIndex-- },
-                onNext       = { if (tripIndex < total - 1) tripIndex++ },
-                onUpcoming   = {
-                    val idx = sampleTrips.indexOfFirst { it.isUpcoming }
-                    if (idx >= 0) tripIndex = idx
-                }
-            )
+                TripNavigator(
+                    currentIndex = tripIndex,
+                    total        = total,
+                    onPrev       = { if (tripIndex > 0) tripIndex-- },
+                    onNext       = { if (tripIndex < total - 1) tripIndex++ },
+                    onUpcoming   = {
+                        val idx = sampleTrips.indexOfFirst { it.isUpcoming }
+                        if (idx >= 0) tripIndex = idx
+                    }
+                )
 
-            Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = Modifier.height(8.dp))
 
-            TripHeroCard(trip = trip)
+                TripHeroCard(trip = trip)
 
-            Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(16.dp))
 
-            StatGrid(
-                trip             = trip,
-                onItineraryClick = onItineraryClick,
-                onPhotosClick    = onPhotosClick,
-                onPackingClick   = onPackingClick,
-                onPlacesClick    = onPlacesClick
-            )
+                StatGrid(
+                    trip             = trip,
+                    onItineraryClick = onItineraryClick,
+                    onPhotosClick    = onPhotosClick,
+                    onPackingClick   = onPackingClick,
+                    onPlacesClick    = onPlacesClick
+                )
 
-            Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(16.dp))
 
-            Text(
-                text       = stringResource(R.string.home_upcoming_days).uppercase(),
-                style      = MaterialTheme.typography.labelMedium,
-                color      = MaterialTheme.colorScheme.onSurfaceVariant,
-                fontWeight = FontWeight.SemiBold
-            )
-            Spacer(modifier = Modifier.height(8.dp))
+                Text(
+                    text       = stringResource(R.string.home_upcoming_days).uppercase(),
+                    style      = MaterialTheme.typography.labelMedium,
+                    color      = MaterialTheme.colorScheme.onSurfaceVariant,
+                    fontWeight = FontWeight.SemiBold
+                )
+                Spacer(modifier = Modifier.height(8.dp))
 
-            DayCard("01", trip.day1Title, trip.day1Sub, onItineraryClick)
-            DayCard("02", trip.day2Title, trip.day2Sub, onItineraryClick)
-            DayCard("03", trip.day3Title, trip.day3Sub, onItineraryClick)
-
-            Spacer(modifier = Modifier.height(16.dp))
+                DayCard("01", trip.day1Title, trip.day1Sub, onItineraryClick)
+                DayCard("02", trip.day2Title, trip.day2Sub, onItineraryClick)
+                DayCard("03", trip.day3Title, trip.day3Sub, onItineraryClick)
+            }
         }
     }
 }

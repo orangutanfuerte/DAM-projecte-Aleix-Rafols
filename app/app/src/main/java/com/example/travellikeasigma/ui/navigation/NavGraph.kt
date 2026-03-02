@@ -1,5 +1,7 @@
 package com.example.travellikeasigma.navigation
 
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
@@ -23,15 +25,12 @@ import com.example.travellikeasigma.ui.screen.TermsScreen
 // Behaves exactly like pressing the tab in the bottom bar:
 //   • pops back to HOME so the stack stays flat
 //   • won't duplicate the destination if already there
-//   • restores saved scroll / state
+//   • always starts fresh (no saved scroll / state)
 // ---------------------------------------------------------------------------
 private fun NavHostController.navigateToTab(route: String) {
     navigate(route) {
-        popUpTo(Routes.HOME) {
-            saveState = true
-        }
+        popUpTo(Routes.HOME)
         launchSingleTop = true
-        restoreState    = true
     }
 }
 
@@ -41,9 +40,13 @@ fun NavGraph(
     modifier:      Modifier = Modifier
 ) {
     NavHost(
-        navController    = navController,
-        startDestination = Routes.HOME,
-        modifier         = modifier
+        navController      = navController,
+        startDestination   = Routes.HOME,
+        modifier           = modifier,
+        enterTransition    = { EnterTransition.None },
+        exitTransition     = { ExitTransition.None },
+        popEnterTransition = { EnterTransition.None },
+        popExitTransition  = { ExitTransition.None }
     ) {
         composable(Routes.HOME) {
             HomeScreen(
