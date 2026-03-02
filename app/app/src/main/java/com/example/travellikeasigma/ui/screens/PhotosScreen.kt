@@ -13,7 +13,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Delete
@@ -27,7 +27,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -39,22 +39,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.example.travellikeasigma.R
-
-private data class PhotoItem(val id: Int, val color: Color)
-
-private val samplePhotos = listOf(
-    PhotoItem(0, Color(0xFFB2E2F0)),
-    PhotoItem(1, Color(0xFFA37AC2)),
-    PhotoItem(2, Color(0xFFFFB346)),
-    PhotoItem(3, Color(0xFFCCF4FA)),
-    PhotoItem(4, Color(0xFF7851A8)),
-    PhotoItem(5, Color(0xFFFFF09C)),
-)
+import com.example.travellikeasigma.model.Trip
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PhotosScreen() {
-    var selectedId: Int? by remember { mutableStateOf(null) }
+fun PhotosScreen(trip: Trip) {
+    var selectedIndex: Int by remember { mutableIntStateOf(-1) }
 
     Scaffold(
         topBar = {
@@ -66,7 +56,7 @@ fun PhotosScreen() {
                             style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold)
                         )
                         Text(
-                            text = stringResource(R.string.photos_subtitle),
+                            text = stringResource(R.string.photos_subtitle, trip.name, trip.photoCount),
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -83,12 +73,12 @@ fun PhotosScreen() {
             verticalArrangement = Arrangement.spacedBy(2.dp),
             horizontalArrangement = Arrangement.spacedBy(2.dp)
         ) {
-            items(samplePhotos) { photo ->
+            itemsIndexed(trip.photos) { index, photo ->
                 Box(
                     modifier = Modifier
                         .aspectRatio(1f)
                         .background(photo.color)
-                        .clickable { selectedId = photo.id },
+                        .clickable { selectedIndex = index },
                     contentAlignment = Alignment.Center
                 ) {
                     Icon(
@@ -106,10 +96,10 @@ fun PhotosScreen() {
         }
     }
 
-    val selected = selectedId?.let { id -> samplePhotos.firstOrNull { it.id == id } }
+    val selected = if (selectedIndex in trip.photos.indices) trip.photos[selectedIndex] else null
     if (selected != null) {
         Dialog(
-            onDismissRequest = { selectedId = null },
+            onDismissRequest = { selectedIndex = -1 },
             properties = DialogProperties(usePlatformDefaultWidth = false)
         ) {
             Box(
@@ -145,7 +135,7 @@ fun PhotosScreen() {
                             tint = Color.White
                         )
                     }
-                    IconButton(onClick = { selectedId = null }) {
+                    IconButton(onClick = { selectedIndex = -1 }) {
                         Icon(
                             imageVector = Icons.Filled.Close,
                             contentDescription = stringResource(R.string.cd_close),

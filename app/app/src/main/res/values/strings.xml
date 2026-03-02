@@ -36,17 +36,17 @@
     <!-- Placeholder screens -->
     <string name="placeholder_coming_soon">Coming soon…</string>
     <string name="itinerary_title">Itinerary</string>
-    <string name="itinerary_subtitle">Japan Highlights · 14 days</string>
+    <string name="itinerary_subtitle">%1$s · %2$d days</string>
     <string name="packing_title">Packing List</string>
-    <string name="packing_subtitle">Tap items to check them off</string>
+    <string name="packing_subtitle">%1$s · %2$d items</string>
     <string name="packing_progress">%1$d / %2$d items packed</string>
     <string name="packing_add_item_placeholder">New item…</string>
     <string name="packing_add_item">Add item</string>
     <string name="packing_add_category">Add Category</string>
     <string name="photos_title">Photos</string>
-    <string name="photos_subtitle">Japan Highlights · 6 photos</string>
+    <string name="photos_subtitle">%1$s · %2$d photos</string>
     <string name="places_title">Saved Places</string>
-    <string name="places_subtitle">9 places · Tokyo &amp; Kyoto</string>
+    <string name="places_subtitle">%1$s · %2$d places</string>
 
     <!-- Preferences Screen -->
     <string name="pref_title">Preferences</string>

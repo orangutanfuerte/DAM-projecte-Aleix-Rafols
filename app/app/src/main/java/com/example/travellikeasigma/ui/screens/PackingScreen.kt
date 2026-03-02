@@ -29,6 +29,7 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -46,29 +47,45 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import com.example.travellikeasigma.R
 import com.example.travellikeasigma.model.PackingCategory
-import com.example.travellikeasigma.model.samplePackingList
+import com.example.travellikeasigma.model.Trip
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PackingScreen() {
-    val allItems = samplePackingList.categories.flatMap { it.items }
+fun PackingScreen(trip: Trip) {
+    val categories = trip.packingCategories
+    val allItems = categories.flatMap { it.items }
     val totalCount = allItems.size
 
-    // Track packed item IDs — Set<Int> is Bundle-safe
-    val initialPacked = allItems.filter { it.isPacked }.map { it.id }.toSet()
-    var packedIds by rememberSaveable { mutableStateOf(initialPacked) }
-    val packedCount = packedIds.size
+    // Track packed item names — Set<String> is Bundle-safe
+    val initialPacked = allItems.filter { it.isPacked }.map { it.name }.toSet()
+    var packedNames by rememberSaveable { mutableStateOf(initialPacked) }
+    val packedCount = packedNames.size
 
-    // One input text state per category — SnapshotStateList so only the changed
-    // index triggers recomposition, not the entire list (layout-only, no-op buttons)
+    // One input text state per category
     val addItemTexts: SnapshotStateList<String> = remember {
-        List(samplePackingList.categories.size) { "" }.toMutableStateList()
+        List(categories.size) { "" }.toMutableStateList()
     }
 
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(stringResource(R.string.packing_title)) }
+                title = {
+                    Column {
+                        Text(
+                            text = stringResource(R.string.packing_title),
+                            style = MaterialTheme.typography.titleLarge,
+                            fontWeight = FontWeight.Bold
+                        )
+                        Text(
+                            text = stringResource(R.string.packing_subtitle, trip.name, trip.totalPackingItems),
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+                },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.surface
+                )
             )
         },
         contentWindowInsets = WindowInsets(0)
@@ -81,33 +98,33 @@ fun PackingScreen() {
             ),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            // ── Overall progress ──────────────────────────────────────────────
+            // Overall progress
             item {
                 ProgressCard(packed = packedCount, total = totalCount)
             }
 
-            // ── Categories ───────────────────────────────────────────────────
-            samplePackingList.categories.forEachIndexed { index, category ->
-                item(key = "header_${category.id}") {
+            // Categories
+            categories.forEachIndexed { index, category ->
+                item(key = "header_${category.name}") {
                     Spacer(Modifier.height(8.dp))
                     CategoryHeader(
                         category = category,
-                        packedCount = category.items.count { it.id in packedIds }
+                        packedCount = category.items.count { it.name in packedNames }
                     )
                 }
 
                 items(
                     items = category.items,
-                    key = { it.id }
+                    key = { "${category.name}_${it.name}" }
                 ) { packingItem ->
                     PackingItemRow(
                         name = packingItem.name,
-                        isPacked = packingItem.id in packedIds,
+                        isPacked = packingItem.name in packedNames,
                         onToggle = {
-                            packedIds = if (packingItem.id in packedIds)
-                                packedIds - packingItem.id
+                            packedNames = if (packingItem.name in packedNames)
+                                packedNames - packingItem.name
                             else
-                                packedIds + packingItem.id
+                                packedNames + packingItem.name
                         }
                     )
                 }
@@ -120,7 +137,7 @@ fun PackingScreen() {
                 }
             }
 
-            // ── Add category ─────────────────────────────────────────────────
+            // Add category
             item {
                 Spacer(Modifier.height(8.dp))
                 OutlinedButton(
