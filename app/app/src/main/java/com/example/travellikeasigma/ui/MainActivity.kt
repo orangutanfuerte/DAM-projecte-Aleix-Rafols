@@ -41,6 +41,7 @@ fun TravelSigmaApp() {
     val bottomBarRoutes = setOf(
         Routes.HOME,
         Routes.ITINERARY,
+        "${Routes.ITINERARY}?day={day}",
         Routes.PACKING,
         Routes.PHOTOS,
         Routes.PLACES

@@ -9,6 +9,7 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import com.example.travellikeasigma.model.sampleTrips
 import com.example.travellikeasigma.ui.screen.AboutScreen
 import com.example.travellikeasigma.ui.screen.AddActivityScreen
 import com.example.travellikeasigma.ui.screen.HomeScreen
@@ -39,6 +40,8 @@ fun NavGraph(
     navController: NavHostController,
     modifier:      Modifier = Modifier
 ) {
+    val currentTrip = sampleTrips[0]
+
     NavHost(
         navController      = navController,
         startDestination   = Routes.HOME,
@@ -50,17 +53,26 @@ fun NavGraph(
     ) {
         composable(Routes.HOME) {
             HomeScreen(
+                trip             = currentTrip,
                 onNewTripClick   = { navController.navigate(Routes.NEW_TRIP) },
                 onAvatarClick    = { navController.navigate(Routes.PREFERENCES) },
-                // ✅ Card/day clicks use navigateToTab — same behaviour as the bar
                 onItineraryClick = { navController.navigateToTab(Routes.ITINERARY) },
                 onPackingClick   = { navController.navigateToTab(Routes.PACKING) },
                 onPhotosClick    = { navController.navigateToTab(Routes.PHOTOS) },
-                onPlacesClick    = { navController.navigateToTab(Routes.PLACES) }
+                onPlacesClick    = { navController.navigateToTab(Routes.PLACES) },
+                onDayClick       = { dayIndex ->
+                    navController.navigateToTab(Routes.itineraryDay(dayIndex))
+                }
             )
         }
-        composable(Routes.ITINERARY) {
+        composable(
+            route = "${Routes.ITINERARY}?day={day}",
+            arguments = listOf(navArgument("day") { defaultValue = -1; type = NavType.IntType })
+        ) { backStackEntry ->
+            val initialDay = backStackEntry.arguments?.getInt("day") ?: -1
             ItineraryScreen(
+                trip = currentTrip,
+                initialDay = initialDay,
                 onAddActivityClick = { dayNumber ->
                     navController.navigate(Routes.addActivity(dayNumber))
                 }
@@ -78,13 +90,13 @@ fun NavGraph(
             )
         }
         composable(Routes.PACKING) {
-            PackingScreen()
+            PackingScreen(trip = currentTrip)
         }
         composable(Routes.PHOTOS) {
-            PhotosScreen()
+            PhotosScreen(trip = currentTrip)
         }
         composable(Routes.PLACES) {
-            PlacesScreen()
+            PlacesScreen(trip = currentTrip)
         }
         composable(Routes.PREFERENCES) {
             PreferencesScreen(

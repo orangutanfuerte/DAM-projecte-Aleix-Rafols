@@ -54,9 +54,9 @@ import com.example.travellikeasigma.model.ActivityType
 import com.example.travellikeasigma.model.DayWeather
 import com.example.travellikeasigma.model.ItineraryActivity
 import com.example.travellikeasigma.model.ItineraryDay
+import com.example.travellikeasigma.model.Trip
 import com.example.travellikeasigma.model.WeatherType
 import com.example.travellikeasigma.model.displayName
-import com.example.travellikeasigma.model.sampleItinerary
 
 // ---------------------------------------------------------------------------
 // Tag colors (from HTML preview)
@@ -75,9 +75,15 @@ private val TransitTagText = Color(0xFF3A6AC8)
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ItineraryScreen(onAddActivityClick: (dayNumber: Int) -> Unit = {}) {
-    var selectedDay by rememberSaveable { mutableIntStateOf(0) }
-    val day = sampleItinerary[selectedDay]
+fun ItineraryScreen(
+    trip: Trip,
+    initialDay: Int = -1,
+    onAddActivityClick: (dayNumber: Int) -> Unit = {}
+) {
+    var selectedDay by rememberSaveable {
+        mutableIntStateOf(if (initialDay >= 0) initialDay else 0)
+    }
+    val day = trip.itinerary[selectedDay]
 
     Scaffold(
         topBar = {
@@ -90,7 +96,7 @@ fun ItineraryScreen(onAddActivityClick: (dayNumber: Int) -> Unit = {}) {
                             fontWeight = FontWeight.Bold
                         )
                         Text(
-                            text = stringResource(R.string.itinerary_subtitle),
+                            text = stringResource(R.string.itinerary_subtitle, trip.name, trip.daysCount),
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -121,7 +127,7 @@ fun ItineraryScreen(onAddActivityClick: (dayNumber: Int) -> Unit = {}) {
         ) {
             // Day selector
             DaySelectorRow(
-                days = sampleItinerary,
+                days = trip.itinerary,
                 selectedIndex = selectedDay,
                 onDaySelected = { selectedDay = it }
             )
