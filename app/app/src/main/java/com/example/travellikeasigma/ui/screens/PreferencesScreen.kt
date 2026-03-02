@@ -15,7 +15,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.ArrowForwardIos
 import androidx.compose.material.icons.automirrored.filled.Logout
 import androidx.compose.material.icons.filled.Edit
@@ -27,16 +26,13 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -47,8 +43,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.travellikeasigma.R
+import com.example.travellikeasigma.ui.components.ProfileAvatar
+import com.example.travellikeasigma.ui.components.TripTopAppBar
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(androidx.compose.material3.ExperimentalMaterial3Api::class)
 @Composable
 fun PreferencesScreen(
     onBackClick:  () -> Unit,
@@ -57,17 +55,9 @@ fun PreferencesScreen(
 ) {
     Scaffold(
         topBar = {
-            TopAppBar(
-                title          = { Text(stringResource(R.string.pref_title)) },
-                navigationIcon = {
-                    IconButton(onClick = onBackClick) {
-                        Icon(
-                            imageVector        = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = stringResource(R.string.cd_back),
-                            modifier           = Modifier.size(18.dp)
-                        )
-                    }
-                }
+            TripTopAppBar(
+                title = stringResource(R.string.pref_title),
+                onBackClick = onBackClick
             )
         }
     ) { innerPadding ->
@@ -159,22 +149,10 @@ private fun ProfileHeader() {
             .padding(vertical = 24.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Surface(
-            modifier = Modifier.size(72.dp),
-            shape    = CircleShape,
-            color    = MaterialTheme.colorScheme.primaryContainer
-        ) {
-            Text(
-                text      = "S",
-                modifier  = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 20.dp),
-                textAlign = TextAlign.Center,
-                style     = MaterialTheme.typography.headlineMedium,
-                fontWeight = FontWeight.Bold,
-                color     = MaterialTheme.colorScheme.onPrimaryContainer
-            )
-        }
+        ProfileAvatar(
+            initials = "S",
+            size = 72.dp
+        )
         Spacer(modifier = Modifier.height(12.dp))
         Text(
             text       = stringResource(R.string.pref_user_name),

@@ -35,7 +35,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -45,7 +44,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -57,17 +55,17 @@ import com.example.travellikeasigma.model.ItineraryDay
 import com.example.travellikeasigma.model.Trip
 import com.example.travellikeasigma.model.WeatherType
 import com.example.travellikeasigma.model.displayName
-
-// ---------------------------------------------------------------------------
-// Tag colors (from HTML preview)
-// ---------------------------------------------------------------------------
-
-private val FoodTagBg = Color(0xFFFEF3E2)
-private val FoodTagText = Color(0xFFC8773A)
-private val SightTagBg = Color(0xFFE8F0E9)
-private val SightTagText = Color(0xFF4A7C59)
-private val TransitTagBg = Color(0xFFEAF0F8)
-private val TransitTagText = Color(0xFF3A6AC8)
+import com.example.travellikeasigma.ui.theme.FoodTagBackground
+import com.example.travellikeasigma.ui.theme.FoodTagText
+import com.example.travellikeasigma.ui.theme.SightseeingTagBackground
+import com.example.travellikeasigma.ui.theme.SightseeingTagText
+import com.example.travellikeasigma.ui.theme.TransitTagBackground
+import com.example.travellikeasigma.ui.theme.TransitTagText
+import com.example.travellikeasigma.ui.theme.WeatherCloudyTint
+import com.example.travellikeasigma.ui.theme.WeatherPartlyCloudyTint
+import com.example.travellikeasigma.ui.theme.WeatherRainyTint
+import com.example.travellikeasigma.ui.components.TripTopAppBar
+import com.example.travellikeasigma.ui.theme.WeatherSunnyTint
 
 // ---------------------------------------------------------------------------
 // ItineraryScreen
@@ -87,21 +85,9 @@ fun ItineraryScreen(
 
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = {
-                    Column {
-                        Text(
-                            text = stringResource(R.string.itinerary_title),
-                            style = MaterialTheme.typography.titleLarge,
-                            fontWeight = FontWeight.Bold
-                        )
-                        Text(
-                            text = stringResource(R.string.itinerary_subtitle, trip.name, trip.daysCount),
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                    }
-                },
+            TripTopAppBar(
+                title = stringResource(R.string.itinerary_title),
+                subtitle = stringResource(R.string.itinerary_subtitle, trip.name, trip.daysCount),
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.surface
                 )
@@ -225,10 +211,10 @@ private fun WeatherCard(weather: DayWeather) {
                 contentDescription = weather.description,
                 modifier = Modifier.size(28.dp),
                 tint = when (weather.icon) {
-                    WeatherType.SUNNY -> Color(0xFFFF9800)
-                    WeatherType.PARTLY_CLOUDY -> Color(0xFF78909C)
-                    WeatherType.CLOUDY -> Color(0xFF90A4AE)
-                    WeatherType.RAINY -> Color(0xFF42A5F5)
+                    WeatherType.SUNNY -> WeatherSunnyTint
+                    WeatherType.PARTLY_CLOUDY -> WeatherPartlyCloudyTint
+                    WeatherType.CLOUDY -> WeatherCloudyTint
+                    WeatherType.RAINY -> WeatherRainyTint
                 }
             )
             Column {
@@ -333,9 +319,9 @@ private fun TimelineItem(
 @Composable
 private fun ActivityTag(type: ActivityType) {
     val (bg, textColor) = when (type) {
-        ActivityType.FOOD -> FoodTagBg to FoodTagText
-        ActivityType.SIGHTSEEING -> SightTagBg to SightTagText
-        ActivityType.TRANSIT -> TransitTagBg to TransitTagText
+        ActivityType.FOOD -> FoodTagBackground to FoodTagText
+        ActivityType.SIGHTSEEING -> SightseeingTagBackground to SightseeingTagText
+        ActivityType.TRANSIT -> TransitTagBackground to TransitTagText
         ActivityType.OTHERS -> return
     }
 

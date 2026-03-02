@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material.icons.filled.Remove
@@ -31,7 +30,6 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.rememberDateRangePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -49,6 +47,7 @@ import com.example.travellikeasigma.R
 import com.example.travellikeasigma.model.NewTripInput
 import com.example.travellikeasigma.model.sampleCountries
 import com.example.travellikeasigma.model.sampleHotels
+import com.example.travellikeasigma.ui.components.TripTopAppBar
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -101,21 +100,14 @@ fun NewTripScreen(
 
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = { Text(stepTitle) },
-                navigationIcon = {
-                    IconButton(onClick = {
-                        when (currentStep) {
-                            NewTripStep.DESTINATION -> onBackClick()
-                            NewTripStep.NAME        -> currentStep = NewTripStep.DESTINATION
-                            NewTripStep.DETAILS     -> currentStep = NewTripStep.NAME
-                            NewTripStep.HOTEL       -> currentStep = NewTripStep.DETAILS
-                        }
-                    }) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = stringResource(R.string.cd_back)
-                        )
+            TripTopAppBar(
+                title = stepTitle,
+                onBackClick = {
+                    when (currentStep) {
+                        NewTripStep.DESTINATION -> onBackClick()
+                        NewTripStep.NAME        -> currentStep = NewTripStep.DESTINATION
+                        NewTripStep.DETAILS     -> currentStep = NewTripStep.NAME
+                        NewTripStep.HOTEL       -> currentStep = NewTripStep.DETAILS
                     }
                 }
             )

@@ -19,7 +19,6 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Image
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -27,8 +26,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -45,6 +42,8 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.example.travellikeasigma.R
 import com.example.travellikeasigma.model.Trip
+import com.example.travellikeasigma.ui.components.ConfirmationDialog
+import com.example.travellikeasigma.ui.components.TripTopAppBar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -54,7 +53,10 @@ fun PhotosScreen(trip: Trip) {
 
     Scaffold(
         floatingActionButton = {
-            FloatingActionButton(onClick = { /* no-op */ }) {
+            FloatingActionButton(
+                onClick = { /* no-op */ },
+                containerColor = MaterialTheme.colorScheme.primary
+            ) {
                 Icon(
                     imageVector = Icons.Filled.Add,
                     contentDescription = stringResource(R.string.photos_add)
@@ -62,20 +64,9 @@ fun PhotosScreen(trip: Trip) {
             }
         },
         topBar = {
-            TopAppBar(
-                title = {
-                    Column {
-                        Text(
-                            text = stringResource(R.string.photos_title),
-                            style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold)
-                        )
-                        Text(
-                            text = stringResource(R.string.photos_subtitle, trip.name, trip.photoCount),
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                    }
-                }
+            TripTopAppBar(
+                title = stringResource(R.string.photos_title),
+                subtitle = stringResource(R.string.photos_subtitle, trip.name, trip.photoCount)
             )
         }
     ) { innerPadding ->
@@ -162,23 +153,16 @@ fun PhotosScreen(trip: Trip) {
     }
 
     if (showDeleteDialog) {
-        AlertDialog(
-            onDismissRequest = { showDeleteDialog = false },
-            title = { Text(stringResource(R.string.photos_delete_title)) },
-            text = { Text(stringResource(R.string.photos_delete_message)) },
-            confirmButton = {
-                TextButton(onClick = {
-                    showDeleteDialog = false
-                    selectedIndex = -1
-                }) {
-                    Text(stringResource(R.string.photos_delete_yes))
-                }
+        ConfirmationDialog(
+            title = stringResource(R.string.photos_delete_title),
+            message = stringResource(R.string.photos_delete_message),
+            confirmText = stringResource(R.string.photos_delete_yes),
+            dismissText = stringResource(R.string.photos_delete_no),
+            onConfirm = {
+                showDeleteDialog = false
+                selectedIndex = -1
             },
-            dismissButton = {
-                TextButton(onClick = { showDeleteDialog = false }) {
-                    Text(stringResource(R.string.photos_delete_no))
-                }
-            }
+            onDismiss = { showDeleteDialog = false }
         )
     }
 }
