@@ -15,19 +15,21 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Image
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -40,28 +42,31 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.example.travellikeasigma.R
 import com.example.travellikeasigma.model.Trip
+import com.example.travellikeasigma.ui.components.ConfirmationDialog
+import com.example.travellikeasigma.ui.components.TripTopAppBar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PhotosScreen(trip: Trip) {
     var selectedIndex: Int by remember { mutableIntStateOf(-1) }
+    var showDeleteDialog by remember { mutableStateOf(false) }
 
     Scaffold(
+        floatingActionButton = {
+            FloatingActionButton(
+                onClick = { /* no-op */ },
+                containerColor = MaterialTheme.colorScheme.primary
+            ) {
+                Icon(
+                    imageVector = Icons.Filled.Add,
+                    contentDescription = stringResource(R.string.photos_add)
+                )
+            }
+        },
         topBar = {
-            TopAppBar(
-                title = {
-                    Column {
-                        Text(
-                            text = stringResource(R.string.photos_title),
-                            style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold)
-                        )
-                        Text(
-                            text = stringResource(R.string.photos_subtitle, trip.name, trip.photoCount),
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                    }
-                }
+            TripTopAppBar(
+                title = stringResource(R.string.photos_title),
+                subtitle = stringResource(R.string.photos_subtitle, trip.name, trip.photoCount)
             )
         }
     ) { innerPadding ->
@@ -128,7 +133,7 @@ fun PhotosScreen(trip: Trip) {
                         .padding(8.dp),
                     horizontalArrangement = Arrangement.End
                 ) {
-                    IconButton(onClick = { /* no-op */ }) {
+                    IconButton(onClick = { showDeleteDialog = true }) {
                         Icon(
                             imageVector = Icons.Filled.Delete,
                             contentDescription = stringResource(R.string.photos_delete),
@@ -145,5 +150,19 @@ fun PhotosScreen(trip: Trip) {
                 }
             }
         }
+    }
+
+    if (showDeleteDialog) {
+        ConfirmationDialog(
+            title = stringResource(R.string.photos_delete_title),
+            message = stringResource(R.string.photos_delete_message),
+            confirmText = stringResource(R.string.photos_delete_yes),
+            dismissText = stringResource(R.string.photos_delete_no),
+            onConfirm = {
+                showDeleteDialog = false
+                selectedIndex = -1
+            },
+            onDismiss = { showDeleteDialog = false }
+        )
     }
 }

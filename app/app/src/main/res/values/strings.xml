@@ -146,6 +146,11 @@
 
     <!-- Photos Screen -->
     <string name="photos_delete">Delete photo</string>
+    <string name="photos_delete_title">Delete photo?</string>
+    <string name="photos_delete_message">Are you sure you want to delete this photo?</string>
+    <string name="photos_delete_yes">Yes</string>
+    <string name="photos_delete_no">No</string>
+    <string name="photos_add">Add photo</string>
 
     <!-- Places Screen -->
     <string name="places_map_placeholder">Map coming soon</string>
