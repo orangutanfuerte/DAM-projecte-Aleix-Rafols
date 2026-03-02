@@ -11,17 +11,20 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.ScrollState
-import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.selection.selectable
+import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowForwardIos
 import androidx.compose.material.icons.automirrored.filled.Logout
+import androidx.compose.material.icons.filled.DarkMode
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Language
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Policy
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -30,21 +33,28 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.travellikeasigma.R
 import com.example.travellikeasigma.ui.components.ProfileAvatar
 import com.example.travellikeasigma.ui.components.TripTopAppBar
+import com.example.travellikeasigma.ui.theme.LocalThemeMode
+import com.example.travellikeasigma.ui.theme.ThemeMode
 
 @OptIn(androidx.compose.material3.ExperimentalMaterial3Api::class)
 @Composable
@@ -53,6 +63,146 @@ fun PreferencesScreen(
     onTermsClick: () -> Unit,
     onAboutClick: () -> Unit
 ) {
+    // Dialog visibility state
+    var showLanguageDialog      by remember { mutableStateOf(false) }
+    var showNotificationsDialog by remember { mutableStateOf(false) }
+    var showThemeDialog         by remember { mutableStateOf(false) }
+
+    // Local preference state (visual only, not persisted)
+    var selectedLanguage by remember { mutableStateOf("English") }
+    var notificationsOn  by remember { mutableStateOf(true) }
+    val themeModeState   = LocalThemeMode.current
+
+    val themeSublabel = when (themeModeState.value) {
+        ThemeMode.LIGHT  -> stringResource(R.string.pref_theme_light)
+        ThemeMode.DARK   -> stringResource(R.string.pref_theme_dark)
+        ThemeMode.SYSTEM -> stringResource(R.string.pref_theme_system)
+    }
+
+    val notificationsSublabel = if (notificationsOn)
+        stringResource(R.string.pref_notifications_sub)
+    else
+        stringResource(R.string.pref_notifications_off)
+
+    // ── Language dialog ─────────────────────────────────────────────────
+    if (showLanguageDialog) {
+        val languages = listOf(
+            stringResource(R.string.pref_language_en),
+            stringResource(R.string.pref_language_es),
+            stringResource(R.string.pref_language_ca)
+        )
+        AlertDialog(
+            onDismissRequest = { showLanguageDialog = false },
+            title = { Text(stringResource(R.string.pref_language_dialog_title)) },
+            text = {
+                Column(Modifier.selectableGroup()) {
+                    languages.forEach { lang ->
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .selectable(
+                                    selected = (lang == selectedLanguage),
+                                    onClick  = {
+                                        selectedLanguage = lang
+                                        showLanguageDialog = false
+                                    },
+                                    role = Role.RadioButton
+                                )
+                                .padding(vertical = 8.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            RadioButton(
+                                selected = (lang == selectedLanguage),
+                                onClick  = null
+                            )
+                            Spacer(Modifier.width(12.dp))
+                            Text(lang)
+                        }
+                    }
+                }
+            },
+            confirmButton = {
+                TextButton(onClick = { showLanguageDialog = false }) {
+                    Text(stringResource(android.R.string.cancel))
+                }
+            }
+        )
+    }
+
+    // ── Notifications dialog ────────────────────────────────────────────
+    if (showNotificationsDialog) {
+        AlertDialog(
+            onDismissRequest = { showNotificationsDialog = false },
+            title = { Text(stringResource(R.string.pref_notifications_dialog_title)) },
+            text = {
+                Row(
+                    modifier          = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text     = stringResource(R.string.pref_notifications),
+                        modifier = Modifier.weight(1f)
+                    )
+                    Switch(
+                        checked         = notificationsOn,
+                        onCheckedChange = { notificationsOn = it }
+                    )
+                }
+            },
+            confirmButton = {
+                TextButton(onClick = { showNotificationsDialog = false }) {
+                    Text(stringResource(android.R.string.ok))
+                }
+            }
+        )
+    }
+
+    // ── Theme dialog ────────────────────────────────────────────────────
+    if (showThemeDialog) {
+        val options = listOf(
+            ThemeMode.LIGHT  to stringResource(R.string.pref_theme_light),
+            ThemeMode.DARK   to stringResource(R.string.pref_theme_dark),
+            ThemeMode.SYSTEM to stringResource(R.string.pref_theme_system)
+        )
+        AlertDialog(
+            onDismissRequest = { showThemeDialog = false },
+            title = { Text(stringResource(R.string.pref_theme_dialog_title)) },
+            text = {
+                Column(Modifier.selectableGroup()) {
+                    options.forEach { (mode, label) ->
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .selectable(
+                                    selected = (mode == themeModeState.value),
+                                    onClick  = {
+                                        themeModeState.value = mode
+                                        showThemeDialog = false
+                                    },
+                                    role = Role.RadioButton
+                                )
+                                .padding(vertical = 8.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            RadioButton(
+                                selected = (mode == themeModeState.value),
+                                onClick  = null
+                            )
+                            Spacer(Modifier.width(12.dp))
+                            Text(label)
+                        }
+                    }
+                }
+            },
+            confirmButton = {
+                TextButton(onClick = { showThemeDialog = false }) {
+                    Text(stringResource(android.R.string.cancel))
+                }
+            }
+        )
+    }
+
+    // ── Screen content ──────────────────────────────────────────────────
     Scaffold(
         topBar = {
             TripTopAppBar(
@@ -75,17 +225,24 @@ fun PreferencesScreen(
             // Settings group
             SettingsGroup(label = stringResource(R.string.pref_section_settings)) {
                 SettingsRow(
-                    icon    = Icons.Filled.Language,
-                    label   = stringResource(R.string.pref_language),
-                    sublabel = stringResource(R.string.pref_language_current),
-                    onClick = { /* language picker — future */ }
+                    icon     = Icons.Filled.Language,
+                    label    = stringResource(R.string.pref_language),
+                    sublabel = selectedLanguage,
+                    onClick  = { showLanguageDialog = true }
                 )
                 HorizontalDivider(modifier = Modifier.padding(start = 56.dp))
                 SettingsRow(
-                    icon    = Icons.Filled.Notifications,
-                    label   = stringResource(R.string.pref_notifications),
-                    sublabel = stringResource(R.string.pref_notifications_sub),
-                    onClick = { /* notifications — future */ }
+                    icon     = Icons.Filled.Notifications,
+                    label    = stringResource(R.string.pref_notifications),
+                    sublabel = notificationsSublabel,
+                    onClick  = { showNotificationsDialog = true }
+                )
+                HorizontalDivider(modifier = Modifier.padding(start = 56.dp))
+                SettingsRow(
+                    icon     = Icons.Filled.DarkMode,
+                    label    = stringResource(R.string.pref_theme),
+                    sublabel = themeSublabel,
+                    onClick  = { showThemeDialog = true }
                 )
             }
 
@@ -94,17 +251,17 @@ fun PreferencesScreen(
             // Legal group
             SettingsGroup(label = stringResource(R.string.pref_section_legal)) {
                 SettingsRow(
-                    icon    = Icons.Filled.Policy,
-                    label   = stringResource(R.string.pref_terms),
+                    icon     = Icons.Filled.Policy,
+                    label    = stringResource(R.string.pref_terms),
                     sublabel = stringResource(R.string.pref_terms_sub),
-                    onClick = onTermsClick
+                    onClick  = onTermsClick
                 )
                 HorizontalDivider(modifier = Modifier.padding(start = 56.dp))
                 SettingsRow(
-                    icon    = Icons.Filled.Info,
-                    label   = stringResource(R.string.pref_about),
+                    icon     = Icons.Filled.Info,
+                    label    = stringResource(R.string.pref_about),
                     sublabel = stringResource(R.string.pref_about_sub, stringResource(R.string.app_version)),
-                    onClick = onAboutClick
+                    onClick  = onAboutClick
                 )
             }
 

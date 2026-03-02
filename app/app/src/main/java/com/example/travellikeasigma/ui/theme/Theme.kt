@@ -8,7 +8,14 @@ import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.compositionLocalOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.platform.LocalContext
+
+enum class ThemeMode { LIGHT, DARK, SYSTEM }
+
+val LocalThemeMode = compositionLocalOf<MutableState<ThemeMode>> { mutableStateOf(ThemeMode.SYSTEM) }
 
 private val LightColorScheme = lightColorScheme(
     primary = md_theme_light_primary,
@@ -90,10 +97,16 @@ private val DarkColorScheme = darkColorScheme(
 
 @Composable
 fun TravelLikeASigmaTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
+    themeMode: ThemeMode = ThemeMode.SYSTEM,
     dynamicColor: Boolean = false,
     content: @Composable () -> Unit
 ) {
+    val darkTheme = when (themeMode) {
+        ThemeMode.LIGHT  -> false
+        ThemeMode.DARK   -> true
+        ThemeMode.SYSTEM -> isSystemInDarkTheme()
+    }
+
     val colorScheme = when {
         dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
             val context = LocalContext.current
