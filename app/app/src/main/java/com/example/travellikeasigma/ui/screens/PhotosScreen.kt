@@ -15,19 +15,24 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Image
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -45,8 +50,17 @@ import com.example.travellikeasigma.model.Trip
 @Composable
 fun PhotosScreen(trip: Trip) {
     var selectedIndex: Int by remember { mutableIntStateOf(-1) }
+    var showDeleteDialog by remember { mutableStateOf(false) }
 
     Scaffold(
+        floatingActionButton = {
+            FloatingActionButton(onClick = { /* no-op */ }) {
+                Icon(
+                    imageVector = Icons.Filled.Add,
+                    contentDescription = stringResource(R.string.photos_add)
+                )
+            }
+        },
         topBar = {
             TopAppBar(
                 title = {
@@ -128,7 +142,7 @@ fun PhotosScreen(trip: Trip) {
                         .padding(8.dp),
                     horizontalArrangement = Arrangement.End
                 ) {
-                    IconButton(onClick = { /* no-op */ }) {
+                    IconButton(onClick = { showDeleteDialog = true }) {
                         Icon(
                             imageVector = Icons.Filled.Delete,
                             contentDescription = stringResource(R.string.photos_delete),
@@ -145,5 +159,26 @@ fun PhotosScreen(trip: Trip) {
                 }
             }
         }
+    }
+
+    if (showDeleteDialog) {
+        AlertDialog(
+            onDismissRequest = { showDeleteDialog = false },
+            title = { Text(stringResource(R.string.photos_delete_title)) },
+            text = { Text(stringResource(R.string.photos_delete_message)) },
+            confirmButton = {
+                TextButton(onClick = {
+                    showDeleteDialog = false
+                    selectedIndex = -1
+                }) {
+                    Text(stringResource(R.string.photos_delete_yes))
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showDeleteDialog = false }) {
+                    Text(stringResource(R.string.photos_delete_no))
+                }
+            }
+        )
     }
 }
