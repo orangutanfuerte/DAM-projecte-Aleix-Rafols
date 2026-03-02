@@ -9,13 +9,18 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.travellikeasigma.navigation.NavGraph
 import com.example.travellikeasigma.navigation.Routes
 import com.example.travellikeasigma.ui.components.BottomNavBar
+import com.example.travellikeasigma.ui.theme.LocalThemeMode
+import com.example.travellikeasigma.ui.theme.ThemeMode
 import com.example.travellikeasigma.ui.theme.TravelLikeASigmaTheme
 
 class MainActivity : ComponentActivity() {
@@ -23,8 +28,11 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            TravelLikeASigmaTheme {
-                TravelSigmaApp()
+            val themeModeState = remember { mutableStateOf(ThemeMode.SYSTEM) }
+            CompositionLocalProvider(LocalThemeMode provides themeModeState) {
+                TravelLikeASigmaTheme(themeMode = themeModeState.value) {
+                    TravelSigmaApp()
+                }
             }
         }
     }

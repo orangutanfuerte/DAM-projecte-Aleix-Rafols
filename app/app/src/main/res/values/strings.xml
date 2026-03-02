@@ -2,7 +2,7 @@
 <resources>
     <!-- App -->
     <string name="app_name">Travel like a Sigma</string>
-    <string name="app_version">0.2.0</string>
+    <string name="app_version">1.0.0</string>
 
     <!-- Bottom Navigation -->
     <string name="nav_home">Home</string>
@@ -58,6 +58,17 @@
     <string name="pref_language_current">English</string>
     <string name="pref_notifications">Notifications</string>
     <string name="pref_notifications_sub">Trip reminders on</string>
+    <string name="pref_notifications_off">Trip reminders off</string>
+    <string name="pref_notifications_dialog_title">Notifications</string>
+    <string name="pref_theme">Theme</string>
+    <string name="pref_theme_light">Light</string>
+    <string name="pref_theme_dark">Dark</string>
+    <string name="pref_theme_system">Follow system</string>
+    <string name="pref_theme_dialog_title">Choose theme</string>
+    <string name="pref_language_dialog_title">Choose language</string>
+    <string name="pref_language_en">English</string>
+    <string name="pref_language_es">Español</string>
+    <string name="pref_language_ca">Català</string>
     <string name="pref_section_legal">Support &amp; Legal</string>
     <string name="pref_terms">Terms &amp; Conditions</string>
     <string name="pref_terms_sub">Privacy policy &amp; usage</string>
@@ -80,7 +91,7 @@
     <string name="terms_s6_title">6. Disclaimers</string>
     <string name="terms_s6_body">Travel like a Sigma is provided \"as is.\" We are not responsible for travel disruptions, errors in third-party data, or any losses arising from use of the app.</string>
     <string name="terms_s7_title">7. Changes to Terms</string>
-    <string name="terms_s7_body">We may update these terms from time to time. Continued use of the app after changes constitutes acceptance of the new terms. Last updated: January 2025.</string>
+    <string name="terms_s7_body">We may update these terms from time to time. Continued use of the app after changes constitutes acceptance of the new terms. Last updated: March 2026.</string>
 
     <!-- About Screen -->
     <string name="about_title">About</string>
@@ -93,10 +104,10 @@
     <string name="about_min_sdk_label">Min SDK</string>
     <string name="about_min_sdk_value">Android 8.0+</string>
     <string name="about_released_label">Released</string>
-    <string name="about_released_value">January 2025</string>
+    <string name="about_released_value">March 2026</string>
     <string name="about_developer_label">Developer</string>
-    <string name="about_developer_value">Sigma Travel Labs</string>
-    <string name="about_copyright">© 2025 Sigma Travel Labs. All rights reserved.</string>
+    <string name="about_developer_value">Aleix Ràfols Bayot</string>
+    <string name="about_copyright">© 2026 Aleix Ràfols Bayot. All rights reserved.</string>
 
     <!-- New Trip Screen -->
     <string name="new_trip_title">New Trip</string>

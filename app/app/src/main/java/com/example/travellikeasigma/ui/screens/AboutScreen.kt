@@ -1,12 +1,15 @@
 package com.example.travellikeasigma.ui.screen
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.ScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
@@ -19,6 +22,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -48,7 +53,13 @@ fun AboutScreen(onBackClick: () -> Unit) {
             Spacer(modifier = Modifier.height(24.dp))
 
             // App icon + name + version
-            Text(text = "✈️", style = MaterialTheme.typography.displayMedium)
+            Image(
+                painter            = painterResource(R.mipmap.ic_launcher_foreground),
+                contentDescription = stringResource(R.string.app_name),
+                modifier           = Modifier
+                    .size(120.dp)
+                    .clip(CircleShape)
+            )
             Spacer(modifier = Modifier.height(8.dp))
             Text(
                 text       = stringResource(R.string.app_name),
@@ -72,7 +83,6 @@ fun AboutScreen(onBackClick: () -> Unit) {
             ) {
                 val rows = listOf(
                     R.string.about_version_label  to stringResource(R.string.app_version),
-                    R.string.about_build_label    to stringResource(R.string.about_build_value),
                     R.string.about_platform_label to stringResource(R.string.about_platform_value),
                     R.string.about_min_sdk_label  to stringResource(R.string.about_min_sdk_value),
                     R.string.about_released_label to stringResource(R.string.about_released_value),
