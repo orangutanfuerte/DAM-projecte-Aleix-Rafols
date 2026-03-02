@@ -68,7 +68,7 @@ fun HomeScreen(
     onPhotosClick:    () -> Unit = {},
     onPlacesClick:    () -> Unit = {}
 ) {
-    var tripIndex by rememberSaveable { mutableIntStateOf(1) }
+    var tripIndex by rememberSaveable { mutableIntStateOf(0) }
     val trip  = sampleTrips[tripIndex]
     val total = sampleTrips.size
 

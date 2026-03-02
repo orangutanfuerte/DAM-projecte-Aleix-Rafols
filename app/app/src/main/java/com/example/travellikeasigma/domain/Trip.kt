@@ -64,7 +64,7 @@ val sampleHotels = listOf(
 )
 
 val sampleTrips: List<Trip> = listOf(
-
+    /*
     Trip(
         name             = "Rome Weekend",
         dates            = "Jan 10 – Jan 13, 2024 · 3 days",
@@ -83,17 +83,18 @@ val sampleTrips: List<Trip> = listOf(
         day3Sub          = "Morning gelato run · fly home",
         heroColor        = Color(0xFF8D6E63),   // warm brown
         isUpcoming       = false
-    ),
+    )*/
+
 
     Trip(
         name             = "Japan Highlights",
-        dates            = "Mar 14 – Mar 28, 2025 · 14 days",
+        dates            = "Mar 14 – Mar 21, 2025 · 7 days",
         statusLabel      = "Active Trip",
         progressFraction = 0.62f,
         progressLabel    = "62%",
         daysPlanned      = "14",
         photoCount       = "6",
-        packingStatus    = "7/18",
+        packingStatus    = "4/18",
         placesCount      = "9",
         day1Title        = "Arrival · Tokyo",
         day1Sub          = "Narita → Hotel → Shinjuku",
@@ -103,7 +104,7 @@ val sampleTrips: List<Trip> = listOf(
         day3Sub          = "Depart 8:00 AM · Shinkansen",
         heroColor        = Color(0xFF4A7C59),   // forest green
         isUpcoming       = false
-    ),
+    )/*,
 
     Trip(
         name             = "Iceland Road Trip",
@@ -123,5 +124,5 @@ val sampleTrips: List<Trip> = listOf(
         day3Sub          = "Full day glacier lagoon",
         heroColor        = Color(0xFF1E6CA8),   // deep blue
         isUpcoming       = true
-    )
+    )*/
 )
