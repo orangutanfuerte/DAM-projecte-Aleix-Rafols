@@ -1,8 +1,9 @@
 package com.example.travellikeasigma.model
 
 import androidx.compose.ui.graphics.Color
+import com.example.travellikeasigma.R
 
-data class Photo(val color: Color)
+data class Photo(val color: Color, val drawableRes: Int? = null)
 
 /**
  * Represents a single trip.
@@ -65,12 +66,12 @@ val sampleHotels = listOf(
 // ─────────────────────────────────────────────────────────────────────────────
 
 val samplePhotos = listOf(
-    Photo(Color(0xFFB2E2F0)),
-    Photo(Color(0xFFA37AC2)),
-    Photo(Color(0xFFFFB346)),
-    Photo(Color(0xFFCCF4FA)),
-    Photo(Color(0xFF7851A8)),
-    Photo(Color(0xFFFFF09C)),
+    Photo(Color(0xFFB2E2F0), R.drawable.photo1),
+    Photo(Color(0xFFA37AC2), R.drawable.photo2),
+    Photo(Color(0xFFFFB346), R.drawable.photo3),
+    Photo(Color(0xFFCCF4FA), R.drawable.photo4),
+    Photo(Color(0xFF7851A8), R.drawable.photo5),
+    Photo(Color(0xFFFFF09C), R.drawable.photo6),
 )
 
 // ─────────────────────────────────────────────────────────────────────────────
