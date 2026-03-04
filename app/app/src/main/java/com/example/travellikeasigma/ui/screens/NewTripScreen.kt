@@ -44,8 +44,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.travellikeasigma.R
-import com.example.travellikeasigma.model.NewTripInput
-import com.example.travellikeasigma.model.sampleCountries
+import com.example.travellikeasigma.model.sampleDestinations
 import com.example.travellikeasigma.model.sampleHotels
 import com.example.travellikeasigma.ui.components.TripTopAppBar
 import java.text.SimpleDateFormat
@@ -68,7 +67,7 @@ private val dateFormatter = SimpleDateFormat("MMM d, yyyy", Locale.ENGLISH)
 @Composable
 fun NewTripScreen(
     onBackClick: () -> Unit,
-    onSave: (NewTripInput) -> Unit
+    onSave: (/*@TODO*/) -> Unit
 ) {
     var currentStep by rememberSaveable { mutableStateOf(NewTripStep.DESTINATION) }
 
@@ -140,16 +139,7 @@ fun NewTripScreen(
                 selectedHotelId = selectedHotelId,
                 onHotelSelect = { selectedHotelId = it.id },
                 onSave = {
-                    onSave(
-                        NewTripInput(
-                            destination    = selectedCountry,
-                            tripName       = tripName,
-                            persons        = persons,
-                            checkInMillis  = checkInMillis,
-                            checkOutMillis = checkOutMillis,
-                            hotel          = selectedHotel!!
-                        )
-                    )
+                    /*@TODO*/
                 },
                 modifier = Modifier.padding(innerPadding)
             )
@@ -206,12 +196,12 @@ private fun DestinationStep(
                 .padding(horizontal = 16.dp, vertical = 8.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            items(sampleCountries) { country ->
-                val isSelected = country == selectedCountry
+            items(sampleDestinations) { destination ->
+                val isSelected = destination.destinationName == selectedCountry
                 Card(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .clickable { onCountrySelect(country) },
+                        .clickable { onCountrySelect(destination.destinationName) },
                     colors = CardDefaults.cardColors(
                         containerColor = if (isSelected)
                             MaterialTheme.colorScheme.primaryContainer
@@ -225,11 +215,11 @@ private fun DestinationStep(
                         horizontalArrangement = Arrangement.spacedBy(12.dp)
                     ) {
                         Text(
-                            text = countryFlags[country] ?: "",
+                            text = countryFlags[destination.destinationName] ?: "",
                             style = MaterialTheme.typography.headlineSmall
                         )
                         Text(
-                            text = country,
+                            text = destination.destinationName,
                             style = MaterialTheme.typography.bodyLarge
                         )
                     }

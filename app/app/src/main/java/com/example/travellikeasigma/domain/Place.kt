@@ -3,19 +3,20 @@ package com.example.travellikeasigma.model
 enum class PlaceCategory { RESTAURANT, MUSEUM, PARK, TEMPLE, SHOPPING, LANDMARK, CAFE, OTHER }
 
 data class Place(
+    val id: Int,
     val name: String,
     val category: PlaceCategory,
     val address: String
 )
 
 val samplePlaces = listOf(
-    Place("Senso-ji Temple",         PlaceCategory.TEMPLE,     "Asakusa, Tokyo"),
-    Place("Tsukiji Outer Market",    PlaceCategory.RESTAURANT, "Chuo, Tokyo"),
-    Place("Shinjuku Gyoen",          PlaceCategory.PARK,       "Shinjuku, Tokyo"),
-    Place("Shibuya Crossing",        PlaceCategory.LANDMARK,   "Shibuya, Tokyo"),
-    Place("Meiji Shrine",            PlaceCategory.TEMPLE,     "Harajuku, Tokyo"),
-    Place("Fushimi Inari Taisha",    PlaceCategory.TEMPLE,     "Fushimi, Kyoto"),
-    Place("Arashiyama Bamboo Grove", PlaceCategory.PARK,       "Arashiyama, Kyoto"),
-    Place("Nishiki Market",          PlaceCategory.SHOPPING,   "Nakagyo, Kyoto"),
-    Place("Kinkaku-ji",             PlaceCategory.LANDMARK,   "Kita, Kyoto"),
+    Place(1, "Senso-ji Temple",         PlaceCategory.TEMPLE,     "Asakusa, Tokyo"),
+    Place(2, "Tsukiji Outer Market",    PlaceCategory.RESTAURANT, "Chuo, Tokyo"),
+    Place(3, "Shinjuku Gyoen",          PlaceCategory.PARK,       "Shinjuku, Tokyo"),
+    Place(4, "Shibuya Crossing",        PlaceCategory.LANDMARK,   "Shibuya, Tokyo"),
+    Place(5, "Meiji Shrine",            PlaceCategory.TEMPLE,     "Harajuku, Tokyo"),
+    Place(6, "Fushimi Inari Taisha",    PlaceCategory.TEMPLE,     "Fushimi, Kyoto"),
+    Place(7, "Arashiyama Bamboo Grove", PlaceCategory.PARK,       "Arashiyama, Kyoto"),
+    Place(8, "Nishiki Market",          PlaceCategory.SHOPPING,   "Nakagyo, Kyoto"),
+    Place(9, "Kinkaku-ji",             PlaceCategory.LANDMARK,   "Kita, Kyoto"),
 )

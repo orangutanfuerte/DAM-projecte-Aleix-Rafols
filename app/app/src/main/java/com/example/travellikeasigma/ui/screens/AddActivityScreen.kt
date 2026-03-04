@@ -145,6 +145,7 @@ fun AddActivityScreen(
             Button(
                 onClick = {
                     val activity = ItineraryActivity(
+                        id = 0,
                         time = time,
                         title = title,
                         subtitle = description,

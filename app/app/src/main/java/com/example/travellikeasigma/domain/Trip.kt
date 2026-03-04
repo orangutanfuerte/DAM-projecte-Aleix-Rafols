@@ -1,9 +1,10 @@
 package com.example.travellikeasigma.model
 
 import androidx.compose.ui.graphics.Color
-import com.example.travellikeasigma.R
-
-data class Photo(val color: Color, val drawableRes: Int? = null)
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import java.time.temporal.ChronoUnit
+import java.util.Locale
 
 /**
  * Represents a single trip.
@@ -11,68 +12,59 @@ data class Photo(val color: Color, val drawableRes: Int? = null)
  * For now it is a plain data class used directly in the UI.
  */
 data class Trip(
+    val id:            Int,
     val name:          String,
-    val dates:         String,
-    val statusLabel:   String,   // e.g. "Past Trip", "Active Trip", "Upcoming"
-    val progressFraction: Float, // 0f – 1.0f
-    val progressLabel: String,   // e.g. "62%"
+    val startDate:     LocalDate,
+    val endDate:       LocalDate,
     val itinerary:     List<ItineraryDay>,
     val packingCategories: List<PackingCategory>,
     val places:        List<Place>,
     val photos:        List<Photo>,
-    /** Unique hero-card background color for this trip */
-    val heroColor:     Color,
-    /** Whether this trip is the next upcoming one (used by Upcoming button) */
-    val isUpcoming:    Boolean = false
+    val heroColor:     Color, /** Unique hero-card background color for this trip */
+    val hotel: Hotel,
+    val persons: Int,
+    val destination: Destination
 ) {
     val daysCount: Int get() = itinerary.size
     val photoCount: Int get() = photos.size
     val placesCount: Int get() = places.size
     val totalPackingItems: Int get() = packingCategories.flatMap { it.items }.size
     val packedPackingItems: Int get() = packingCategories.flatMap { it.items }.count { it.isPacked }
+
+    val formattedDates: String get() {
+        val fmt = DateTimeFormatter.ofPattern("MMM d", Locale.ENGLISH)
+        return "${startDate.format(fmt)} – ${endDate.format(fmt)}, ${endDate.year} · $daysCount days"
+    }
+
+    fun progress(): Float {
+        val today = LocalDate.now()
+        return when {
+            today.isBefore(startDate) -> 0f
+            today.isAfter(endDate)    -> 1f
+            else -> {
+                val total   = ChronoUnit.DAYS.between(startDate, endDate).toFloat()
+                val elapsed = ChronoUnit.DAYS.between(startDate, today).toFloat()
+                if (total == 0f) 1f else elapsed / total
+            }
+        }
+    }
+
+    fun status(): String = when {
+        progress() == 0f -> "Upcoming"
+        progress() >= 1f -> "Past Trip"
+        else             -> "Active Trip"
+    }
+
+    fun addImage(photo: Photo)       { /* @TODO */ }
+    fun removeImage(photo: Photo)    { /* @TODO */ }
+    fun addPlace(place: Place)       { /* @TODO */ }
+    fun removePlace(place: Place)    { /* @TODO */ }
+    fun getUpcomingDays(): List<ItineraryDay> { return emptyList() /* @TODO */ }
+
+    fun addActivity(dayNumber: Int, activity: ItineraryActivity)    { /* @TODO */ }
+    fun removeActivity(dayNumber: Int, activity: ItineraryActivity) { /* @TODO */ }
+    fun totalCost(): Double = itinerary.flatMap { it.activities }.sumOf { it.cost }
 }
-
-// ─────────────────────────────────────────────────────────────────────────────
-// New-trip creation models
-// ─────────────────────────────────────────────────────────────────────────────
-
-data class Hotel(
-    val id: Int,
-    val name: String,
-    val pricePerNight: Double
-)
-
-data class NewTripInput(
-    val destination: String,
-    val tripName: String,
-    val persons: Int,
-    val checkInMillis: Long,
-    val checkOutMillis: Long,
-    val hotel: Hotel
-)
-
-val sampleCountries = listOf("Japan", "Iceland", "Italy", "Spain", "Brasil")
-
-val sampleHotels = listOf(
-    Hotel(1, "Papa Hotel",   89.0),
-    Hotel(2, "Pepe Hotel",  124.0),
-    Hotel(3, "Pipi Hotel",   67.0),
-    Hotel(4, "Popo Hotel",  210.0),
-    Hotel(5, "Pupu Hotel",  155.0)
-)
-
-// ─────────────────────────────────────────────────────────────────────────────
-// Sample photos (moved from PhotosScreen)
-// ─────────────────────────────────────────────────────────────────────────────
-
-val samplePhotos = listOf(
-    Photo(Color(0xFFB2E2F0), R.drawable.photo1),
-    Photo(Color(0xFFA37AC2), R.drawable.photo2),
-    Photo(Color(0xFFFFB346), R.drawable.photo3),
-    Photo(Color(0xFFCCF4FA), R.drawable.photo4),
-    Photo(Color(0xFF7851A8), R.drawable.photo5),
-    Photo(Color(0xFFFFF09C), R.drawable.photo6),
-)
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Sample data — one trip composed from other sample data
@@ -80,16 +72,17 @@ val samplePhotos = listOf(
 
 val sampleTrips: List<Trip> = listOf(
     Trip(
-        name             = "Japan Highlights",
-        dates            = "Mar 14 – Mar 21, 2025 · 7 days",
-        statusLabel      = "Active Trip",
-        progressFraction = 0.62f,
-        progressLabel    = "62%",
-        itinerary        = sampleItinerary,
+        id = 1,
+        name = "Japan Highlights",
+        startDate = LocalDate.of(2027, 3, 14),
+        endDate = LocalDate.of(2027, 3, 21),
+        itinerary = sampleItinerary,
         packingCategories = samplePackingCategories,
-        places           = samplePlaces,
-        photos           = samplePhotos,
-        heroColor        = Color(0xFF4A7C59),   // forest green
-        isUpcoming       = false
-    )
+        places = samplePlaces,
+        photos = samplePhotos,
+        heroColor = Color(0xFF4A7C59),
+        destination = sampleDestinations[0],
+        hotel = sampleHotels.get(0),
+        persons = 4
+    ).also { trip -> trip.itinerary.forEach { it.trip = trip } }
 )

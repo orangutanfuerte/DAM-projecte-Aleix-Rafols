@@ -111,7 +111,7 @@ fun HomeScreen(
                     onPrev       = { if (tripIndex > 0) tripIndex-- },
                     onNext       = { if (tripIndex < total - 1) tripIndex++ },
                     onUpcoming   = {
-                        val idx = sampleTrips.indexOfFirst { it.isUpcoming }
+                        val idx = sampleTrips.indexOfFirst { it.status() == "Upcoming" }
                         if (idx >= 0) tripIndex = idx
                     }
                 )
@@ -279,7 +279,7 @@ private fun TripHeroCard(trip: Trip) {
     ) {
         Column(modifier = Modifier.padding(20.dp)) {
             Text(
-                text       = trip.statusLabel.uppercase(),
+                text       = trip.status().uppercase(),
                 style      = MaterialTheme.typography.labelSmall,
                 color      = onHero.copy(alpha = 0.70f),
                 fontWeight = FontWeight.SemiBold
@@ -292,7 +292,7 @@ private fun TripHeroCard(trip: Trip) {
                 fontWeight = FontWeight.Bold
             )
             Text(
-                text  = trip.dates,
+                text  = trip.formattedDates,
                 style = MaterialTheme.typography.bodySmall,
                 color = onHero.copy(alpha = 0.75f)
             )
@@ -302,19 +302,14 @@ private fun TripHeroCard(trip: Trip) {
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
-                    text  = stringResource(R.string.home_planning_progress),
-                    style = MaterialTheme.typography.labelSmall,
-                    color = onHero.copy(alpha = 0.70f)
-                )
-                Text(
-                    text  = trip.progressLabel,
+                    text  = "${(trip.progress() * 100).toInt()}%",
                     style = MaterialTheme.typography.labelSmall,
                     color = onHero.copy(alpha = 0.70f)
                 )
             }
             Spacer(modifier = Modifier.height(4.dp))
             LinearProgressIndicator(
-                progress   = { trip.progressFraction },
+                progress   = { trip.progress() },
                 modifier   = Modifier
                     .fillMaxWidth()
                     .height(5.dp)

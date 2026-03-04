@@ -98,17 +98,6 @@ fun PhotosScreen(trip: Trip) {
                             contentScale = ContentScale.Crop,
                             modifier = Modifier.fillMaxSize()
                         )
-                    } else {
-                        Icon(
-                            imageVector = Icons.Filled.Image,
-                            contentDescription = null,
-                            modifier = Modifier.size(32.dp),
-                            tint = photo.color.copy(
-                                red = (photo.color.red * 0.6f).coerceIn(0f, 1f),
-                                green = (photo.color.green * 0.6f).coerceIn(0f, 1f),
-                                blue = (photo.color.blue * 0.6f).coerceIn(0f, 1f)
-                            )
-                        )
                     }
                 }
             }
@@ -136,17 +125,6 @@ fun PhotosScreen(trip: Trip) {
                             contentDescription = null,
                             contentScale = ContentScale.Fit,
                             modifier = Modifier.fillMaxSize()
-                        )
-                    } else {
-                        Icon(
-                            imageVector = Icons.Filled.Image,
-                            contentDescription = null,
-                            modifier = Modifier.size(96.dp),
-                            tint = selected.color.copy(
-                                red = (selected.color.red * 0.6f).coerceIn(0f, 1f),
-                                green = (selected.color.green * 0.6f).coerceIn(0f, 1f),
-                                blue = (selected.color.blue * 0.6f).coerceIn(0f, 1f)
-                            )
                         )
                     }
                 }
