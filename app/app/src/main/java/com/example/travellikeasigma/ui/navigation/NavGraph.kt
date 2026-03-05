@@ -3,6 +3,10 @@ package com.example.travellikeasigma.navigation
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -40,7 +44,7 @@ fun NavGraph(
     navController: NavHostController,
     modifier:      Modifier = Modifier
 ) {
-    val currentTrip = sampleTrips[0]
+    var tripIndex by rememberSaveable { mutableIntStateOf(0) }
 
     NavHost(
         navController      = navController,
@@ -53,7 +57,8 @@ fun NavGraph(
     ) {
         composable(Routes.HOME) {
             HomeScreen(
-                trip             = currentTrip,
+                tripIndex        = tripIndex,
+                onTripIndexChange = { tripIndex = it },
                 onNewTripClick   = { navController.navigate(Routes.NEW_TRIP) },
                 onAvatarClick    = { navController.navigate(Routes.PREFERENCES) },
                 onItineraryClick = { navController.navigateToTab(Routes.ITINERARY) },
@@ -71,7 +76,7 @@ fun NavGraph(
         ) { backStackEntry ->
             val initialDay = backStackEntry.arguments?.getInt("day") ?: -1
             ItineraryScreen(
-                trip = currentTrip,
+                trip = sampleTrips[tripIndex],
                 initialDay = initialDay,
                 onAddActivityClick = { dayNumber ->
                     navController.navigate(Routes.addActivity(dayNumber))
@@ -90,13 +95,13 @@ fun NavGraph(
             )
         }
         composable(Routes.PACKING) {
-            PackingScreen(trip = currentTrip)
+            PackingScreen(trip = sampleTrips[tripIndex])
         }
         composable(Routes.PHOTOS) {
-            PhotosScreen(trip = currentTrip)
+            PhotosScreen(trip = sampleTrips[tripIndex])
         }
         composable(Routes.PLACES) {
-            PlacesScreen(trip = currentTrip)
+            PlacesScreen(trip = sampleTrips[tripIndex])
         }
         composable(Routes.PREFERENCES) {
             PreferencesScreen(

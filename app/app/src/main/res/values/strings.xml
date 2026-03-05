@@ -13,7 +13,9 @@
 
     <!-- Home Screen -->
     <string name="home_greeting">Bon Voyage, Sofia!</string>
-    <string name="home_subtitle">Your trip to Japan is coming up!</string>
+    <string name="home_subtitle_upcoming">Your trip to %1$s is coming up!</string>
+    <string name="home_subtitle_active">Have a happy trip to %1$s!</string>
+    <string name="home_subtitle_past">Want to revive your trip to %1$s?</string>
     <string name="home_stat_days">Days planned</string>
     <string name="home_stat_photos">Photos saved</string>
     <string name="home_stat_packing">Items packed</string>

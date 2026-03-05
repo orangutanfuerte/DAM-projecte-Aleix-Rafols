@@ -15,6 +15,26 @@ data class PackingCategory(
     val items: List<PackingItem>
 )
 
+val icelandPackingCategories = listOf(
+    PackingCategory(
+        id = 1, name = "Clothing", emoji = "🧥",
+        items = listOf(
+            PackingItem(101, "Waterproof jacket"),
+            PackingItem(102, "Thermal base layer")
+        )
+    )
+)
+
+val italyPackingCategories = listOf(
+    PackingCategory(
+        id = 1, name = "Clothing", emoji = "👕",
+        items = listOf(
+            PackingItem(201, "T-shirts"),
+            PackingItem(202, "Comfortable shoes")
+        )
+    )
+)
+
 val samplePackingCategories = listOf(
     PackingCategory(
         id = 1,

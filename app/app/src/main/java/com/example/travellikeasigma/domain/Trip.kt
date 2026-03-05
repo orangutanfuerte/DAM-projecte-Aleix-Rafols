@@ -73,6 +73,36 @@ data class Trip(
 val sampleTrips: List<Trip> = listOf(
     Trip(
         id = 1,
+        name = "Iceland Adventure",
+        startDate = LocalDate.of(2024, 6, 1),
+        endDate = LocalDate.of(2024, 6, 8),
+        itinerary = icelandItinerary,
+        packingCategories = icelandPackingCategories,
+        places = icelandPlaces,
+        photos = icelandPhotos,
+        heroColor = Color(0xFF3A6EA5),
+        destination = sampleDestinations[1],
+        hotel = sampleHotels[1],
+        persons = 2
+    ).also { trip -> trip.itinerary.forEach { it.trip = trip } },
+
+    Trip(
+        id = 2,
+        name = "Italian Getaway",
+        startDate = LocalDate.of(2026, 9, 10),
+        endDate = LocalDate.of(2026, 9, 18),
+        itinerary = italyItinerary,
+        packingCategories = italyPackingCategories,
+        places = italyPlaces,
+        photos = italyPhotos,
+        heroColor = Color(0xFFC45B28),
+        destination = sampleDestinations[2],
+        hotel = sampleHotels[2],
+        persons = 3
+    ).also { trip -> trip.itinerary.forEach { it.trip = trip } },
+
+    Trip(
+        id = 3,
         name = "Japan Highlights",
         startDate = LocalDate.of(2027, 3, 14),
         endDate = LocalDate.of(2027, 3, 21),
@@ -82,7 +112,7 @@ val sampleTrips: List<Trip> = listOf(
         photos = samplePhotos,
         heroColor = Color(0xFF4A7C59),
         destination = sampleDestinations[0],
-        hotel = sampleHotels.get(0),
+        hotel = sampleHotels[0],
         persons = 4
     ).also { trip -> trip.itinerary.forEach { it.trip = trip } }
 )

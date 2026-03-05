@@ -9,6 +9,9 @@ data class Place(
     val address: String
 )
 
+val icelandPlaces: List<Place> = emptyList()
+val italyPlaces: List<Place> = emptyList()
+
 val samplePlaces = listOf(
     Place(1, "Senso-ji Temple",         PlaceCategory.TEMPLE,     "Asakusa, Tokyo"),
     Place(2, "Tsukiji Outer Market",    PlaceCategory.RESTAURANT, "Chuo, Tokyo"),

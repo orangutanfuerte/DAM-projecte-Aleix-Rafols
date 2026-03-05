@@ -37,10 +37,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -62,7 +58,8 @@ import com.example.travellikeasigma.ui.components.ProfileAvatar
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
-    trip:             Trip,
+    tripIndex:        Int,
+    onTripIndexChange: (Int) -> Unit,
     onNewTripClick:   () -> Unit,
     onAvatarClick:    () -> Unit,
     onItineraryClick: () -> Unit = {},
@@ -71,8 +68,8 @@ fun HomeScreen(
     onPlacesClick:    () -> Unit = {},
     onDayClick:       (Int) -> Unit = {}
 ) {
-    var tripIndex by rememberSaveable { mutableIntStateOf(0) }
     val total = sampleTrips.size
+    val currentTrip = sampleTrips[tripIndex]
 
     Scaffold(
         topBar = {
@@ -98,7 +95,11 @@ fun HomeScreen(
                     fontWeight = FontWeight.Bold
                 )
                 Text(
-                    text  = stringResource(R.string.home_subtitle),
+                    text  = when (currentTrip.status()) {
+                        "Past Trip"    -> stringResource(R.string.home_subtitle_past, currentTrip.destination.destinationName)
+                        "Active Trip"  -> stringResource(R.string.home_subtitle_active, currentTrip.destination.destinationName)
+                        else           -> stringResource(R.string.home_subtitle_upcoming, currentTrip.destination.destinationName)
+                    },
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -108,22 +109,22 @@ fun HomeScreen(
                 TripNavigator(
                     currentIndex = tripIndex,
                     total        = total,
-                    onPrev       = { if (tripIndex > 0) tripIndex-- },
-                    onNext       = { if (tripIndex < total - 1) tripIndex++ },
+                    onPrev       = { if (tripIndex > 0) onTripIndexChange(tripIndex - 1) },
+                    onNext       = { if (tripIndex < total - 1) onTripIndexChange(tripIndex + 1) },
                     onUpcoming   = {
                         val idx = sampleTrips.indexOfFirst { it.status() == "Upcoming" }
-                        if (idx >= 0) tripIndex = idx
+                        if (idx >= 0) onTripIndexChange(idx)
                     }
                 )
 
                 Spacer(modifier = Modifier.height(8.dp))
 
-                TripHeroCard(trip = trip)
+                TripHeroCard(trip = currentTrip)
 
                 Spacer(modifier = Modifier.height(16.dp))
 
                 StatGrid(
-                    trip             = trip,
+                    trip             = currentTrip,
                     onItineraryClick = onItineraryClick,
                     onPhotosClick    = onPhotosClick,
                     onPackingClick   = onPackingClick,
@@ -140,7 +141,7 @@ fun HomeScreen(
                 )
                 Spacer(modifier = Modifier.height(8.dp))
 
-                trip.itinerary.take(3).forEachIndexed { index, day ->
+                currentTrip.itinerary.take(3).forEachIndexed { index, day ->
                     val title = day.activities.getOrNull(0)?.title ?: ""
                     val subtitle = day.activities.getOrNull(1)?.title ?: ""
                     DayCard(

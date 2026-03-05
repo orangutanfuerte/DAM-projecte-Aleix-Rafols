@@ -15,6 +15,13 @@ data class ItineraryDay(
 // Sample data — 7 days of Japan Highlights
 // ---------------------------------------------------------------------------
 
+// Iceland: Jun 1–8 (7 days)
+val icelandItinerary = (1..7).map { ItineraryDay(dayNumber = it, activities = emptyList()) }
+
+// Italy: Sep 10–18 (8 days)
+val italyItinerary = (1..8).map { ItineraryDay(dayNumber = it, activities = emptyList()) }
+
+// Japan sample itinerary (full)
 val sampleItinerary = listOf(
     ItineraryDay(
         dayNumber = 1,

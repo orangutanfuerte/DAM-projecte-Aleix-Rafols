@@ -5,6 +5,9 @@ import com.example.travellikeasigma.R
 
 data class Photo(val id: Int, val drawableRes: Int? = null)
 
+val icelandPhotos: List<Photo> = emptyList()
+val italyPhotos: List<Photo> = emptyList()
+
 val samplePhotos = listOf(
     Photo(1, R.drawable.photo1),
     Photo(2, R.drawable.photo2),
