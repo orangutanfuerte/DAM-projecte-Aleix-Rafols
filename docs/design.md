@@ -1,9 +1,9 @@
-# 📐 Diseño Arquitectónico de Travel Planner
+# 📐 Diseny Arquitectònic de Travel like a Sigma
 
 ## 🏛️ Arquitectura General
-Travel Planner sigue una arquitectura **MVVM (Model-View-ViewModel)** para una mejor separación de responsabilidades y escalabilidad.
+Travel like a Sigma implementa una arquitectura **MVVM (Model-View-ViewModel)** per a una millor separació de responsabilitats i escalabilitat.
 
 
-## 📊 Modelo de Datos: Creado completo para futuros Sprints
+## 📊 Model de Dades: Creat complet per a futurs sprints
 
 ![alt text](domain_model.png)
