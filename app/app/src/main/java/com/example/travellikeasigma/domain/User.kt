@@ -18,9 +18,16 @@ data class User(
     val password: String,
     val authentication: Authentication = Authentication(),
     val preferences: Preferences = Preferences(),
-    val trips: List<Trip> = emptyList()
+    val trips: MutableList<Trip> = mutableListOf()
 ) {
-    fun createTrip(trip: Trip) { /* @TODO */ }
-    fun removeTrip(trip: Trip) { /* @TODO */ }
+    fun createTrip(trip: Trip) { trips.add(trip) }
+    fun removeTrip(trip: Trip) { trips.remove(trip) }
     fun updatePreferences(preferences: Preferences) { /* @TODO */ }
 }
+
+val sampleUser = User(
+    id    = 1,
+    email = "sigma@travel.com",
+    password = "",
+    trips = sampleTrips.toMutableList()
+)
