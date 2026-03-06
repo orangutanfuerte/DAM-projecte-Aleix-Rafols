@@ -1,11 +1,13 @@
 package com.example.travellikeasigma.ui.screen
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -35,6 +37,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -68,7 +72,8 @@ fun PhotosScreen(trip: Trip) {
                 title = stringResource(R.string.photos_title),
                 subtitle = stringResource(R.string.photos_subtitle, trip.name, trip.photoCount)
             )
-        }
+        },
+        contentWindowInsets = WindowInsets(0)
     ) { innerPadding ->
         LazyVerticalGrid(
             columns = GridCells.Fixed(3),
@@ -82,20 +87,18 @@ fun PhotosScreen(trip: Trip) {
                 Box(
                     modifier = Modifier
                         .aspectRatio(1f)
-                        .background(photo.color)
+                        .background(Color.Black)
                         .clickable { selectedIndex = index },
                     contentAlignment = Alignment.Center
                 ) {
-                    Icon(
-                        imageVector = Icons.Filled.Image,
-                        contentDescription = null,
-                        modifier = Modifier.size(32.dp),
-                        tint = photo.color.copy(
-                            red = (photo.color.red * 0.6f).coerceIn(0f, 1f),
-                            green = (photo.color.green * 0.6f).coerceIn(0f, 1f),
-                            blue = (photo.color.blue * 0.6f).coerceIn(0f, 1f)
+                    if (photo.drawableRes != null) {
+                        Image(
+                            painter = painterResource(photo.drawableRes),
+                            contentDescription = null,
+                            contentScale = ContentScale.Crop,
+                            modifier = Modifier.fillMaxSize()
                         )
-                    )
+                    }
                 }
             }
         }
@@ -113,19 +116,17 @@ fun PhotosScreen(trip: Trip) {
                     .background(Color.Black)
             ) {
                 Box(
-                    modifier = Modifier.fillMaxSize().background(selected.color),
+                    modifier = Modifier.fillMaxSize().background(Color.Black),
                     contentAlignment = Alignment.Center
                 ) {
-                    Icon(
-                        imageVector = Icons.Filled.Image,
-                        contentDescription = null,
-                        modifier = Modifier.size(96.dp),
-                        tint = selected.color.copy(
-                            red = (selected.color.red * 0.6f).coerceIn(0f, 1f),
-                            green = (selected.color.green * 0.6f).coerceIn(0f, 1f),
-                            blue = (selected.color.blue * 0.6f).coerceIn(0f, 1f)
+                    if (selected.drawableRes != null) {
+                        Image(
+                            painter = painterResource(selected.drawableRes),
+                            contentDescription = null,
+                            contentScale = ContentScale.Fit,
+                            modifier = Modifier.fillMaxSize()
                         )
-                    )
+                    }
                 }
                 Row(
                     modifier = Modifier

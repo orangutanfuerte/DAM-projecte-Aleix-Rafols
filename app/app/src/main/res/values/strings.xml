@@ -13,25 +13,16 @@
 
     <!-- Home Screen -->
     <string name="home_greeting">Bon Voyage, Sofia!</string>
-    <string name="home_subtitle">Your trip to Japan is coming up!</string>
-    <string name="home_active_trip_label">Active Trip</string>
-    <string name="home_trip_name">Japan Highlights</string>
-    <string name="home_trip_dates">Mar 14 – Mar 28, 2025 · 14 days</string>
-    <string name="home_planning_progress">Planning progress</string>
+    <string name="home_subtitle_upcoming">Your trip to %1$s is coming up!</string>
+    <string name="home_subtitle_active">Have a happy trip to %1$s!</string>
+    <string name="home_subtitle_past">Want to revive your trip to %1$s?</string>
     <string name="home_stat_days">Days planned</string>
     <string name="home_stat_photos">Photos saved</string>
     <string name="home_stat_packing">Items packed</string>
     <string name="home_stat_places">Saved places</string>
     <string name="home_upcoming_days">Upcoming days</string>
     <string name="home_new_trip">New Trip</string>
-    <string name="home_day_1_title">Arrival · Tokyo</string>
-    <string name="home_day_1_sub">Narita → Hotel → Shinjuku</string>
-    <string name="home_day_2_title">Shibuya &amp; Harajuku</string>
-    <string name="home_day_2_sub">4 activities · 2 restaurants</string>
-    <string name="home_day_3_title">Day trip to Nikko</string>
-    <string name="home_day_3_sub">Depart 8:00 AM · Shinkansen</string>
     <string name="home_upcoming_pill">Upcoming</string>
-    <string name="home_trip_counter">2 / 3</string>
 
     <!-- Placeholder screens -->
     <string name="placeholder_coming_soon">Coming soon…</string>
@@ -55,7 +46,6 @@
     <string name="pref_edit_profile">Edit Profile</string>
     <string name="pref_section_settings">App Settings</string>
     <string name="pref_language">Language</string>
-    <string name="pref_language_current">English</string>
     <string name="pref_notifications">Notifications</string>
     <string name="pref_notifications_sub">Trip reminders on</string>
     <string name="pref_notifications_off">Trip reminders off</string>
@@ -97,8 +87,6 @@
     <string name="about_title">About</string>
     <string name="about_tagline">Built for explorers who plan smart, travel bold, and leave no destination unchecked.</string>
     <string name="about_version_label">Version</string>
-    <string name="about_build_label">Build</string>
-    <string name="about_build_value">42</string>
     <string name="about_platform_label">Platform</string>
     <string name="about_platform_value">Android</string>
     <string name="about_min_sdk_label">Min SDK</string>
@@ -110,26 +98,15 @@
     <string name="about_copyright">© 2026 Aleix Ràfols Bayot. All rights reserved.</string>
 
     <!-- New Trip Screen -->
-    <string name="new_trip_title">New Trip</string>
     <string name="new_trip_step_destination_title">Where to? 🌍</string>
-    <string name="new_trip_step_destination_sub">Pick your next destination</string>
-    <string name="new_trip_step_dates_title">When? 📅</string>
-    <string name="new_trip_step_dates_sub">Select your check-in and check-out</string>
     <string name="new_trip_step_hotel_title">Choose Hotel 🏨</string>
-    <string name="new_trip_step_hotel_sub">Select where you\'ll stay</string>
-    <string name="new_trip_cta_dates">Choose Dates</string>
-    <string name="new_trip_cta_hotel">Pick a Hotel</string>
-    <string name="new_trip_cta_create">Create Trip</string>
-    <string name="new_trip_search_hint">Search city or country…</string>
     <string name="new_trip_checkin">Check-in</string>
     <string name="new_trip_checkout">Check-out</string>
     <string name="new_trip_select_date">Select date</string>
 
     <!-- New Trip – additional strings -->
     <string name="new_trip_step_name_title">Trip Name</string>
-    <string name="new_trip_step_name_sub">Give your trip a name</string>
     <string name="new_trip_step_details_title">Travellers &amp; Dates</string>
-    <string name="new_trip_step_details_sub">Who\'s going and when</string>
     <string name="new_trip_name_label">Trip name</string>
     <string name="new_trip_name_placeholder">e.g. Japan Adventure 2025</string>
     <string name="new_trip_persons_label">Travellers</string>

@@ -39,6 +39,7 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -47,13 +48,13 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import java.time.format.DateTimeFormatter
+import java.util.Locale
 import com.example.travellikeasigma.R
 import com.example.travellikeasigma.model.ActivityType
-import com.example.travellikeasigma.model.DayWeather
 import com.example.travellikeasigma.model.ItineraryActivity
 import com.example.travellikeasigma.model.ItineraryDay
 import com.example.travellikeasigma.model.Trip
-import com.example.travellikeasigma.model.WeatherType
 import com.example.travellikeasigma.model.displayName
 import com.example.travellikeasigma.ui.theme.FoodTagBackground
 import com.example.travellikeasigma.ui.theme.FoodTagText
@@ -119,11 +120,21 @@ fun ItineraryScreen(
             )
 
             // Weather card
-            WeatherCard(weather = day.weather)
+            val weather = remember(selectedDay) {
+                val type = WeatherType.entries.random()
+                val description = when (type) {
+                    WeatherType.SUNNY         -> "Sunny"
+                    WeatherType.PARTLY_CLOUDY -> "Partly Cloudy"
+                    WeatherType.CLOUDY        -> "Cloudy"
+                    WeatherType.RAINY         -> "Rainy"
+                }
+                DayWeather(type, (18..28).random(), (10..17).random(), description)
+            }
+            WeatherCard(weather = weather)
 
             // Date + city label
             Text(
-                text = "${day.date} \u00b7 ${day.city}",
+                text = day.getDate().format(DateTimeFormatter.ofPattern("MMM d, yyyy", Locale.ENGLISH)),
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
@@ -184,6 +195,14 @@ private fun DaySelectorRow(
 // ---------------------------------------------------------------------------
 // Weather card
 // ---------------------------------------------------------------------------
+enum class WeatherType { SUNNY, PARTLY_CLOUDY, CLOUDY, RAINY }
+
+data class DayWeather(
+    val icon: WeatherType,
+    val tempHigh: Int,
+    val tempLow: Int,
+    val description: String
+)
 
 @Composable
 private fun WeatherCard(weather: DayWeather) {

@@ -14,6 +14,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.travellikeasigma.navigation.NavGraph
@@ -22,9 +24,19 @@ import com.example.travellikeasigma.ui.components.BottomNavBar
 import com.example.travellikeasigma.ui.theme.LocalThemeMode
 import com.example.travellikeasigma.ui.theme.ThemeMode
 import com.example.travellikeasigma.ui.theme.TravelLikeASigmaTheme
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
+        var isChecking = true
+        lifecycleScope.launch {
+            delay(3000L)
+            isChecking = false
+        }
+        installSplashScreen().apply {
+            setKeepOnScreenCondition { isChecking }
+        }
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
