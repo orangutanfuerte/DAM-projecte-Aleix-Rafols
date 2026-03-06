@@ -5,11 +5,11 @@ import androidx.compose.animation.ExitTransition
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.compose.runtime.toMutableStateList
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
+import com.example.travellikeasigma.model.Trip
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -44,9 +44,9 @@ private fun NavHostController.navigateToTab(route: String) {
 @Composable
 fun NavGraph(
     navController: NavHostController,
+    userTrips:     SnapshotStateList<Trip>,
     modifier:      Modifier = Modifier
 ) {
-    val userTrips = remember { sampleUser.trips.toMutableStateList() }
     var tripIndex by rememberSaveable { mutableIntStateOf(0) }
     // Clamp index if the list shrinks (e.g. after removal)
     val safeIndex = tripIndex.coerceIn(0, (userTrips.size - 1).coerceAtLeast(0))

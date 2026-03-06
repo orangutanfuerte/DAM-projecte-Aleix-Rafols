@@ -18,6 +18,8 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.compose.runtime.toMutableStateList
+import com.example.travellikeasigma.model.sampleUser
 import com.example.travellikeasigma.navigation.NavGraph
 import com.example.travellikeasigma.navigation.Routes
 import com.example.travellikeasigma.ui.components.BottomNavBar
@@ -56,8 +58,9 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun TravelSigmaApp() {
     val navController = rememberNavController()
+    val userTrips = remember { sampleUser.trips.toMutableStateList() }
 
-    // Only show the bottom bar on the 5 main tab screens
+    // Only show the bottom bar on the 5 main tab screens and only when there are trips
     val bottomBarRoutes = setOf(
         Routes.HOME,
         Routes.ITINERARY,
@@ -68,20 +71,20 @@ fun TravelSigmaApp() {
     )
     val backStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute   = backStackEntry?.destination?.route
-    val showBottomBar  = currentRoute in bottomBarRoutes
+    val showBottomBar  = currentRoute in bottomBarRoutes && userTrips.isNotEmpty()
 
     Scaffold(
-        contentWindowInsets = WindowInsets(0), //  TREU DEPENDENCIES SI NO L'USES
+        contentWindowInsets = WindowInsets(0),
         bottomBar = {
             if (showBottomBar) {
                 BottomNavBar(navController = navController)
-
             }
-        }//, contentWindowInsets = WindowInsets.safeDrawing //  TREU DEPENDENCIES SI NO L'USES
+        }
     ) { innerPadding ->
         NavGraph(
             navController = navController,
-            modifier = Modifier.padding(innerPadding)
+            userTrips     = userTrips,
+            modifier      = Modifier.padding(innerPadding)
         )
     }
 }

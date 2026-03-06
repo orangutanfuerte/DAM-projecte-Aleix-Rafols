@@ -78,8 +78,37 @@ fun HomeScreen(
     onDeleteTripClick:   () -> Unit = {}
 ) {
     val total = trips.size
-    val currentTrip = trips[tripIndex]
     var showDeleteDialog by remember { mutableStateOf(false) }
+
+    // Empty state — no trips yet
+    if (trips.isEmpty()) {
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                Text(
+                    text  = stringResource(R.string.home_no_trips),
+                    style = MaterialTheme.typography.titleMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+                Button(
+                    onClick = onNewTripClick,
+                    shape   = RoundedCornerShape(14.dp)
+                ) {
+                    Icon(Icons.Filled.Add, contentDescription = null)
+                    Spacer(Modifier.width(8.dp))
+                    Text(stringResource(R.string.home_new_trip), fontWeight = FontWeight.SemiBold)
+                }
+            }
+        }
+        return
+    }
+
+    val currentTrip = trips[tripIndex]
 
     Scaffold(
         topBar = {
