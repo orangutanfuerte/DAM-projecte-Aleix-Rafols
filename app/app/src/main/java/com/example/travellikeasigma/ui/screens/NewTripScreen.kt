@@ -43,8 +43,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.graphics.Color
 import com.example.travellikeasigma.R
+import com.example.travellikeasigma.ui.theme.heroColors
 import com.example.travellikeasigma.model.ItineraryDay
 import com.example.travellikeasigma.model.Trip
 import com.example.travellikeasigma.model.sampleDestinations
@@ -149,7 +149,7 @@ fun NewTripScreen(
                     val hotel = sampleHotels.find { it.id == selectedHotelId } ?: return@HotelStep
                     val startDate = Instant.ofEpochMilli(checkInMillis).atZone(ZoneOffset.UTC).toLocalDate()
                     val endDate   = Instant.ofEpochMilli(checkOutMillis).atZone(ZoneOffset.UTC).toLocalDate()
-                    val dayCount  = ChronoUnit.DAYS.between(startDate, endDate).toInt().coerceAtLeast(1)
+                    val dayCount  = (ChronoUnit.DAYS.between(startDate, endDate).toInt() + 1).coerceAtLeast(1)
                     val itinerary = (1..dayCount).map { ItineraryDay(dayNumber = it, activities = emptyList()) }
                     val newTrip = Trip(
                         id                = System.currentTimeMillis().toInt(),
@@ -160,7 +160,7 @@ fun NewTripScreen(
                         packingCategories = emptyList(),
                         places            = emptyList(),
                         photos            = emptyList(),
-                        heroColor         = Color(0xFF7851A8),
+                        heroColor         = heroColors.random(),
                         hotel             = hotel,
                         persons           = persons,
                         destination       = destination

@@ -123,3 +123,15 @@ val WeatherRainyTint = Color(0xFF42A5F5)
 // Map placeholder (PlacesScreen)
 val MapPlaceholderBackground = Color(0xFFBBDEFB)
 val MapPlaceholderIcon = Color(0xFF1976D2)
+
+// Hero card palette — used for new trip colors
+val heroColors = listOf(
+    Color(0xFF7851A8), // Purple
+    Color(0xFF3A6EA5), // Ocean Blue
+    Color(0xFF4A7C59), // Forest Green
+    Color(0xFFC45B28), // Burnt Orange
+    Color(0xFF9E4B6B), // Raspberry
+    Color(0xFF3D7D8A), // Teal
+    Color(0xFF8A6A2E), // Amber
+    Color(0xFF5B6EA5), // Slate Blue
+)
