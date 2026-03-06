@@ -7,13 +7,15 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
+import com.example.travellikeasigma.model.Trip
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import com.example.travellikeasigma.model.sampleTrips
+import com.example.travellikeasigma.model.sampleUser
 import com.example.travellikeasigma.ui.screen.AboutScreen
 import com.example.travellikeasigma.ui.screen.AddActivityScreen
 import com.example.travellikeasigma.ui.screen.HomeScreen
@@ -42,9 +44,12 @@ private fun NavHostController.navigateToTab(route: String) {
 @Composable
 fun NavGraph(
     navController: NavHostController,
+    userTrips:     SnapshotStateList<Trip>,
     modifier:      Modifier = Modifier
 ) {
     var tripIndex by rememberSaveable { mutableIntStateOf(0) }
+    // Clamp index if the list shrinks (e.g. after removal)
+    val safeIndex = tripIndex.coerceIn(0, (userTrips.size - 1).coerceAtLeast(0))
 
     NavHost(
         navController      = navController,
@@ -57,7 +62,8 @@ fun NavGraph(
     ) {
         composable(Routes.HOME) {
             HomeScreen(
-                tripIndex        = tripIndex,
+                trips            = userTrips,
+                tripIndex        = safeIndex,
                 onTripIndexChange = { tripIndex = it },
                 onNewTripClick   = { navController.navigate(Routes.NEW_TRIP) },
                 onAvatarClick    = { navController.navigate(Routes.PREFERENCES) },
@@ -67,6 +73,11 @@ fun NavGraph(
                 onPlacesClick    = { navController.navigateToTab(Routes.PLACES) },
                 onDayClick       = { dayIndex ->
                     navController.navigateToTab(Routes.itineraryDay(dayIndex))
+                },
+                onDeleteTripClick = {
+                    val tripToDelete = userTrips[safeIndex]
+                    sampleUser.removeTrip(tripToDelete)
+                    userTrips.removeAt(safeIndex)
                 }
             )
         }
@@ -76,7 +87,7 @@ fun NavGraph(
         ) { backStackEntry ->
             val initialDay = backStackEntry.arguments?.getInt("day") ?: -1
             ItineraryScreen(
-                trip = sampleTrips[tripIndex],
+                trip = userTrips[safeIndex],
                 initialDay = initialDay,
                 onAddActivityClick = { dayNumber ->
                     navController.navigate(Routes.addActivity(dayNumber))
@@ -95,13 +106,13 @@ fun NavGraph(
             )
         }
         composable(Routes.PACKING) {
-            PackingScreen(trip = sampleTrips[tripIndex])
+            PackingScreen(trip = userTrips[safeIndex])
         }
         composable(Routes.PHOTOS) {
-            PhotosScreen(trip = sampleTrips[tripIndex])
+            PhotosScreen(trip = userTrips[safeIndex])
         }
         composable(Routes.PLACES) {
-            PlacesScreen(trip = sampleTrips[tripIndex])
+            PlacesScreen(trip = userTrips[safeIndex])
         }
         composable(Routes.PREFERENCES) {
             PreferencesScreen(
@@ -119,7 +130,12 @@ fun NavGraph(
         composable(Routes.NEW_TRIP) {
             NewTripScreen(
                 onBackClick = { navController.popBackStack() },
-                onSave      = { navController.popBackStack() }
+                onSave      = { newTrip ->
+                    sampleUser.createTrip(newTrip)
+                    userTrips.add(newTrip)
+                    tripIndex = userTrips.size - 1
+                    navController.popBackStack()
+                }
             )
         }
     }

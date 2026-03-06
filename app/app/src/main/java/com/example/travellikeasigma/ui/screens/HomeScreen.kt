@@ -23,6 +23,9 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ChevronLeft
 import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material.icons.filled.ElectricBolt
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -37,6 +40,10 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -48,7 +55,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.travellikeasigma.R
 import com.example.travellikeasigma.model.Trip
-import com.example.travellikeasigma.model.sampleTrips
+import com.example.travellikeasigma.ui.components.ConfirmationDialog
 import com.example.travellikeasigma.ui.components.ProfileAvatar
 
 // ---------------------------------------------------------------------------
@@ -58,6 +65,7 @@ import com.example.travellikeasigma.ui.components.ProfileAvatar
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
+    trips:            List<Trip>,
     tripIndex:        Int,
     onTripIndexChange: (Int) -> Unit,
     onNewTripClick:   () -> Unit,
@@ -66,10 +74,41 @@ fun HomeScreen(
     onPackingClick:   () -> Unit = {},
     onPhotosClick:    () -> Unit = {},
     onPlacesClick:    () -> Unit = {},
-    onDayClick:       (Int) -> Unit = {}
+    onDayClick:          (Int) -> Unit = {},
+    onDeleteTripClick:   () -> Unit = {}
 ) {
-    val total = sampleTrips.size
-    val currentTrip = sampleTrips[tripIndex]
+    val total = trips.size
+    var showDeleteDialog by remember { mutableStateOf(false) }
+
+    // Empty state — no trips yet
+    if (trips.isEmpty()) {
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                Text(
+                    text  = stringResource(R.string.home_no_trips),
+                    style = MaterialTheme.typography.titleMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+                Button(
+                    onClick = onNewTripClick,
+                    shape   = RoundedCornerShape(14.dp)
+                ) {
+                    Icon(Icons.Filled.Add, contentDescription = null)
+                    Spacer(Modifier.width(8.dp))
+                    Text(stringResource(R.string.home_new_trip), fontWeight = FontWeight.SemiBold)
+                }
+            }
+        }
+        return
+    }
+
+    val currentTrip = trips[tripIndex]
 
     Scaffold(
         topBar = {
@@ -112,7 +151,7 @@ fun HomeScreen(
                     onPrev       = { if (tripIndex > 0) onTripIndexChange(tripIndex - 1) },
                     onNext       = { if (tripIndex < total - 1) onTripIndexChange(tripIndex + 1) },
                     onUpcoming   = {
-                        val idx = sampleTrips.indexOfFirst { it.status() == "Upcoming" }
+                        val idx = trips.indexOfFirst { it.status() == "Upcoming" }
                         if (idx >= 0) onTripIndexChange(idx)
                     }
                 )
@@ -151,8 +190,34 @@ fun HomeScreen(
                         onClick = { onDayClick(index) }
                     )
                 }
+
+                Spacer(Modifier.height(16.dp))
+                Button(
+                    onClick = { showDeleteDialog = true },
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.errorContainer,
+                        contentColor   = MaterialTheme.colorScheme.onErrorContainer
+                    ),
+                    shape = RoundedCornerShape(14.dp)
+                ) {
+                    Icon(Icons.Filled.Delete, contentDescription = null)
+                    Spacer(Modifier.width(8.dp))
+                    Text(stringResource(R.string.home_delete_trip), fontWeight = FontWeight.SemiBold)
+                }
             }
         }
+    }
+
+    if (showDeleteDialog) {
+        ConfirmationDialog(
+            title       = stringResource(R.string.home_delete_trip_title),
+            message     = stringResource(R.string.home_delete_trip_message, currentTrip.name),
+            confirmText = stringResource(R.string.home_delete_trip_yes),
+            dismissText = stringResource(R.string.home_delete_trip_no),
+            onConfirm   = { showDeleteDialog = false; onDeleteTripClick() },
+            onDismiss   = { showDeleteDialog = false }
+        )
     }
 }
 
