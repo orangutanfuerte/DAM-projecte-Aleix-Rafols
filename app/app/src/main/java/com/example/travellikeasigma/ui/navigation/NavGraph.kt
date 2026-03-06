@@ -130,7 +130,12 @@ fun NavGraph(
         composable(Routes.NEW_TRIP) {
             NewTripScreen(
                 onBackClick = { navController.popBackStack() },
-                onSave      = { navController.popBackStack() }
+                onSave      = { newTrip ->
+                    sampleUser.createTrip(newTrip)
+                    userTrips.add(newTrip)
+                    tripIndex = userTrips.size - 1
+                    navController.popBackStack()
+                }
             )
         }
     }
