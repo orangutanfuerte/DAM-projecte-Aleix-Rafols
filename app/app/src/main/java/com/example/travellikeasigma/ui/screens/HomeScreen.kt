@@ -180,11 +180,12 @@ fun HomeScreen(
                 )
                 Spacer(modifier = Modifier.height(8.dp))
 
-                currentTrip.itinerary.take(3).forEachIndexed { index, day ->
-                    val title = day.activities.getOrNull(0)?.title ?: ""
-                    val subtitle = day.activities.getOrNull(1)?.title ?: ""
+                (1..minOf(3, currentTrip.daysCount)).forEachIndexed { index, dayNumber ->
+                    val dayActivities = currentTrip.getActivitiesByDay(dayNumber)
+                    val title = dayActivities.getOrNull(0)?.title ?: ""
+                    val subtitle = dayActivities.getOrNull(1)?.title ?: ""
                     DayCard(
-                        day = "%02d".format(day.dayNumber),
+                        day = "%02d".format(dayNumber),
                         title = title,
                         subtitle = subtitle,
                         onClick = { onDayClick(index) }

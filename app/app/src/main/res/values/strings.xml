@@ -2,7 +2,7 @@
 <resources>
     <!-- App -->
     <string name="app_name">Travel like a Sigma</string>
-    <string name="app_version">1.0.0</string>
+    <string name="app_version">2.0.0</string>
 
     <!-- Bottom Navigation -->
     <string name="nav_home">Home</string>
@@ -137,6 +137,15 @@
     <string name="add_activity_time_picker_title">Select time</string>
     <string name="add_activity_time_confirm">OK</string>
     <string name="add_activity_time_cancel">Cancel</string>
+
+    <!-- Edit Activity Screen -->
+    <string name="edit_activity_title">Edit Activity</string>
+    <string name="edit_activity_update">Update</string>
+    <string name="edit_activity_delete">Delete</string>
+    <string name="edit_activity_delete_title">Delete activity?</string>
+    <string name="edit_activity_delete_message">Are you sure you want to delete \"%1$s\"?</string>
+    <string name="edit_activity_delete_yes">Yes</string>
+    <string name="edit_activity_delete_no">No</string>
 
     <!-- Photos Screen -->
     <string name="photos_delete">Delete photo</string>

@@ -18,6 +18,7 @@ import androidx.navigation.navArgument
 import com.example.travellikeasigma.model.sampleUser
 import com.example.travellikeasigma.ui.screen.AboutScreen
 import com.example.travellikeasigma.ui.screen.AddActivityScreen
+import com.example.travellikeasigma.ui.screen.EditActivityScreen
 import com.example.travellikeasigma.ui.screen.HomeScreen
 import com.example.travellikeasigma.ui.screen.ItineraryScreen
 import com.example.travellikeasigma.ui.screen.NewTripScreen
@@ -91,6 +92,9 @@ fun NavGraph(
                 initialDay = initialDay,
                 onAddActivityClick = { dayNumber ->
                     navController.navigate(Routes.addActivity(dayNumber))
+                },
+                onEditActivityClick = { dayNumber, activityId ->
+                    navController.navigate(Routes.editActivity(dayNumber, activityId))
                 }
             )
         }
@@ -102,8 +106,46 @@ fun NavGraph(
             AddActivityScreen(
                 dayNumber = dayNumber,
                 onBackClick = { navController.popBackStack() },
-                onSave = { navController.popBackStack() }
+                onSave = { activity ->
+                    val trip = userTrips[safeIndex]
+                    val maxId = trip.activities.maxOfOrNull { it.id } ?: 0
+                    val date = trip.getDateForDay(dayNumber)
+                    val activityWithId = activity.copy(id = maxId + 1, date = date)
+                    trip.addActivity(activityWithId)
+                    userTrips[safeIndex] = trip.copy()
+                    navController.popBackStack()
+                }
             )
+        }
+        composable(
+            route = Routes.EDIT_ACTIVITY,
+            arguments = listOf(
+                navArgument("dayNumber") { type = NavType.IntType },
+                navArgument("activityId") { type = NavType.IntType }
+            )
+        ) { backStackEntry ->
+            val dayNumber = backStackEntry.arguments?.getInt("dayNumber") ?: 1
+            val activityId = backStackEntry.arguments?.getInt("activityId") ?: 0
+            val trip = userTrips[safeIndex]
+            val activity = trip.activities.find { it.id == activityId }
+
+            if (activity != null) {
+                EditActivityScreen(
+                    dayNumber = dayNumber,
+                    activity = activity,
+                    onBackClick = { navController.popBackStack() },
+                    onUpdate = { updatedActivity ->
+                        trip.updateActivity(updatedActivity)
+                        userTrips[safeIndex] = trip.copy()
+                        navController.popBackStack()
+                    },
+                    onDelete = {
+                        navController.popBackStack()
+                        trip.removeActivity(activity)
+                        userTrips[safeIndex] = trip.copy()
+                    }
+                )
+            }
         }
         composable(Routes.PACKING) {
             PackingScreen(trip = userTrips[safeIndex])
