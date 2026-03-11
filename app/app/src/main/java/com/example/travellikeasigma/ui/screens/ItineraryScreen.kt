@@ -1,6 +1,8 @@
 package com.example.travellikeasigma.ui.screen
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -53,7 +55,6 @@ import java.util.Locale
 import com.example.travellikeasigma.R
 import com.example.travellikeasigma.model.ActivityType
 import com.example.travellikeasigma.model.ItineraryActivity
-import com.example.travellikeasigma.model.ItineraryDay
 import com.example.travellikeasigma.model.Trip
 import com.example.travellikeasigma.model.displayName
 import com.example.travellikeasigma.ui.theme.FoodTagBackground
@@ -77,12 +78,14 @@ import com.example.travellikeasigma.ui.theme.WeatherSunnyTint
 fun ItineraryScreen(
     trip: Trip,
     initialDay: Int = -1,
-    onAddActivityClick: (dayNumber: Int) -> Unit = {}
+    onAddActivityClick: (dayNumber: Int) -> Unit = {},
+    onEditActivityClick: (dayNumber: Int, activityId: Int) -> Unit = { _, _ -> }
 ) {
     var selectedDay by rememberSaveable {
         mutableIntStateOf(if (initialDay >= 0) initialDay else 0)
     }
-    val day = trip.itinerary[selectedDay]
+    val dayNumber = selectedDay + 1
+    val dayActivities = trip.getActivitiesByDay(dayNumber)
 
     Scaffold(
         topBar = {
@@ -96,7 +99,7 @@ fun ItineraryScreen(
         },
         floatingActionButton = {
             FloatingActionButton(
-                onClick = { onAddActivityClick(day.dayNumber) },
+                onClick = { onAddActivityClick(dayNumber) },
                 containerColor = MaterialTheme.colorScheme.primary
             ) {
                 Icon(
@@ -114,7 +117,7 @@ fun ItineraryScreen(
         ) {
             // Day selector
             DaySelectorRow(
-                days = trip.itinerary,
+                daysCount = trip.daysCount,
                 selectedIndex = selectedDay,
                 onDaySelected = { selectedDay = it }
             )
@@ -134,7 +137,7 @@ fun ItineraryScreen(
 
             // Date + city label
             Text(
-                text = day.getDate().format(DateTimeFormatter.ofPattern("MMM d, yyyy", Locale.ENGLISH)),
+                text = trip.getDateForDay(dayNumber).format(DateTimeFormatter.ofPattern("MMM d, yyyy", Locale.ENGLISH)),
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
@@ -145,10 +148,12 @@ fun ItineraryScreen(
                 modifier = Modifier.fillMaxSize(),
                 contentPadding = PaddingValues(horizontal = 16.dp, vertical = 4.dp)
             ) {
-                itemsIndexed(day.activities) { index, activity ->
+                val sortedActivities = dayActivities
+                itemsIndexed(sortedActivities) { index, activity ->
                     TimelineItem(
                         activity = activity,
-                        isLast = index == day.activities.lastIndex
+                        isLast = index == sortedActivities.lastIndex,
+                        onLongPress = { onEditActivityClick(dayNumber, activity.id) }
                     )
                 }
             }
@@ -162,7 +167,7 @@ fun ItineraryScreen(
 
 @Composable
 private fun DaySelectorRow(
-    days: List<ItineraryDay>,
+    daysCount: Int,
     selectedIndex: Int,
     onDaySelected: (Int) -> Unit
 ) {
@@ -171,13 +176,13 @@ private fun DaySelectorRow(
         horizontalArrangement = Arrangement.spacedBy(8.dp),
         modifier = Modifier.padding(bottom = 12.dp)
     ) {
-        itemsIndexed(days) { index, day ->
+        items(daysCount) { index ->
             FilterChip(
                 selected = index == selectedIndex,
                 onClick = { onDaySelected(index) },
                 label = {
                     Text(
-                        text = "Day ${day.dayNumber}",
+                        text = "Day ${index + 1}",
                         style = MaterialTheme.typography.labelMedium,
                         fontWeight = if (index == selectedIndex) FontWeight.SemiBold else FontWeight.Normal
                     )
@@ -256,10 +261,12 @@ private fun WeatherCard(weather: DayWeather) {
 // Timeline item — dot + line on the left, card on the right
 // ---------------------------------------------------------------------------
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun TimelineItem(
     activity: ItineraryActivity,
-    isLast: Boolean
+    isLast: Boolean,
+    onLongPress: () -> Unit = {}
 ) {
     Row(
         modifier = Modifier.fillMaxWidth(),
@@ -297,7 +304,11 @@ private fun TimelineItem(
         Card(
             modifier = Modifier
                 .weight(1f)
-                .padding(bottom = 10.dp),
+                .padding(bottom = 10.dp)
+                .combinedClickable(
+                    onClick = {},
+                    onLongClick = onLongPress
+                ),
             shape = RoundedCornerShape(12.dp),
             elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)
         ) {

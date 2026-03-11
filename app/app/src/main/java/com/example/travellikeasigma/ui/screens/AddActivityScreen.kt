@@ -3,6 +3,7 @@ package com.example.travellikeasigma.ui.screen
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
@@ -53,15 +54,6 @@ fun AddActivityScreen(
     onBackClick: () -> Unit,
     onSave: (ItineraryActivity) -> Unit
 ) {
-    var selectedType by rememberSaveable { mutableStateOf(ActivityType.SIGHTSEEING) }
-    var title by rememberSaveable { mutableStateOf("") }
-    var time by rememberSaveable { mutableStateOf("") }
-    var price by rememberSaveable { mutableStateOf("") }
-    var description by rememberSaveable { mutableStateOf("") }
-    var showTimePicker by rememberSaveable { mutableStateOf(false) }
-
-    val timePickerState = rememberTimePickerState(is24Hour = true)
-
     Scaffold(
         topBar = {
             TripTopAppBar(
@@ -72,94 +64,126 @@ fun AddActivityScreen(
         },
         contentWindowInsets = WindowInsets(0)
     ) { innerPadding ->
-        Column(
+        ActivityForm(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(innerPadding)
-                .verticalScroll(ScrollState(0))
-                .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+                .padding(innerPadding),
+            saveButtonText = stringResource(R.string.add_activity_save),
+            onSave = onSave
+        )
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun ActivityForm(
+    modifier: Modifier = Modifier,
+    initialType: ActivityType = ActivityType.SIGHTSEEING,
+    initialTitle: String = "",
+    initialTime: String = "",
+    initialPrice: String = "",
+    initialDescription: String = "",
+    saveButtonText: String,
+    onSave: (ItineraryActivity) -> Unit,
+    extraContent: @Composable ColumnScope.() -> Unit = {}
+) {
+    var selectedType by rememberSaveable { mutableStateOf(initialType) }
+    var title by rememberSaveable { mutableStateOf(initialTitle) }
+    var time by rememberSaveable { mutableStateOf(initialTime) }
+    var price by rememberSaveable { mutableStateOf(initialPrice) }
+    var description by rememberSaveable { mutableStateOf(initialDescription) }
+    var showTimePicker by rememberSaveable { mutableStateOf(false) }
+
+    val timePickerState = rememberTimePickerState(is24Hour = true)
+
+    Column(
+        modifier = modifier
+            .verticalScroll(ScrollState(0))
+            .padding(16.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
+        // Activity type selector
+        Text(
+            text = stringResource(R.string.add_activity_type),
+            style = MaterialTheme.typography.labelLarge
+        )
+        Row(
+            modifier = Modifier.horizontalScroll(ScrollState(0)),
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            // Activity type selector
-            Text(
-                text = stringResource(R.string.add_activity_type),
-                style = MaterialTheme.typography.labelLarge
-            )
-            Row(
-                modifier = Modifier.horizontalScroll(ScrollState(0)),
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                ActivityType.entries.forEach { type ->
-                    FilterChip(
-                        selected = selectedType == type,
-                        onClick = { selectedType = type },
-                        label = { Text(type.displayName()) }
-                    )
-                }
-            }
-
-            // Title
-            OutlinedTextField(
-                value = title,
-                onValueChange = { title = it },
-                label = { Text(stringResource(R.string.add_activity_title_label)) },
-                placeholder = { Text(stringResource(R.string.add_activity_title_placeholder)) },
-                modifier = Modifier.fillMaxWidth(),
-                singleLine = true
-            )
-
-            // Time
-            PickerCard(
-                icon = Icons.Filled.AccessTime,
-                label = stringResource(R.string.add_activity_time_label),
-                value = time,
-                placeholder = stringResource(R.string.add_activity_time_placeholder),
-                onClick = { showTimePicker = true },
-                modifier = Modifier.fillMaxWidth()
-            )
-
-            // Price
-            OutlinedTextField(
-                value = price,
-                onValueChange = { price = it },
-                label = { Text(stringResource(R.string.add_activity_price_label)) },
-                modifier = Modifier.fillMaxWidth(),
-                singleLine = true,
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
-                suffix = { Text("\u20ac") }
-            )
-
-            // Description
-            OutlinedTextField(
-                value = description,
-                onValueChange = { description = it },
-                label = { Text(stringResource(R.string.add_activity_description_label)) },
-                placeholder = { Text(stringResource(R.string.add_activity_description_placeholder)) },
-                modifier = Modifier.fillMaxWidth(),
-                minLines = 3
-            )
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            // Save button
-            Button(
-                onClick = {
-                    val activity = ItineraryActivity(
-                        id = 0,
-                        time = time,
-                        title = title,
-                        subtitle = description,
-                        cost = price.toDoubleOrNull() ?: 0.0,
-                        tag = if (selectedType == ActivityType.OTHERS) null else selectedType
-                    )
-                    onSave(activity)
-                },
-                modifier = Modifier.fillMaxWidth(),
-                enabled = title.isNotBlank() && time.isNotBlank()
-            ) {
-                Text(stringResource(R.string.add_activity_save))
+            ActivityType.entries.forEach { type ->
+                FilterChip(
+                    selected = selectedType == type,
+                    onClick = { selectedType = type },
+                    label = { Text(type.displayName()) }
+                )
             }
         }
+
+        // Title
+        OutlinedTextField(
+            value = title,
+            onValueChange = { title = it },
+            label = { Text(stringResource(R.string.add_activity_title_label)) },
+            placeholder = { Text(stringResource(R.string.add_activity_title_placeholder)) },
+            modifier = Modifier.fillMaxWidth(),
+            singleLine = true
+        )
+
+        // Time
+        PickerCard(
+            icon = Icons.Filled.AccessTime,
+            label = stringResource(R.string.add_activity_time_label),
+            value = time,
+            placeholder = stringResource(R.string.add_activity_time_placeholder),
+            onClick = { showTimePicker = true },
+            modifier = Modifier.fillMaxWidth()
+        )
+
+        // Price
+        OutlinedTextField(
+            value = price,
+            onValueChange = { price = it },
+            label = { Text(stringResource(R.string.add_activity_price_label)) },
+            modifier = Modifier.fillMaxWidth(),
+            singleLine = true,
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
+            suffix = { Text("\u20ac") }
+        )
+
+        // Description
+        OutlinedTextField(
+            value = description,
+            onValueChange = { description = it },
+            label = { Text(stringResource(R.string.add_activity_description_label)) },
+            placeholder = { Text(stringResource(R.string.add_activity_description_placeholder)) },
+            modifier = Modifier.fillMaxWidth(),
+            minLines = 3
+        )
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        // Save / Update button
+        Button(
+            onClick = {
+                val activity = ItineraryActivity(
+                    id = 0,
+                    time = time,
+                    title = title,
+                    subtitle = description,
+                    cost = price.toDoubleOrNull() ?: 0.0,
+                    tag = if (selectedType == ActivityType.OTHERS) null else selectedType
+                )
+                onSave(activity)
+            },
+            modifier = Modifier.fillMaxWidth(),
+            enabled = title.isNotBlank() && time.isNotBlank(),
+            shape = RoundedCornerShape(14.dp)
+        ) {
+            Text(saveButtonText)
+        }
+
+        extraContent()
     }
 
     // TimePicker dialog
