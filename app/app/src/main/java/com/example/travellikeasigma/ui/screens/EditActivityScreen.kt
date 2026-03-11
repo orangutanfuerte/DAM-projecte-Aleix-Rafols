@@ -59,7 +59,7 @@ fun EditActivityScreen(
             initialDescription = activity.subtitle,
             saveButtonText = stringResource(R.string.edit_activity_update),
             onSave = { updatedActivity ->
-                onUpdate(updatedActivity.copy(id = activity.id))
+                onUpdate(updatedActivity.copy(id = activity.id, date = activity.date))
             },
             extraContent = {
                 Button(
