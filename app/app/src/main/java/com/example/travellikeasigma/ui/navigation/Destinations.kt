@@ -28,6 +28,8 @@ object Routes {
     const val NEW_TRIP      = "new_trip"
     const val ADD_ACTIVITY  = "add_activity/{dayNumber}"
     fun addActivity(dayNumber: Int): String = "add_activity/$dayNumber"
+    const val EDIT_ACTIVITY = "edit_activity/{dayNumber}/{activityId}"
+    fun editActivity(dayNumber: Int, activityId: Int): String = "edit_activity/$dayNumber/$activityId"
     fun itineraryDay(dayIndex: Int): String = "$ITINERARY?day=$dayIndex"
 }
 

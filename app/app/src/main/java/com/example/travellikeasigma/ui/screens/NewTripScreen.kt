@@ -45,7 +45,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.travellikeasigma.R
 import com.example.travellikeasigma.ui.theme.heroColors
-import com.example.travellikeasigma.model.ItineraryDay
 import com.example.travellikeasigma.model.Trip
 import com.example.travellikeasigma.model.sampleDestinations
 import com.example.travellikeasigma.model.sampleHotels
@@ -53,7 +52,6 @@ import com.example.travellikeasigma.ui.components.TripTopAppBar
 import java.text.SimpleDateFormat
 import java.time.Instant
 import java.time.ZoneOffset
-import java.time.temporal.ChronoUnit
 import java.util.Date
 import java.util.Locale
 
@@ -149,14 +147,12 @@ fun NewTripScreen(
                     val hotel = sampleHotels.find { it.id == selectedHotelId } ?: return@HotelStep
                     val startDate = Instant.ofEpochMilli(checkInMillis).atZone(ZoneOffset.UTC).toLocalDate()
                     val endDate   = Instant.ofEpochMilli(checkOutMillis).atZone(ZoneOffset.UTC).toLocalDate()
-                    val dayCount  = (ChronoUnit.DAYS.between(startDate, endDate).toInt() + 1).coerceAtLeast(1)
-                    val itinerary = (1..dayCount).map { ItineraryDay(dayNumber = it, activities = emptyList()) }
                     val newTrip = Trip(
                         id                = System.currentTimeMillis().toInt(),
                         name              = tripName,
                         startDate         = startDate,
                         endDate           = endDate,
-                        itinerary         = itinerary,
+                        activities        = mutableListOf(),
                         packingCategories = emptyList(),
                         places            = emptyList(),
                         photos            = emptyList(),
@@ -164,7 +160,7 @@ fun NewTripScreen(
                         hotel             = hotel,
                         persons           = persons,
                         destination       = destination
-                    ).also { trip -> trip.itinerary.forEach { it.trip = trip } }
+                    )
                     onSave(newTrip)
                 },
                 modifier = Modifier.padding(innerPadding)
