@@ -1,4 +1,4 @@
-package com.example.travellikeasigma.model
+package com.example.travellikeasigma.domain
 
 data class Destination(val id: Int, val destinationName: String)
 

@@ -1,4 +1,4 @@
-package com.example.travellikeasigma.ui.screen
+package com.example.travellikeasigma.ui.screens
 
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.WindowInsets
@@ -21,8 +21,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.travellikeasigma.R
-import com.example.travellikeasigma.model.ActivityType
-import com.example.travellikeasigma.model.ItineraryActivity
+import com.example.travellikeasigma.domain.ActivityType
+import com.example.travellikeasigma.domain.ItineraryActivity
 import com.example.travellikeasigma.ui.components.ConfirmationDialog
 import com.example.travellikeasigma.ui.components.TripTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api

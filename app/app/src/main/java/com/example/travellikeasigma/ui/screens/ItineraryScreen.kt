@@ -1,4 +1,4 @@
-package com.example.travellikeasigma.ui.screen
+package com.example.travellikeasigma.ui.screens
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
@@ -53,10 +53,10 @@ import androidx.compose.ui.unit.dp
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 import com.example.travellikeasigma.R
-import com.example.travellikeasigma.model.ActivityType
-import com.example.travellikeasigma.model.ItineraryActivity
-import com.example.travellikeasigma.model.Trip
-import com.example.travellikeasigma.model.displayName
+import com.example.travellikeasigma.domain.ActivityType
+import com.example.travellikeasigma.domain.ItineraryActivity
+import com.example.travellikeasigma.domain.Trip
+import com.example.travellikeasigma.domain.displayName
 import com.example.travellikeasigma.ui.theme.FoodTagBackground
 import com.example.travellikeasigma.ui.theme.FoodTagText
 import com.example.travellikeasigma.ui.theme.SightseeingTagBackground

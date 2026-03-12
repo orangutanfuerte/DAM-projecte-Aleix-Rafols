@@ -1,4 +1,4 @@
-package com.example.travellikeasigma.ui.screen
+package com.example.travellikeasigma.ui.screens
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -54,7 +54,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.travellikeasigma.R
-import com.example.travellikeasigma.model.Trip
+import com.example.travellikeasigma.domain.Trip
 import com.example.travellikeasigma.ui.components.ConfirmationDialog
 import com.example.travellikeasigma.ui.components.ProfileAvatar
 
@@ -172,24 +172,27 @@ fun HomeScreen(
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                Text(
-                    text       = stringResource(R.string.home_upcoming_days).uppercase(),
-                    style      = MaterialTheme.typography.labelMedium,
-                    color      = MaterialTheme.colorScheme.onSurfaceVariant,
-                    fontWeight = FontWeight.SemiBold
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-
-                (1..minOf(3, currentTrip.daysCount)).forEachIndexed { index, dayNumber ->
-                    val dayActivities = currentTrip.getActivitiesByDay(dayNumber)
-                    val title = dayActivities.getOrNull(0)?.title ?: ""
-                    val subtitle = dayActivities.getOrNull(1)?.title ?: ""
-                    DayCard(
-                        day = "%02d".format(dayNumber),
-                        title = title,
-                        subtitle = subtitle,
-                        onClick = { onDayClick(index) }
+                val upcomingDays = currentTrip.getUpcomingDays()
+                if (upcomingDays.isNotEmpty()) {
+                    Text(
+                        text       = stringResource(R.string.home_upcoming_days).uppercase(),
+                        style      = MaterialTheme.typography.labelMedium,
+                        color      = MaterialTheme.colorScheme.onSurfaceVariant,
+                        fontWeight = FontWeight.SemiBold
                     )
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    upcomingDays.forEach { dayNumber ->
+                        val dayActivities = currentTrip.getActivitiesByDay(dayNumber)
+                        val title    = dayActivities.getOrNull(0)?.title ?: ""
+                        val subtitle = dayActivities.getOrNull(1)?.title ?: ""
+                        DayCard(
+                            day      = "%02d".format(dayNumber),
+                            title    = title,
+                            subtitle = subtitle,
+                            onClick  = { onDayClick(dayNumber - 1) }
+                        )
+                    }
                 }
 
                 Spacer(Modifier.height(16.dp))

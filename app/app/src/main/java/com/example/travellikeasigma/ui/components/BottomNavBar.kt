@@ -14,8 +14,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.example.travellikeasigma.navigation.BottomNavDestination
-import com.example.travellikeasigma.navigation.Routes
+import com.example.travellikeasigma.ui.navigation.BottomNavDestination
+import com.example.travellikeasigma.ui.navigation.Routes
 
 @Composable
 fun BottomNavBar(navController: NavController) {

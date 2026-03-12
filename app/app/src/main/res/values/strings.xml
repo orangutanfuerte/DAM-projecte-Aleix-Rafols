@@ -147,6 +147,13 @@
     <string name="edit_activity_delete_yes">Yes</string>
     <string name="edit_activity_delete_no">No</string>
 
+    <!-- Snackbar messages -->
+    <string name="snackbar_trip_created">Trip created successfully</string>
+    <string name="snackbar_trip_deleted">Trip deleted</string>
+    <string name="snackbar_activity_created">Activity added successfully</string>
+    <string name="snackbar_activity_updated">Activity updated successfully</string>
+    <string name="snackbar_activity_deleted">Activity deleted</string>
+
     <!-- Photos Screen -->
     <string name="photos_delete">Delete photo</string>
     <string name="photos_delete_title">Delete photo?</string>

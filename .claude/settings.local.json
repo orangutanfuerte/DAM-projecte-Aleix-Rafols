@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:github.com)",
+      "Bash(./gradlew assembleDebug 2>&1 | tail -60)"
+    ]
+  }
+}

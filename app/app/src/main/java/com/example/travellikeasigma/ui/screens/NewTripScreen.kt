@@ -1,4 +1,4 @@
-package com.example.travellikeasigma.ui.screen
+package com.example.travellikeasigma.ui.screens
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -44,13 +44,14 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.travellikeasigma.R
-import com.example.travellikeasigma.ui.theme.heroColors
-import com.example.travellikeasigma.model.Trip
-import com.example.travellikeasigma.model.sampleDestinations
-import com.example.travellikeasigma.model.sampleHotels
+import com.example.travellikeasigma.domain.Destination
+import com.example.travellikeasigma.domain.Hotel
+import com.example.travellikeasigma.domain.sampleDestinations
+import com.example.travellikeasigma.domain.sampleHotels
 import com.example.travellikeasigma.ui.components.TripTopAppBar
 import java.text.SimpleDateFormat
 import java.time.Instant
+import java.time.LocalDate
 import java.time.ZoneOffset
 import java.util.Date
 import java.util.Locale
@@ -71,7 +72,7 @@ private val dateFormatter = SimpleDateFormat("MMM d, yyyy", Locale.ENGLISH)
 @Composable
 fun NewTripScreen(
     onBackClick: () -> Unit,
-    onSave: (Trip) -> Unit
+    onSave: (name: String, startDate: LocalDate, endDate: LocalDate, destination: Destination, hotel: Hotel, persons: Int) -> Unit
 ) {
     var currentStep by rememberSaveable { mutableStateOf(NewTripStep.DESTINATION) }
 
@@ -147,21 +148,7 @@ fun NewTripScreen(
                     val hotel = sampleHotels.find { it.id == selectedHotelId } ?: return@HotelStep
                     val startDate = Instant.ofEpochMilli(checkInMillis).atZone(ZoneOffset.UTC).toLocalDate()
                     val endDate   = Instant.ofEpochMilli(checkOutMillis).atZone(ZoneOffset.UTC).toLocalDate()
-                    val newTrip = Trip(
-                        id                = System.currentTimeMillis().toInt(),
-                        name              = tripName,
-                        startDate         = startDate,
-                        endDate           = endDate,
-                        activities        = mutableListOf(),
-                        packingCategories = emptyList(),
-                        places            = emptyList(),
-                        photos            = emptyList(),
-                        heroColor         = heroColors.random(),
-                        hotel             = hotel,
-                        persons           = persons,
-                        destination       = destination
-                    )
-                    onSave(newTrip)
+                    onSave(tripName, startDate, endDate, destination, hotel, persons)
                 },
                 modifier = Modifier.padding(innerPadding)
             )
@@ -423,7 +410,7 @@ private fun DetailsStep(
 @Composable
 private fun HotelStep(
     selectedHotelId: Int,
-    onHotelSelect: (com.example.travellikeasigma.model.Hotel) -> Unit,
+    onHotelSelect: (com.example.travellikeasigma.domain.Hotel) -> Unit,
     onSave: () -> Unit,
     modifier: Modifier = Modifier
 ) {

@@ -1,4 +1,4 @@
-package com.example.travellikeasigma.navigation
+package com.example.travellikeasigma.ui.navigation
 
 // ---------------------------------------------------------------------------
 // Bottom-nav destinations — only the 5 tabs that appear in the BottomNavBar

@@ -1,4 +1,4 @@
-package com.example.travellikeasigma.model
+package com.example.travellikeasigma.domain
 
 import java.time.LocalDate
 
