@@ -20,12 +20,16 @@ import com.example.travellikeasigma.ui.screens.AddActivityScreen
 import com.example.travellikeasigma.ui.screens.EditActivityScreen
 import com.example.travellikeasigma.ui.screens.HomeScreen
 import com.example.travellikeasigma.ui.screens.ItineraryScreen
+import com.example.travellikeasigma.ui.screens.LoginScreen
 import com.example.travellikeasigma.ui.screens.NewTripScreen
 import com.example.travellikeasigma.ui.screens.PhotosScreen
 import com.example.travellikeasigma.ui.screens.PlacesScreen
 import com.example.travellikeasigma.ui.screens.PreferencesScreen
 import com.example.travellikeasigma.ui.screens.TermsScreen
+import com.example.travellikeasigma.ui.theme.ThemeMode
+import com.example.travellikeasigma.ui.viewmodels.AuthViewModel
 import com.example.travellikeasigma.ui.viewmodels.ItineraryViewModel
+import com.example.travellikeasigma.ui.viewmodels.PreferencesViewModel
 import com.example.travellikeasigma.ui.viewmodels.TripViewModel
 
 // ---------------------------------------------------------------------------
@@ -40,24 +44,47 @@ private fun NavHostController.navigateToTab(route: String) {
 
 @Composable
 fun NavGraph(
-    navController:     NavHostController,
-    tripViewModel:     TripViewModel,
-    snackbarHostState: SnackbarHostState,
-    modifier:          Modifier = Modifier
+    navController:        NavHostController,
+    tripViewModel:        TripViewModel,
+    authViewModel:        AuthViewModel,
+    preferencesViewModel: PreferencesViewModel,
+    snackbarHostState:    SnackbarHostState,
+    modifier:             Modifier = Modifier
 ) {
     val itineraryViewModel: ItineraryViewModel = hiltViewModel()
     val scope   = rememberCoroutineScope()
     val context = LocalContext.current
 
+    val startDestination = if (authViewModel.isLoggedIn) Routes.HOME else Routes.LOGIN
+
     NavHost(
         navController      = navController,
-        startDestination   = Routes.HOME,
+        startDestination   = startDestination,
         modifier           = modifier,
         enterTransition    = { EnterTransition.None },
         exitTransition     = { ExitTransition.None },
         popEnterTransition = { EnterTransition.None },
         popExitTransition  = { ExitTransition.None }
     ) {
+        composable(Routes.LOGIN) {
+            LoginScreen(
+                email            = authViewModel.email,
+                password         = authViewModel.password,
+                loginError       = authViewModel.loginError,
+                onEmailChange    = { authViewModel.email = it },
+                onPasswordChange = { authViewModel.password = it },
+                onLoginClick     = {
+                    if (authViewModel.login()) {
+                        navController.navigate(Routes.HOME) {
+                            popUpTo(Routes.LOGIN) { inclusive = true }
+                        }
+                        scope.launch {
+                            snackbarHostState.showSnackbar(context.getString(R.string.snackbar_login_success))
+                        }
+                    }
+                }
+            )
+        }
         composable(Routes.HOME) {
             HomeScreen(
                 trips            = tripViewModel.trips,
@@ -161,9 +188,22 @@ fun NavGraph(
         }
         composable(Routes.PREFERENCES) {
             PreferencesScreen(
-                onBackClick  = { navController.popBackStack() },
-                onTermsClick = { navController.navigate(Routes.TERMS) },
-                onAboutClick = { navController.navigate(Routes.ABOUT) }
+                onBackClick            = { navController.popBackStack() },
+                onTermsClick           = { navController.navigate(Routes.TERMS) },
+                onAboutClick           = { navController.navigate(Routes.ABOUT) },
+                onLogoutClick          = {
+                    authViewModel.logout()
+                    navController.navigate(Routes.LOGIN) {
+                        popUpTo(0) { inclusive = true }
+                    }
+                    scope.launch {
+                        snackbarHostState.showSnackbar(context.getString(R.string.snackbar_logout))
+                    }
+                },
+                themeMode              = preferencesViewModel.themeMode,
+                notificationsEnabled   = preferencesViewModel.notificationsEnabled,
+                onThemeChange          = { preferencesViewModel.updateThemeMode(it) },
+                onNotificationsChange  = { preferencesViewModel.updateNotificationsEnabled(it) }
             )
         }
         composable(Routes.TERMS) {

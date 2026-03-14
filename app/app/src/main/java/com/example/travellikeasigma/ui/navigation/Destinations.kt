@@ -16,6 +16,7 @@ import com.example.travellikeasigma.R
 // Routes — one object to hold all route strings, avoiding hardcoded literals
 // ---------------------------------------------------------------------------
 object Routes {
+    const val LOGIN         = "login"
     const val HOME          = "home"
     const val ITINERARY     = "itinerary"
     const val PHOTOS        = "photos"

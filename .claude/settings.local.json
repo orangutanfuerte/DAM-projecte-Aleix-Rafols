@@ -2,7 +2,9 @@
   "permissions": {
     "allow": [
       "WebFetch(domain:github.com)",
-      "Bash(./gradlew assembleDebug 2>&1 | tail -60)"
+      "Bash(./gradlew assembleDebug 2>&1 | tail -60)",
+      "Bash(cd /home/aleixrb/Projectes/DAM/DAM-projecte-Aleix-Rafols/app && ./gradlew assembleDebug 2>&1 | tail -40)",
+      "Bash(./gradlew assembleDebug 2>&1 | tail -20)"
     ]
   }
 }

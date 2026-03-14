@@ -81,11 +81,19 @@ fun HomeScreen(
 
     // Empty state — no trips yet
     if (trips.isEmpty()) {
-        Box(
-            modifier = Modifier.fillMaxSize(),
-            contentAlignment = Alignment.Center
-        ) {
+        Box(modifier = Modifier.fillMaxSize()) {
+            // Avatar in top-right corner for preferences access
+            ProfileAvatar(
+                initials = "S",
+                size = 36.dp,
+                modifier = Modifier
+                    .align(Alignment.TopEnd)
+                    .padding(top = 48.dp, end = 16.dp)
+                    .clip(CircleShape)
+                    .clickable(onClickLabel = stringResource(R.string.cd_avatar)) { onAvatarClick() }
+            )
             Column(
+                modifier = Modifier.align(Alignment.Center),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {

@@ -51,35 +51,39 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.travellikeasigma.R
+import com.example.travellikeasigma.ui.components.ConfirmationDialog
 import com.example.travellikeasigma.ui.components.ProfileAvatar
 import com.example.travellikeasigma.ui.components.TripTopAppBar
-import com.example.travellikeasigma.ui.theme.LocalThemeMode
 import com.example.travellikeasigma.ui.theme.ThemeMode
 
 @OptIn(androidx.compose.material3.ExperimentalMaterial3Api::class)
 @Composable
 fun PreferencesScreen(
-    onBackClick:  () -> Unit,
-    onTermsClick: () -> Unit,
-    onAboutClick: () -> Unit
+    onBackClick:           () -> Unit,
+    onTermsClick:          () -> Unit,
+    onAboutClick:          () -> Unit,
+    onLogoutClick:         () -> Unit,
+    themeMode:             ThemeMode,
+    notificationsEnabled:  Boolean,
+    onThemeChange:         (ThemeMode) -> Unit,
+    onNotificationsChange: (Boolean) -> Unit
 ) {
     // Dialog visibility state
     var showLanguageDialog      by remember { mutableStateOf(false) }
     var showNotificationsDialog by remember { mutableStateOf(false) }
     var showThemeDialog         by remember { mutableStateOf(false) }
+    var showLogoutDialog        by remember { mutableStateOf(false) }
 
     // Local preference state (visual only, not persisted)
     var selectedLanguage by remember { mutableStateOf("English") }
-    var notificationsOn  by remember { mutableStateOf(true) }
-    val themeModeState   = LocalThemeMode.current
 
-    val themeSublabel = when (themeModeState.value) {
+    val themeSublabel = when (themeMode) {
         ThemeMode.LIGHT  -> stringResource(R.string.pref_theme_light)
         ThemeMode.DARK   -> stringResource(R.string.pref_theme_dark)
         ThemeMode.SYSTEM -> stringResource(R.string.pref_theme_system)
     }
 
-    val notificationsSublabel = if (notificationsOn)
+    val notificationsSublabel = if (notificationsEnabled)
         stringResource(R.string.pref_notifications_sub)
     else
         stringResource(R.string.pref_notifications_off)
@@ -144,8 +148,8 @@ fun PreferencesScreen(
                         modifier = Modifier.weight(1f)
                     )
                     Switch(
-                        checked         = notificationsOn,
-                        onCheckedChange = { notificationsOn = it }
+                        checked         = notificationsEnabled,
+                        onCheckedChange = { onNotificationsChange(it) }
                     )
                 }
             },
@@ -174,9 +178,9 @@ fun PreferencesScreen(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .selectable(
-                                    selected = (mode == themeModeState.value),
+                                    selected = (mode == themeMode),
                                     onClick  = {
-                                        themeModeState.value = mode
+                                        onThemeChange(mode)
                                         showThemeDialog = false
                                     },
                                     role = Role.RadioButton
@@ -185,7 +189,7 @@ fun PreferencesScreen(
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             RadioButton(
-                                selected = (mode == themeModeState.value),
+                                selected = (mode == themeMode),
                                 onClick  = null
                             )
                             Spacer(Modifier.width(12.dp))
@@ -199,6 +203,18 @@ fun PreferencesScreen(
                     Text(stringResource(android.R.string.cancel))
                 }
             }
+        )
+    }
+
+    // ── Logout confirmation dialog ───────────────────────────────────────
+    if (showLogoutDialog) {
+        ConfirmationDialog(
+            title       = stringResource(R.string.logout_dialog_title),
+            message     = stringResource(R.string.logout_dialog_message),
+            confirmText = stringResource(R.string.logout_dialog_yes),
+            dismissText = stringResource(R.string.logout_dialog_no),
+            onConfirm   = { showLogoutDialog = false; onLogoutClick() },
+            onDismiss   = { showLogoutDialog = false }
         )
     }
 
@@ -269,7 +285,7 @@ fun PreferencesScreen(
 
             // Logout button
             Button(
-                onClick  = { /* logout — future */ },
+                onClick  = { showLogoutDialog = true },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp),
