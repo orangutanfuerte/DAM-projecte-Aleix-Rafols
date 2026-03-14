@@ -12,7 +12,6 @@ data class Trip(
     val startDate:         LocalDate,
     val endDate:           LocalDate,
     val activities:        List<ItineraryActivity>,
-    val packingCategories: List<PackingCategory>,
     val places:            List<Place>,
     val photos:            List<Photo>,
     val heroColor:         Color,
@@ -23,8 +22,6 @@ data class Trip(
     val daysCount: Int get() = ChronoUnit.DAYS.between(startDate, endDate).toInt() + 1
     val photoCount: Int get() = photos.size
     val placesCount: Int get() = places.size
-    val totalPackingItems: Int get() = packingCategories.flatMap { it.items }.size
-    val packedPackingItems: Int get() = packingCategories.flatMap { it.items }.count { it.isPacked }
 
     val formattedDates: String get() {
         val fmt = DateTimeFormatter.ofPattern("MMM d", Locale.ENGLISH)

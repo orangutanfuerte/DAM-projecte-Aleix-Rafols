@@ -21,7 +21,6 @@ import com.example.travellikeasigma.ui.screens.EditActivityScreen
 import com.example.travellikeasigma.ui.screens.HomeScreen
 import com.example.travellikeasigma.ui.screens.ItineraryScreen
 import com.example.travellikeasigma.ui.screens.NewTripScreen
-import com.example.travellikeasigma.ui.screens.PackingScreen
 import com.example.travellikeasigma.ui.screens.PhotosScreen
 import com.example.travellikeasigma.ui.screens.PlacesScreen
 import com.example.travellikeasigma.ui.screens.PreferencesScreen
@@ -67,7 +66,6 @@ fun NavGraph(
                 onNewTripClick   = { navController.navigate(Routes.NEW_TRIP) },
                 onAvatarClick    = { navController.navigate(Routes.PREFERENCES) },
                 onItineraryClick = { navController.navigateToTab(Routes.ITINERARY) },
-                onPackingClick   = { navController.navigateToTab(Routes.PACKING) },
                 onPhotosClick    = { navController.navigateToTab(Routes.PHOTOS) },
                 onPlacesClick    = { navController.navigateToTab(Routes.PLACES) },
                 onDayClick       = { dayIndex ->
@@ -147,12 +145,6 @@ fun NavGraph(
                         scope.launch { snackbarHostState.showSnackbar(context.getString(R.string.snackbar_activity_deleted)) }
                     }
                 )
-            }
-        }
-        composable(Routes.PACKING) {
-            val trip = tripViewModel.selectedTrip
-            if (trip != null) {
-                PackingScreen(trip = trip)
             }
         }
         composable(Routes.PHOTOS) {

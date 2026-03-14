@@ -69,7 +69,6 @@ fun TravelSigmaApp() {
         Routes.HOME,
         Routes.ITINERARY,
         "${Routes.ITINERARY}?day={day}",
-        Routes.PACKING,
         Routes.PHOTOS,
         Routes.PLACES
     )

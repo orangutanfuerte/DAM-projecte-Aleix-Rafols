@@ -49,7 +49,6 @@ class TripViewModel @Inject constructor(
             startDate = startDate,
             endDate = endDate,
             activities = emptyList(),
-            packingCategories = emptyList(),
             places = emptyList(),
             photos = emptyList(),
             heroColor = heroColors.random(),

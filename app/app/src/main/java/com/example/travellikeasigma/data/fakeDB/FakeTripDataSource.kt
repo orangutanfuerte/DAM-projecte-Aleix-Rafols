@@ -4,15 +4,12 @@ import androidx.compose.ui.graphics.Color
 import com.example.travellikeasigma.domain.ActivityType
 import com.example.travellikeasigma.domain.ItineraryActivity
 import com.example.travellikeasigma.domain.Trip
-import com.example.travellikeasigma.domain.icelandPackingCategories
 import com.example.travellikeasigma.domain.icelandPhotos
 import com.example.travellikeasigma.domain.icelandPlaces
-import com.example.travellikeasigma.domain.italyPackingCategories
 import com.example.travellikeasigma.domain.italyPhotos
 import com.example.travellikeasigma.domain.italyPlaces
 import com.example.travellikeasigma.domain.sampleDestinations
 import com.example.travellikeasigma.domain.sampleHotels
-import com.example.travellikeasigma.domain.samplePackingCategories
 import com.example.travellikeasigma.domain.samplePhotos
 import com.example.travellikeasigma.domain.samplePlaces
 import java.time.LocalDate
@@ -71,7 +68,6 @@ class FakeTripDataSource @Inject constructor() {
             startDate = LocalDate.of(2024, 6, 1),
             endDate = LocalDate.of(2024, 6, 8),
             activities = emptyList(),
-            packingCategories = icelandPackingCategories,
             places = icelandPlaces,
             photos = icelandPhotos,
             heroColor = Color(0xFF3A6EA5),
@@ -85,7 +81,6 @@ class FakeTripDataSource @Inject constructor() {
             startDate = LocalDate.of(2026, 9, 10),
             endDate = LocalDate.of(2026, 9, 18),
             activities = emptyList(),
-            packingCategories = italyPackingCategories,
             places = italyPlaces,
             photos = italyPhotos,
             heroColor = Color(0xFFC45B28),
@@ -99,7 +94,6 @@ class FakeTripDataSource @Inject constructor() {
             startDate = LocalDate.of(2027, 3, 14),
             endDate = LocalDate.of(2027, 3, 21),
             activities = japanActivities,
-            packingCategories = samplePackingCategories,
             places = samplePlaces,
             photos = samplePhotos,
             heroColor = Color(0xFF4A7C59),

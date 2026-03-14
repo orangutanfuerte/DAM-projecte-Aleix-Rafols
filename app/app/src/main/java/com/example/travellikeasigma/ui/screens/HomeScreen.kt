@@ -71,7 +71,6 @@ fun HomeScreen(
     onNewTripClick:   () -> Unit,
     onAvatarClick:    () -> Unit,
     onItineraryClick: () -> Unit = {},
-    onPackingClick:   () -> Unit = {},
     onPhotosClick:    () -> Unit = {},
     onPlacesClick:    () -> Unit = {},
     onDayClick:          (Int) -> Unit = {},
@@ -166,7 +165,6 @@ fun HomeScreen(
                     trip             = currentTrip,
                     onItineraryClick = onItineraryClick,
                     onPhotosClick    = onPhotosClick,
-                    onPackingClick   = onPackingClick,
                     onPlacesClick    = onPlacesClick
                 )
 
@@ -407,29 +405,23 @@ private fun StatGrid(
     trip:             Trip,
     onItineraryClick: () -> Unit,
     onPhotosClick:    () -> Unit,
-    onPackingClick:   () -> Unit,
     onPlacesClick:    () -> Unit
 ) {
     val items = listOf(
-        StatItem("🗓", trip.daysCount.toString(),                          R.string.home_stat_days,    onItineraryClick),
-        StatItem("📸", trip.photoCount.toString(),                         R.string.home_stat_photos,  onPhotosClick),
-        StatItem("🧳", "${trip.packedPackingItems}/${trip.totalPackingItems}", R.string.home_stat_packing, onPackingClick),
-        StatItem("📍", trip.placesCount.toString(),                        R.string.home_stat_places,  onPlacesClick)
+        StatItem("🗓", trip.daysCount.toString(),   R.string.home_stat_days,   onItineraryClick),
+        StatItem("📸", trip.photoCount.toString(),  R.string.home_stat_photos, onPhotosClick),
+        StatItem("📍", trip.placesCount.toString(), R.string.home_stat_places, onPlacesClick)
     )
 
-    Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-        items.chunked(2).forEach { row ->
-            Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                row.forEach { item ->
-                    StatCard(
-                        emoji    = item.emoji,
-                        value    = item.value,
-                        label    = stringResource(item.labelRes),
-                        onClick  = item.onClick,
-                        modifier = Modifier.weight(1f)
-                    )
-                }
-            }
+    Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+        items.forEach { item ->
+            StatCard(
+                emoji    = item.emoji,
+                value    = item.value,
+                label    = stringResource(item.labelRes),
+                onClick  = item.onClick,
+                modifier = Modifier.weight(1f)
+            )
         }
     }
 }
