@@ -202,8 +202,10 @@ fun NavGraph(
                 },
                 themeMode              = preferencesViewModel.themeMode,
                 notificationsEnabled   = preferencesViewModel.notificationsEnabled,
+                language               = preferencesViewModel.language,
                 onThemeChange          = { preferencesViewModel.updateThemeMode(it) },
-                onNotificationsChange  = { preferencesViewModel.updateNotificationsEnabled(it) }
+                onNotificationsChange  = { preferencesViewModel.updateNotificationsEnabled(it) },
+                onLanguageChange       = { preferencesViewModel.updateLanguage(it) }
             )
         }
         composable(Routes.TERMS) {

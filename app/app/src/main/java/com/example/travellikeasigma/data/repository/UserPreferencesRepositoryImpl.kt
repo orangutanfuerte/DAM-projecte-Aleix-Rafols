@@ -34,4 +34,10 @@ class UserPreferencesRepositoryImpl @Inject constructor(
     override fun setNotificationsEnabled(enabled: Boolean) {
         sharedPreferencesManager.notificationsEnabled = enabled
     }
+
+    override fun getLanguage(): String = sharedPreferencesManager.language
+
+    override fun setLanguage(language: String) {
+        sharedPreferencesManager.language = language
+    }
 }

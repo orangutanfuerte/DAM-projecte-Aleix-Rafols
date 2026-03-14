@@ -20,6 +20,9 @@ class PreferencesViewModel @Inject constructor(
     var notificationsEnabled by mutableStateOf(repo.isNotificationsEnabled())
         private set
 
+    var language by mutableStateOf(repo.getLanguage())
+        private set
+
     fun updateThemeMode(mode: ThemeMode) {
         themeMode = mode
         repo.setThemeMode(mode.name.lowercase())
@@ -28,6 +31,11 @@ class PreferencesViewModel @Inject constructor(
     fun updateNotificationsEnabled(enabled: Boolean) {
         notificationsEnabled = enabled
         repo.setNotificationsEnabled(enabled)
+    }
+
+    fun updateLanguage(language: String) {
+        this.language = language
+        repo.setLanguage(language)
     }
 
     private fun mapStringToThemeMode(value: String): ThemeMode = when (value) {

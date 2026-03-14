@@ -27,6 +27,10 @@ class SharedPreferencesManager @Inject constructor(
         get() = prefs.getBoolean(KEY_NOTIFICATIONS_ENABLED, true)
         set(value) = prefs.edit().putBoolean(KEY_NOTIFICATIONS_ENABLED, value).apply()
 
+    var language: String
+        get() = prefs.getString(KEY_LANGUAGE, "en") ?: "en"
+        set(value) = prefs.edit().putString(KEY_LANGUAGE, value).apply()
+
     fun clearSession() {
         prefs.edit()
             .remove(KEY_IS_LOGGED_IN)
@@ -39,5 +43,6 @@ class SharedPreferencesManager @Inject constructor(
         private const val KEY_LOGGED_IN_EMAIL = "logged_in_email"
         private const val KEY_THEME_MODE = "theme_mode"
         private const val KEY_NOTIFICATIONS_ENABLED = "notifications_enabled"
+        private const val KEY_LANGUAGE = "language"
     }
 }

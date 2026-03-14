@@ -9,4 +9,6 @@ interface UserPreferencesRepository {
     fun setThemeMode(mode: String)
     fun isNotificationsEnabled(): Boolean
     fun setNotificationsEnabled(enabled: Boolean)
+    fun getLanguage(): String
+    fun setLanguage(language: String)
 }

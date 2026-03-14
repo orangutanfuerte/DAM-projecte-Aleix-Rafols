@@ -65,8 +65,10 @@ fun PreferencesScreen(
     onLogoutClick:         () -> Unit,
     themeMode:             ThemeMode,
     notificationsEnabled:  Boolean,
+    language:              String,
     onThemeChange:         (ThemeMode) -> Unit,
-    onNotificationsChange: (Boolean) -> Unit
+    onNotificationsChange: (Boolean) -> Unit,
+    onLanguageChange:      (String) -> Unit
 ) {
     // Dialog visibility state
     var showLanguageDialog      by remember { mutableStateOf(false) }
@@ -74,8 +76,11 @@ fun PreferencesScreen(
     var showThemeDialog         by remember { mutableStateOf(false) }
     var showLogoutDialog        by remember { mutableStateOf(false) }
 
-    // Local preference state (visual only, not persisted)
-    var selectedLanguage by remember { mutableStateOf("English") }
+    val selectedLanguage = when (language) {
+        "es" -> stringResource(R.string.pref_language_es)
+        "ca" -> stringResource(R.string.pref_language_ca)
+        else -> stringResource(R.string.pref_language_en)
+    }
 
     val themeSublabel = when (themeMode) {
         ThemeMode.LIGHT  -> stringResource(R.string.pref_theme_light)
@@ -90,24 +95,24 @@ fun PreferencesScreen(
 
     // ── Language dialog ─────────────────────────────────────────────────
     if (showLanguageDialog) {
-        val languages = listOf(
-            stringResource(R.string.pref_language_en),
-            stringResource(R.string.pref_language_es),
-            stringResource(R.string.pref_language_ca)
+        val languageOptions = listOf(
+            "en" to stringResource(R.string.pref_language_en),
+            "es" to stringResource(R.string.pref_language_es),
+            "ca" to stringResource(R.string.pref_language_ca)
         )
         AlertDialog(
             onDismissRequest = { showLanguageDialog = false },
             title = { Text(stringResource(R.string.pref_language_dialog_title)) },
             text = {
                 Column(Modifier.selectableGroup()) {
-                    languages.forEach { lang ->
+                    languageOptions.forEach { (code, label) ->
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .selectable(
-                                    selected = (lang == selectedLanguage),
+                                    selected = (code == language),
                                     onClick  = {
-                                        selectedLanguage = lang
+                                        onLanguageChange(code)
                                         showLanguageDialog = false
                                     },
                                     role = Role.RadioButton
@@ -116,11 +121,11 @@ fun PreferencesScreen(
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             RadioButton(
-                                selected = (lang == selectedLanguage),
+                                selected = (code == language),
                                 onClick  = null
                             )
                             Spacer(Modifier.width(12.dp))
-                            Text(lang)
+                            Text(label)
                         }
                     }
                 }
