@@ -1,5 +1,7 @@
 package com.example.travellikeasigma
 
+import android.content.Context
+import android.content.res.Configuration
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -28,9 +30,24 @@ import com.example.travellikeasigma.ui.viewmodels.TripViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import java.util.Locale
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+
+    override fun attachBaseContext(newBase: Context) {
+        val prefs = newBase.getSharedPreferences("travel_sigma_prefs", Context.MODE_PRIVATE)
+        if (prefs.contains("language")) {
+            val lang = prefs.getString("language", "en") ?: "en"
+            val locale = Locale(lang)
+            val config = Configuration(newBase.resources.configuration)
+            config.setLocale(locale)
+            super.attachBaseContext(newBase.createConfigurationContext(config))
+        } else {
+            super.attachBaseContext(newBase)
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         var isChecking = true
         lifecycleScope.launch {
@@ -43,7 +60,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            TravelSigmaApp()
+            TravelSigmaApp(onRecreate = { recreate() })
         }
     }
 }
@@ -52,7 +69,7 @@ class MainActivity : ComponentActivity() {
 // Root composable — owns the NavController and the outer Scaffold
 // ---------------------------------------------------------------------------
 @Composable
-fun TravelSigmaApp() {
+fun TravelSigmaApp(onRecreate: () -> Unit = {}) {
     val navController        = rememberNavController()
     val tripViewModel:        TripViewModel        = hiltViewModel()
     val authViewModel:        AuthViewModel        = hiltViewModel()
@@ -89,6 +106,7 @@ fun TravelSigmaApp() {
                 authViewModel        = authViewModel,
                 preferencesViewModel = preferencesViewModel,
                 snackbarHostState    = snackbarHostState,
+                onRecreate           = onRecreate,
                 modifier             = Modifier.padding(innerPadding)
             )
         }

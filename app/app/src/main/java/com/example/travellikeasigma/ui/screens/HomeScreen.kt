@@ -51,12 +51,17 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import java.util.Locale
 import com.example.travellikeasigma.R
 import com.example.travellikeasigma.domain.Trip
+import com.example.travellikeasigma.domain.TripStatus
 import com.example.travellikeasigma.ui.components.ConfirmationDialog
 import com.example.travellikeasigma.ui.components.ProfileAvatar
+import com.example.travellikeasigma.ui.components.label
+import com.example.travellikeasigma.ui.components.translatedName
 
 // ---------------------------------------------------------------------------
 // HomeScreen
@@ -140,11 +145,12 @@ fun HomeScreen(
                     style      = MaterialTheme.typography.headlineSmall,
                     fontWeight = FontWeight.Bold
                 )
+                val translatedDestination = currentTrip.destination.translatedName()
                 Text(
                     text  = when (currentTrip.status()) {
-                        "Past Trip"    -> stringResource(R.string.home_subtitle_past, currentTrip.destination.destinationName)
-                        "Active Trip"  -> stringResource(R.string.home_subtitle_active, currentTrip.destination.destinationName)
-                        else           -> stringResource(R.string.home_subtitle_upcoming, currentTrip.destination.destinationName)
+                        TripStatus.PAST   -> stringResource(R.string.home_subtitle_past, translatedDestination)
+                        TripStatus.ACTIVE -> stringResource(R.string.home_subtitle_active, translatedDestination)
+                        else              -> stringResource(R.string.home_subtitle_upcoming, translatedDestination)
                     },
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
@@ -158,7 +164,7 @@ fun HomeScreen(
                     onPrev       = { if (tripIndex > 0) onTripIndexChange(tripIndex - 1) },
                     onNext       = { if (tripIndex < total - 1) onTripIndexChange(tripIndex + 1) },
                     onUpcoming   = {
-                        val idx = trips.indexOfFirst { it.status() == "Upcoming" }
+                        val idx = trips.indexOfFirst { it.status() == TripStatus.UPCOMING }
                         if (idx >= 0) onTripIndexChange(idx)
                     }
                 )
@@ -306,7 +312,7 @@ private fun TripNavigator(
         ) {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Text(
-                    text  = "Your Trips",
+                    text  = stringResource(R.string.home_your_trips),
                     style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -345,6 +351,7 @@ private fun TripNavigator(
 
 @Composable
 private fun TripHeroCard(trip: Trip) {
+    val appLocale = LocalConfiguration.current.locales[0]
     val onHero = if (trip.heroColor.luminance() > 0.35f) Color.Black else Color.White
 
     Card(
@@ -355,7 +362,7 @@ private fun TripHeroCard(trip: Trip) {
     ) {
         Column(modifier = Modifier.padding(20.dp)) {
             Text(
-                text       = trip.status().uppercase(),
+                text       = trip.status().label().uppercase(),
                 style      = MaterialTheme.typography.labelSmall,
                 color      = onHero.copy(alpha = 0.70f),
                 fontWeight = FontWeight.SemiBold
@@ -368,7 +375,7 @@ private fun TripHeroCard(trip: Trip) {
                 fontWeight = FontWeight.Bold
             )
             Text(
-                text  = trip.formattedDates,
+                text  = "${trip.formattedDateRange(appLocale)} · ${stringResource(R.string.trip_date_days, trip.daysCount)}",
                 style = MaterialTheme.typography.bodySmall,
                 color = onHero.copy(alpha = 0.75f)
             )

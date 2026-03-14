@@ -42,6 +42,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -51,6 +52,7 @@ import com.example.travellikeasigma.domain.Hotel
 import com.example.travellikeasigma.domain.sampleDestinations
 import com.example.travellikeasigma.domain.sampleHotels
 import com.example.travellikeasigma.ui.components.TripTopAppBar
+import com.example.travellikeasigma.ui.components.translatedName
 import java.text.SimpleDateFormat
 import java.time.Instant
 import java.time.LocalDate
@@ -68,7 +70,7 @@ private val countryFlags = mapOf(
     "Brasil"  to "🇧🇷"
 )
 
-private val dateFormatter = SimpleDateFormat("MMM d, yyyy", Locale.ENGLISH)
+private fun dateFormatter(locale: Locale) = SimpleDateFormat("MMM d, yyyy", locale)
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -238,7 +240,7 @@ private fun DestinationStep(
                             style = MaterialTheme.typography.headlineSmall
                         )
                         Text(
-                            text = destination.destinationName,
+                            text = destination.translatedName(),
                             style = MaterialTheme.typography.bodyLarge
                         )
                     }
@@ -310,12 +312,13 @@ private fun DetailsStep(
     modifier: Modifier = Modifier
 ) {
     val datesSelected = checkInMillis > 0 && checkOutMillis > 0
+    val fmt = dateFormatter(LocalConfiguration.current.locales[0])
     val checkInText = if (checkInMillis > 0)
-        dateFormatter.format(Date(checkInMillis))
+        fmt.format(Date(checkInMillis))
     else
         stringResource(R.string.new_trip_select_date)
     val checkOutText = if (checkOutMillis > 0)
-        dateFormatter.format(Date(checkOutMillis))
+        fmt.format(Date(checkOutMillis))
     else
         stringResource(R.string.new_trip_select_date)
 

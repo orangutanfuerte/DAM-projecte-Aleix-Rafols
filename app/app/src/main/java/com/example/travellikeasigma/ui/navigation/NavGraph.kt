@@ -49,6 +49,7 @@ fun NavGraph(
     authViewModel:        AuthViewModel,
     preferencesViewModel: PreferencesViewModel,
     snackbarHostState:    SnackbarHostState,
+    onRecreate:           () -> Unit = {},
     modifier:             Modifier = Modifier
 ) {
     val itineraryViewModel: ItineraryViewModel = hiltViewModel()
@@ -205,7 +206,7 @@ fun NavGraph(
                 language               = preferencesViewModel.language,
                 onThemeChange          = { preferencesViewModel.updateThemeMode(it) },
                 onNotificationsChange  = { preferencesViewModel.updateNotificationsEnabled(it) },
-                onLanguageChange       = { preferencesViewModel.updateLanguage(it) }
+                onLanguageChange       = { preferencesViewModel.updateLanguage(it); onRecreate() }
             )
         }
         composable(Routes.TERMS) {

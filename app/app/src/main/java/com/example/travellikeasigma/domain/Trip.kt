@@ -6,6 +6,8 @@ import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
 import java.util.Locale
 
+enum class TripStatus { UPCOMING, ACTIVE, PAST }
+
 data class Trip(
     val id:                Int,
     val name:              String,
@@ -23,9 +25,9 @@ data class Trip(
     val photoCount: Int get() = photos.size
     val placesCount: Int get() = places.size
 
-    val formattedDates: String get() {
-        val fmt = DateTimeFormatter.ofPattern("MMM d", Locale.ENGLISH)
-        return "${startDate.format(fmt)} – ${endDate.format(fmt)}, ${endDate.year} · $daysCount days"
+    fun formattedDateRange(locale: Locale = Locale.getDefault()): String {
+        val fmt = DateTimeFormatter.ofPattern("MMM d", locale)
+        return "${startDate.format(fmt)} – ${endDate.format(fmt)}, ${endDate.year}"
     }
 
     fun progress(): Float {
@@ -41,10 +43,10 @@ data class Trip(
         }
     }
 
-    fun status(): String = when {
-        progress() == 0f -> "Upcoming"
-        progress() >= 1f -> "Past Trip"
-        else             -> "Active Trip"
+    fun status(): TripStatus = when {
+        progress() == 0f -> TripStatus.UPCOMING
+        progress() >= 1f -> TripStatus.PAST
+        else             -> TripStatus.ACTIVE
     }
 
     fun getDateForDay(dayNumber: Int): LocalDate = startDate.plusDays((dayNumber - 1).toLong())

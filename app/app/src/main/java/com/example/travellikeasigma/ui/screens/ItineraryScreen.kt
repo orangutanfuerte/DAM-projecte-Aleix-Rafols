@@ -43,6 +43,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -52,7 +53,7 @@ import com.example.travellikeasigma.R
 import com.example.travellikeasigma.domain.ActivityType
 import com.example.travellikeasigma.domain.ItineraryActivity
 import com.example.travellikeasigma.domain.Trip
-import com.example.travellikeasigma.domain.displayName
+import com.example.travellikeasigma.ui.components.label
 import com.example.travellikeasigma.ui.theme.FoodTagBackground
 import com.example.travellikeasigma.ui.theme.FoodTagText
 import com.example.travellikeasigma.ui.theme.SightseeingTagBackground
@@ -116,7 +117,9 @@ fun ItineraryScreen(
 
             // Date + city label
             Text(
-                text = trip.getDateForDay(dayNumber).format(DateTimeFormatter.ofPattern("MMM d, yyyy", Locale.ENGLISH)),
+                text = trip.getDateForDay(dayNumber).format(
+                    DateTimeFormatter.ofPattern("MMM d, yyyy", LocalConfiguration.current.locales[0])
+                ),
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
@@ -161,7 +164,7 @@ private fun DaySelectorRow(
                 onClick = { onDaySelected(index) },
                 label = {
                     Text(
-                        text = "Day ${index + 1}",
+                        text = stringResource(R.string.itinerary_day_label, index + 1),
                         style = MaterialTheme.typography.labelMedium,
                         fontWeight = if (index == selectedIndex) FontWeight.SemiBold else FontWeight.Normal
                     )
@@ -275,7 +278,7 @@ private fun ActivityTag(type: ActivityType) {
     }
 
     Text(
-        text = type.displayName(),
+        text = type.label(),
         style = MaterialTheme.typography.labelSmall,
         fontWeight = FontWeight.SemiBold,
         color = textColor,

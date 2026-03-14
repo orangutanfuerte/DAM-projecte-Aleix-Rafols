@@ -28,7 +28,12 @@ class SharedPreferencesManager @Inject constructor(
         set(value) = prefs.edit().putBoolean(KEY_NOTIFICATIONS_ENABLED, value).apply()
 
     var language: String
-        get() = prefs.getString(KEY_LANGUAGE, "en") ?: "en"
+        get() {
+            val saved = prefs.getString(KEY_LANGUAGE, null)
+            if (saved != null) return saved
+            val deviceLang = java.util.Locale.getDefault().language
+            return if (deviceLang in listOf("en", "es", "ca")) deviceLang else "en"
+        }
         set(value) = prefs.edit().putString(KEY_LANGUAGE, value).apply()
 
     fun clearSession() {

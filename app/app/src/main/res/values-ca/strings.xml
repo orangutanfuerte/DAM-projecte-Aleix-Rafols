@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Bottom Navigation -->
+    <string name="nav_home">Inici</string>
+    <string name="nav_itinerary">Itinerari</string>
+    <string name="nav_photos">Fotos</string>
+    <string name="nav_places">Llocs</string>
+
+    <!-- Home Screen -->
+    <string name="home_greeting">Bon Voyage, Sofia!</string>
+    <string name="home_subtitle_upcoming">El teu viatge a %1$s s\'acosta!</string>
+    <string name="home_subtitle_active">Gaudeix del teu viatge a %1$s!</string>
+    <string name="home_subtitle_past">Vols reviure el teu viatge a %1$s?</string>
+    <string name="home_stat_days">Dies planificats</string>
+    <string name="home_stat_photos">Fotos desades</string>
+    <string name="home_stat_places">Llocs desats</string>
+    <string name="home_upcoming_days">Dies propers</string>
+    <string name="home_new_trip">Nou Viatge</string>
+    <string name="home_upcoming_pill">Proper</string>
+    <string name="home_no_trips">Encara no hi ha viatges</string>
+    <string name="home_delete_trip">Eliminar Viatge</string>
+    <string name="home_delete_trip_title">Eliminar viatge?</string>
+    <string name="home_delete_trip_message">Estàs segur que vols eliminar %1$s?</string>
+    <string name="home_delete_trip_yes">Sí</string>
+    <string name="home_delete_trip_no">No</string>
+
+    <!-- Placeholder screens -->
+    <string name="placeholder_coming_soon">Properament…</string>
+    <string name="itinerary_title">Itinerari</string>
+    <string name="itinerary_subtitle">%1$s · %2$d dies</string>
+    <string name="photos_title">Fotos</string>
+    <string name="photos_subtitle">%1$s · %2$d fotos</string>
+    <string name="places_title">Llocs Desats</string>
+    <string name="places_subtitle">%1$s · %2$d llocs</string>
+
+    <!-- Preferences Screen -->
+    <string name="pref_title">Preferències</string>
+    <string name="pref_edit_profile">Editar Perfil</string>
+    <string name="pref_section_settings">Configuració de l\'app</string>
+    <string name="pref_language">Idioma</string>
+    <string name="pref_notifications">Notificacions</string>
+    <string name="pref_notifications_sub">Recordatoris de viatge activats</string>
+    <string name="pref_notifications_off">Recordatoris de viatge desactivats</string>
+    <string name="pref_notifications_dialog_title">Notificacions</string>
+    <string name="pref_theme">Tema</string>
+    <string name="pref_theme_light">Clar</string>
+    <string name="pref_theme_dark">Fosc</string>
+    <string name="pref_theme_system">Seguir sistema</string>
+    <string name="pref_theme_dialog_title">Triar tema</string>
+    <string name="pref_language_dialog_title">Triar idioma</string>
+    <string name="pref_section_legal">Suport i Legal</string>
+    <string name="pref_terms">Termes i Condicions</string>
+    <string name="pref_terms_sub">Política de privacitat i ús</string>
+    <string name="pref_about">Sobre</string>
+    <string name="pref_about_sub">Versió %1$s</string>
+    <string name="pref_logout">Tancar Sessió</string>
+
+    <!-- Terms Screen -->
+    <string name="terms_title">Termes i Condicions</string>
+    <string name="terms_s1_title">1. Acceptació dels Termes</string>
+    <string name="terms_s1_body">En utilitzar Travel like a Sigma, acceptes quedar vinculat per aquests Termes i Condicions. Si no hi estàs d\'acord, si us plau no facis servir l\'app.</string>
+    <string name="terms_s2_title">2. Ús de l\'App</string>
+    <string name="terms_s2_body">Aquesta app està destinada a la planificació personal i no comercial de viatges. No pots fer servir l\'app per emmagatzemar o compartir contingut il·legal ni infringir els drets de tercers.</string>
+    <string name="terms_s3_title">3. Dades de l\'Usuari i Privacitat</string>
+    <string name="terms_s3_body">Només recopilem les dades necessàries per prestar el nostre servei: detalls de viatges, llistes d\'equipatge i fotos que pugis. Les teves dades s\'emmagatzemen de forma segura i mai es venen a tercers.</string>
+    <string name="terms_s4_title">4. Fotos i Contingut</string>
+    <string name="terms_s4_body">Les fotos que pugis segueixen sent de la teva propietat. En pujar-les, ens concedixes una llicència limitada per mostrar-les únicament dins del teu compte.</string>
+    <string name="terms_s5_title">5. Terminació del Compte</string>
+    <string name="terms_s5_body">Ens reservem el dret de cancel·lar comptes que violin aquests termes. Pots eliminar el teu compte en qualsevol moment des del menú de preferències.</string>
+    <string name="terms_s6_title">6. Descàrrecs de Responsabilitat</string>
+    <string name="terms_s6_body">Travel like a Sigma es proporciona \"tal qual\". No som responsables d\'interrupcions en el viatge, errors en dades de tercers ni de qualsevol pèrdua derivada de l\'ús de l\'app.</string>
+    <string name="terms_s7_title">7. Canvis en els Termes</string>
+    <string name="terms_s7_body">Podem actualitzar aquests termes de tant en tant. L\'ús continuat de l\'app després dels canvis constitueix l\'acceptació dels nous termes. Última actualització: març 2026.</string>
+
+    <!-- About Screen -->
+    <string name="about_title">Sobre</string>
+    <string name="about_tagline">Creada per a exploradors que planifiquen amb intel·ligència, viatgen amb audàcia i no deixen cap destí sense descobrir.</string>
+    <string name="about_version_label">Versió</string>
+    <string name="about_platform_label">Plataforma</string>
+    <string name="about_released_label">Llançament</string>
+    <string name="about_released_value">Març 2026</string>
+    <string name="about_developer_label">Desenvolupador</string>
+
+    <!-- New Trip Screen -->
+    <string name="new_trip_step_destination_title">On anem? 🌍</string>
+    <string name="new_trip_step_hotel_title">Triar Hotel 🏨</string>
+    <string name="new_trip_checkin">Entrada</string>
+    <string name="new_trip_checkout">Sortida</string>
+    <string name="new_trip_select_date">Seleccionar data</string>
+    <string name="new_trip_step_name_title">Nom del Viatge</string>
+    <string name="new_trip_step_details_title">Viatgers i Dates</string>
+    <string name="new_trip_name_label">Nom del viatge</string>
+    <string name="new_trip_name_placeholder">p. ex. Aventura al Japó 2025</string>
+    <string name="new_trip_persons_label">Viatgers</string>
+    <string name="new_trip_cta_next">Següent</string>
+    <string name="new_trip_cta_save">Desar Viatge</string>
+    <string name="new_trip_per_night">/ nit</string>
+    <string name="new_trip_date_confirm">OK</string>
+    <string name="new_trip_date_cancel">Cancel·lar</string>
+
+    <!-- Add Activity Screen -->
+    <string name="add_activity_title">Nova Activitat</string>
+    <string name="add_activity_day_label">Dia %1$d</string>
+    <string name="add_activity_type">Tipus d\'activitat</string>
+    <string name="add_activity_title_label">Títol</string>
+    <string name="add_activity_title_placeholder">p. ex. Visitar el Colosseu</string>
+    <string name="add_activity_time_label">Hora</string>
+    <string name="add_activity_time_placeholder">Seleccionar hora</string>
+    <string name="add_activity_price_label">Preu</string>
+    <string name="add_activity_description_label">Descripció</string>
+    <string name="add_activity_description_placeholder">p. ex. Recordar provar el sushi daurat</string>
+    <string name="add_activity_save">Desar Activitat</string>
+    <string name="add_activity_time_picker_title">Seleccionar hora</string>
+    <string name="add_activity_time_confirm">OK</string>
+    <string name="add_activity_time_cancel">Cancel·lar</string>
+
+    <!-- Edit Activity Screen -->
+    <string name="edit_activity_title">Editar Activitat</string>
+    <string name="edit_activity_update">Actualitzar</string>
+    <string name="edit_activity_delete">Eliminar</string>
+    <string name="edit_activity_delete_title">Eliminar activitat?</string>
+    <string name="edit_activity_delete_message">Estàs segur que vols eliminar \"%1$s\"?</string>
+    <string name="edit_activity_delete_yes">Sí</string>
+    <string name="edit_activity_delete_no">No</string>
+
+    <!-- Login Screen -->
+    <string name="login_title">Travel like a Sigma</string>
+    <string name="login_email_label">Correu electrònic</string>
+    <string name="login_password_label">Contrasenya</string>
+    <string name="login_button">Iniciar Sessió</string>
+    <string name="login_subtitle">Benvingut de nou, explorador!</string>
+    <string name="login_error">Correu o contrasenya incorrectes</string>
+    <string name="snackbar_login_success">Sessió iniciada correctament</string>
+
+    <!-- Logout -->
+    <string name="logout_dialog_title">Tancar sessió?</string>
+    <string name="logout_dialog_message">Estàs segur que vols tancar sessió?</string>
+    <string name="logout_dialog_yes">Sí</string>
+    <string name="logout_dialog_no">No</string>
+    <string name="snackbar_logout">Sessió tancada</string>
+
+    <!-- Snackbar messages -->
+    <string name="snackbar_trip_created">Viatge creat correctament</string>
+    <string name="snackbar_trip_deleted">Viatge eliminat</string>
+    <string name="snackbar_activity_created">Activitat afegida correctament</string>
+    <string name="snackbar_activity_updated">Activitat actualitzada correctament</string>
+    <string name="snackbar_activity_deleted">Activitat eliminada</string>
+
+    <!-- Photos Screen -->
+    <string name="photos_delete">Eliminar foto</string>
+    <string name="photos_delete_title">Eliminar foto?</string>
+    <string name="photos_delete_message">Estàs segur que vols eliminar aquesta foto?</string>
+    <string name="photos_delete_yes">Sí</string>
+    <string name="photos_delete_no">No</string>
+    <string name="photos_add">Afegir foto</string>
+
+    <!-- Places Screen -->
+    <string name="places_map_placeholder">Mapa properament</string>
+    <string name="places_remove_title">Eliminar lloc?</string>
+    <string name="places_remove_message">Estàs segur que vols eliminar %1$s?</string>
+    <string name="places_remove_yes">Sí</string>
+    <string name="places_remove_no">No</string>
+    <string name="places_remove_cd">Eliminar lloc</string>
+
+    <!-- Trip status -->
+    <string name="trip_status_upcoming">Proper</string>
+    <string name="trip_status_past">Viatge passat</string>
+    <string name="trip_status_active">Viatge actiu</string>
+    <string name="trip_date_days">%1$d dies</string>
+
+    <!-- Activity types -->
+    <string name="activity_type_food">Menjar</string>
+    <string name="activity_type_sightseeing">Turisme</string>
+    <string name="activity_type_transit">Trànsit</string>
+    <string name="activity_type_others">Altres</string>
+
+    <!-- Home extras -->
+    <string name="home_your_trips">Els teus Viatges</string>
+    <string name="itinerary_day_label">Dia %1$d</string>
+
+    <!-- Destinations -->
+    <string name="destination_japan">Japó</string>
+    <string name="destination_iceland">Islàndia</string>
+    <string name="destination_italy">Itàlia</string>
+    <string name="destination_spain">Espanya</string>
+    <string name="destination_brasil">Brasil</string>
+
+    <!-- Content descriptions (accessibility) -->
+    <string name="cd_avatar">Obrir preferències</string>
+    <string name="cd_back">Tornar</string>
+    <string name="cd_close">Tancar</string>
+    <string name="cd_next_trip">Següent viatge</string>
+    <string name="cd_prev_trip">Viatge anterior</string>
+    <string name="cd_add_activity">Afegir activitat</string>
+</resources>

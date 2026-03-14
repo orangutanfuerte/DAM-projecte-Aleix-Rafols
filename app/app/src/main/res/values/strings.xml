@@ -178,6 +178,29 @@
     <string name="places_remove_no">No</string>
     <string name="places_remove_cd">Remove place</string>
 
+    <!-- Trip status -->
+    <string name="trip_status_upcoming">Upcoming</string>
+    <string name="trip_status_past">Past Trip</string>
+    <string name="trip_status_active">Active Trip</string>
+    <string name="trip_date_days">%1$d days</string>
+
+    <!-- Activity types -->
+    <string name="activity_type_food">Food</string>
+    <string name="activity_type_sightseeing">Sightseeing</string>
+    <string name="activity_type_transit">Transit</string>
+    <string name="activity_type_others">Others</string>
+
+    <!-- Home extras -->
+    <string name="home_your_trips">Your Trips</string>
+    <string name="itinerary_day_label">Day %1$d</string>
+
+    <!-- Destinations -->
+    <string name="destination_japan">Japan</string>
+    <string name="destination_iceland">Iceland</string>
+    <string name="destination_italy">Italy</string>
+    <string name="destination_spain">Spain</string>
+    <string name="destination_brasil">Brasil</string>
+
     <!-- Content descriptions (accessibility) -->
     <string name="cd_avatar">Open preferences</string>
     <string name="cd_back">Go back</string>

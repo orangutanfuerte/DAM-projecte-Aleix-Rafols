@@ -43,7 +43,7 @@ import androidx.compose.ui.window.Dialog
 import com.example.travellikeasigma.R
 import com.example.travellikeasigma.domain.ActivityType
 import com.example.travellikeasigma.domain.ItineraryActivity
-import com.example.travellikeasigma.domain.displayName
+import com.example.travellikeasigma.ui.components.label
 import com.example.travellikeasigma.ui.components.PickerCard
 import com.example.travellikeasigma.ui.components.TripTopAppBar
 
@@ -115,7 +115,7 @@ fun ActivityForm(
                 FilterChip(
                     selected = selectedType == type,
                     onClick = { selectedType = type },
-                    label = { Text(type.displayName()) }
+                    label = { Text(type.label()) }
                 )
             }
         }
