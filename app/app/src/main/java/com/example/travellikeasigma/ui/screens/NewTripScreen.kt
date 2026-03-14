@@ -30,8 +30,10 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.SelectableDates
 import androidx.compose.material3.rememberDateRangePickerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableLongStateOf
@@ -93,7 +95,15 @@ fun NewTripScreen(
     val selectedHotel = sampleHotels.find { it.id == selectedHotelId }
 
     // DateRangePicker state lives outside the dialog so it persists while open
-    val dateRangeState = rememberDateRangePickerState()
+    val todayMillis = remember {
+        LocalDate.now().atStartOfDay(ZoneOffset.UTC).toInstant().toEpochMilli()
+    }
+    val dateRangeState = rememberDateRangePickerState(
+        selectableDates = object : SelectableDates {
+            override fun isSelectableDate(utcTimeMillis: Long) = utcTimeMillis >= todayMillis
+            override fun isSelectableYear(year: Int) = year >= LocalDate.now().year
+        }
+    )
 
     val stepTitle = when (currentStep) {
         NewTripStep.DESTINATION -> stringResource(R.string.new_trip_step_destination_title)
