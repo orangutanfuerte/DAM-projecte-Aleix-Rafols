@@ -33,8 +33,7 @@ classDiagram
         +String name
         +LocalDate startDate
         +LocalDate endDate
-        +List~ItineraryDay~ itinerary
-        +List~PackingCategory~ packingCategories
+        +List~ItineraryActivity~ activities
         +List~Place~ places
         +List~Photo~ photos
         +Color heroColor
@@ -44,8 +43,6 @@ classDiagram
         +Int daysCount
         +Int photoCount
         +Int placesCount
-        +Int totalPackingItems
-        +Int packedPackingItems
         +String formattedDates
         +progress() Float
         +status() String
@@ -53,7 +50,9 @@ classDiagram
         +removeImage(Photo)
         +addPlace(Place)
         +removePlace(Place)
-        +getUpcomingDays() List~ItineraryDay~
+        +getUpcomingDays() List~Int~
+        +getDateForDay(Int) LocalDate
+        +getActivitiesByDay(Int) List~ItineraryActivity~
         +addActivity(Int, ItineraryActivity)
         +removeActivity(Int, ItineraryActivity)
         +totalCost() Double
@@ -71,13 +70,6 @@ classDiagram
         +Destination destination
     }
 
-    class ItineraryDay {
-        +Int dayNumber
-        +List~ItineraryActivity~ activities
-        +Trip trip
-        +getDate() LocalDate
-    }
-
     class ItineraryActivity {
         +Int id
         +String time
@@ -85,6 +77,7 @@ classDiagram
         +String subtitle
         +Double cost
         +ActivityType? tag
+        +LocalDate date
     }
 
     class ActivityType {
@@ -94,20 +87,6 @@ classDiagram
         TRANSIT
         OTHERS
         +displayName() String
-    }
-
-    class PackingCategory {
-        +Int id
-        +String name
-        +String emoji
-        +List~PackingItem~ items
-    }
-
-    class PackingItem {
-        +Int id
-        +String name
-        +Boolean isPacked
-        +togglePacked() PackingItem
     }
 
     class Photo {
@@ -140,19 +119,13 @@ classDiagram
 
     Trip "1" --> "1" Destination
     Trip "1" --> "1" Hotel
-    Trip "1" --> "*" ItineraryDay
-    Trip "1" --> "*" PackingCategory
+    Trip "1" --> "*" ItineraryActivity
     Trip "1" --> "*" Photo
     Trip "1" --> "*" Place
 
     Hotel "1" --> "1" Destination
 
-    ItineraryDay "*" --> "1" Trip : trip
-    ItineraryDay "1" --> "*" ItineraryActivity
-
     ItineraryActivity --> ActivityType
-
-    PackingCategory "1" --> "*" PackingItem
 
     Place --> PlaceCategory
 ```
