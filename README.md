@@ -17,7 +17,6 @@ L’aplicació està desenvolupada amb **Kotlin i Jetpack Compose**, oferint una
 ✅ **Planificació d’itineraris** – Organitza els teus viatges i visualitza les teves rutes fàcilment. 📅  
 ✅ **Cerca de llocs propers** – Descobreix restaurants, atraccions turístiques i altres punts d’interès. 🏝️  
 ✅ **Emmagatzematge d’imatges** – Guarda records i fotografies dels teus viatges. 📸  
-✅ **Llista per preparar la maleta** – Assegura’t de no oblidar res abans de marxar. 🎒  
 ✅ **Personalització de preferències d’usuari** – Configura l’aplicació segons les teves necessitats. ⚙️  
 ✅ **Suport per a múltiples idiomes** – Pensada per a usuaris d’arreu del món. 🌍  
 
