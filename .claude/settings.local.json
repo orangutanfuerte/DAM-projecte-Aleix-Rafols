@@ -6,7 +6,8 @@
       "Bash(cd /home/aleixrb/Projectes/DAM/DAM-projecte-Aleix-Rafols/app && ./gradlew assembleDebug 2>&1 | tail -40)",
       "Bash(./gradlew assembleDebug 2>&1 | tail -20)",
       "Bash(./gradlew assembleDebug 2>&1 | tail -10)",
-      "Bash(./gradlew assembleDebug)"
+      "Bash(./gradlew assembleDebug)",
+      "Bash(cat /home/aleixrb/Projectes/DAM/DAM-projecte-Aleix-Rafols/app/app/build/test-results/testDebugUnitTest/*.xml)"
     ]
   }
 }

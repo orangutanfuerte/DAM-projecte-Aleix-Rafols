@@ -37,6 +37,10 @@ android {
     buildFeatures {
         compose = true
     }
+    testOptions {
+        // Allow android.util.Log calls in unit tests without throwing
+        unitTests.isReturnDefaultValues = true
+    }
 }
 
 dependencies {

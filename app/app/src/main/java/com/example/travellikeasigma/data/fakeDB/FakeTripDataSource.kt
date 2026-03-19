@@ -1,5 +1,6 @@
 package com.example.travellikeasigma.data.fakeDB
 
+import android.util.Log
 import androidx.compose.ui.graphics.Color
 import com.example.travellikeasigma.domain.ActivityType
 import com.example.travellikeasigma.domain.ItineraryActivity
@@ -108,11 +109,17 @@ class FakeTripDataSource @Inject constructor() {
     fun getTripById(id: Int): Trip? = trips.find { it.id == id }
 
     fun addTrip(trip: Trip) {
+        Log.d(TAG, "addTrip: id=${trip.id}, name='${trip.name}'")
         trips.add(trip)
     }
 
     fun removeTrip(tripId: Int) {
-        trips.removeAll { it.id == tripId }
+        val removed = trips.removeAll { it.id == tripId }
+        if (removed) {
+            Log.d(TAG, "removeTrip: removed trip id=$tripId")
+        } else {
+            Log.w(TAG, "removeTrip: no trip found with id=$tripId")
+        }
     }
 
     fun addActivity(tripId: Int, activity: ItineraryActivity) {
@@ -120,6 +127,9 @@ class FakeTripDataSource @Inject constructor() {
         if (index != -1) {
             val trip = trips[index]
             trips[index] = trip.copy(activities = trip.activities + activity)
+            Log.d(TAG, "addActivity: added '${activity.title}' to trip id=$tripId")
+        } else {
+            Log.e(TAG, "addActivity: trip id=$tripId not found")
         }
     }
 
@@ -130,6 +140,9 @@ class FakeTripDataSource @Inject constructor() {
             trips[index] = trip.copy(
                 activities = trip.activities.map { if (it.id == activity.id) activity else it }
             )
+            Log.d(TAG, "updateActivity: updated activity id=${activity.id} in trip id=$tripId")
+        } else {
+            Log.e(TAG, "updateActivity: trip id=$tripId not found")
         }
     }
 
@@ -140,6 +153,13 @@ class FakeTripDataSource @Inject constructor() {
             trips[index] = trip.copy(
                 activities = trip.activities.filter { it.id != activityId }
             )
+            Log.d(TAG, "removeActivity: removed activity id=$activityId from trip id=$tripId")
+        } else {
+            Log.e(TAG, "removeActivity: trip id=$tripId not found")
         }
+    }
+
+    companion object {
+        private const val TAG = "FakeTripDataSource"
     }
 }
