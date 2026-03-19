@@ -49,10 +49,13 @@ class MainActivity : ComponentActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        var isChecking = true
-        lifecycleScope.launch {
-            delay(3000L)
-            isChecking = false
+        // Only show the splash delay on a cold start, not on recreate (e.g. language change)
+        var isChecking = savedInstanceState == null
+        if (isChecking) {
+            lifecycleScope.launch {
+                delay(3000L)
+                isChecking = false
+            }
         }
         installSplashScreen().apply {
             setKeepOnScreenCondition { isChecking }
