@@ -1,4 +1,4 @@
-package com.example.travellikeasigma.ui.screen
+package com.example.travellikeasigma.ui.screens
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
@@ -23,10 +23,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Cloud
-import androidx.compose.material.icons.filled.Grain
-import androidx.compose.material.icons.filled.WbCloudy
-import androidx.compose.material.icons.filled.WbSunny
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -47,27 +43,24 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 import com.example.travellikeasigma.R
-import com.example.travellikeasigma.model.ActivityType
-import com.example.travellikeasigma.model.ItineraryActivity
-import com.example.travellikeasigma.model.Trip
-import com.example.travellikeasigma.model.displayName
+import com.example.travellikeasigma.domain.ActivityType
+import com.example.travellikeasigma.domain.ItineraryActivity
+import com.example.travellikeasigma.domain.Trip
+import com.example.travellikeasigma.ui.components.label
 import com.example.travellikeasigma.ui.theme.FoodTagBackground
 import com.example.travellikeasigma.ui.theme.FoodTagText
 import com.example.travellikeasigma.ui.theme.SightseeingTagBackground
 import com.example.travellikeasigma.ui.theme.SightseeingTagText
 import com.example.travellikeasigma.ui.theme.TransitTagBackground
 import com.example.travellikeasigma.ui.theme.TransitTagText
-import com.example.travellikeasigma.ui.theme.WeatherCloudyTint
-import com.example.travellikeasigma.ui.theme.WeatherPartlyCloudyTint
-import com.example.travellikeasigma.ui.theme.WeatherRainyTint
 import com.example.travellikeasigma.ui.components.TripTopAppBar
-import com.example.travellikeasigma.ui.theme.WeatherSunnyTint
 
 // ---------------------------------------------------------------------------
 // ItineraryScreen
@@ -122,22 +115,11 @@ fun ItineraryScreen(
                 onDaySelected = { selectedDay = it }
             )
 
-            // Weather card
-            val weather = remember(selectedDay) {
-                val type = WeatherType.entries.random()
-                val description = when (type) {
-                    WeatherType.SUNNY         -> "Sunny"
-                    WeatherType.PARTLY_CLOUDY -> "Partly Cloudy"
-                    WeatherType.CLOUDY        -> "Cloudy"
-                    WeatherType.RAINY         -> "Rainy"
-                }
-                DayWeather(type, (18..28).random(), (10..17).random(), description)
-            }
-            WeatherCard(weather = weather)
-
             // Date + city label
             Text(
-                text = trip.getDateForDay(dayNumber).format(DateTimeFormatter.ofPattern("MMM d, yyyy", Locale.ENGLISH)),
+                text = trip.getDateForDay(dayNumber).format(
+                    DateTimeFormatter.ofPattern("MMM d, yyyy", LocalConfiguration.current.locales[0])
+                ),
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
@@ -182,7 +164,7 @@ private fun DaySelectorRow(
                 onClick = { onDaySelected(index) },
                 label = {
                     Text(
-                        text = "Day ${index + 1}",
+                        text = stringResource(R.string.itinerary_day_label, index + 1),
                         style = MaterialTheme.typography.labelMedium,
                         fontWeight = if (index == selectedIndex) FontWeight.SemiBold else FontWeight.Normal
                     )
@@ -193,66 +175,6 @@ private fun DaySelectorRow(
                     selectedLabelColor = MaterialTheme.colorScheme.onPrimary
                 )
             )
-        }
-    }
-}
-
-// ---------------------------------------------------------------------------
-// Weather card
-// ---------------------------------------------------------------------------
-enum class WeatherType { SUNNY, PARTLY_CLOUDY, CLOUDY, RAINY }
-
-data class DayWeather(
-    val icon: WeatherType,
-    val tempHigh: Int,
-    val tempLow: Int,
-    val description: String
-)
-
-@Composable
-private fun WeatherCard(weather: DayWeather) {
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 16.dp),
-        shape = RoundedCornerShape(14.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
-        )
-    ) {
-        Row(
-            modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
-            Icon(
-                imageVector = when (weather.icon) {
-                    WeatherType.SUNNY -> Icons.Filled.WbSunny
-                    WeatherType.PARTLY_CLOUDY -> Icons.Filled.WbCloudy
-                    WeatherType.CLOUDY -> Icons.Filled.Cloud
-                    WeatherType.RAINY -> Icons.Filled.Grain
-                },
-                contentDescription = weather.description,
-                modifier = Modifier.size(28.dp),
-                tint = when (weather.icon) {
-                    WeatherType.SUNNY -> WeatherSunnyTint
-                    WeatherType.PARTLY_CLOUDY -> WeatherPartlyCloudyTint
-                    WeatherType.CLOUDY -> WeatherCloudyTint
-                    WeatherType.RAINY -> WeatherRainyTint
-                }
-            )
-            Column {
-                Text(
-                    text = "${weather.tempLow}\u2013${weather.tempHigh}\u00b0C",
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.SemiBold
-                )
-                Text(
-                    text = weather.description,
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-            }
         }
     }
 }
@@ -356,7 +278,7 @@ private fun ActivityTag(type: ActivityType) {
     }
 
     Text(
-        text = type.displayName(),
+        text = type.label(),
         style = MaterialTheme.typography.labelSmall,
         fontWeight = FontWeight.SemiBold,
         color = textColor,

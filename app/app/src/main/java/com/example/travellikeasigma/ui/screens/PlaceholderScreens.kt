@@ -1,4 +1,4 @@
-package com.example.travellikeasigma.ui.screen
+package com.example.travellikeasigma.ui.screens
 
 // ---------------------------------------------------------------------------
 // Each of these is a one-liner today.

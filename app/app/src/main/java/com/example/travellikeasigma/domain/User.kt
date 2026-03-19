@@ -1,33 +1,26 @@
-package com.example.travellikeasigma.model
-
-class Authentication {
-    fun login(email: String, password: String) { /* @TODO */ }
-    fun logout()                               { /* @TODO */ }
-    fun resetPassword(email: String)           { /* @TODO */ }
-}
+package com.example.travellikeasigma.domain
 
 data class Preferences(
-    val notificationsEnabled: Boolean = true,
+    val language: String = "en",
     val theme: String = "system",
-    val preferredLanguage: String = "en"
+    val notificationsEnabled: Boolean = true
 )
 
 data class User(
     val id: Int,
+    val name: String,
+    val username: String,
     val email: String,
     val password: String,
-    val authentication: Authentication = Authentication(),
-    val preferences: Preferences = Preferences(),
-    val trips: MutableList<Trip> = mutableListOf()
-) {
-    fun createTrip(trip: Trip) { trips.add(trip) }
-    fun removeTrip(trip: Trip) { trips.remove(trip) }
-    fun updatePreferences(preferences: Preferences) { /* @TODO */ }
-}
+    val dateOfBirth: String,
+    val preferences: Preferences = Preferences()
+)
 
 val sampleUser = User(
-    id    = 1,
-    email = "sigma@travel.com",
-    password = "",
-    trips = sampleTrips.toMutableList()
+    id          = 1,
+    name        = "Sofia Martínez",
+    username    = "sofiamartinez",
+    email       = "sofia.martinez@email.com",
+    password    = "1234",
+    dateOfBirth = "24/05/2004"
 )

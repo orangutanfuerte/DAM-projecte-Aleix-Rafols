@@ -1,39 +1,39 @@
-package com.example.travellikeasigma.navigation
+package com.example.travellikeasigma.ui.navigation
 
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
-import androidx.compose.runtime.snapshots.SnapshotStateList
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import com.example.travellikeasigma.model.Trip
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import com.example.travellikeasigma.model.sampleUser
-import com.example.travellikeasigma.ui.screen.AboutScreen
-import com.example.travellikeasigma.ui.screen.AddActivityScreen
-import com.example.travellikeasigma.ui.screen.EditActivityScreen
-import com.example.travellikeasigma.ui.screen.HomeScreen
-import com.example.travellikeasigma.ui.screen.ItineraryScreen
-import com.example.travellikeasigma.ui.screen.NewTripScreen
-import com.example.travellikeasigma.ui.screen.PackingScreen
-import com.example.travellikeasigma.ui.screen.PhotosScreen
-import com.example.travellikeasigma.ui.screen.PlacesScreen
-import com.example.travellikeasigma.ui.screen.PreferencesScreen
-import com.example.travellikeasigma.ui.screen.TermsScreen
+import kotlinx.coroutines.launch
+import androidx.compose.ui.platform.LocalContext
+import com.example.travellikeasigma.R
+import com.example.travellikeasigma.ui.screens.AboutScreen
+import com.example.travellikeasigma.ui.screens.AddActivityScreen
+import com.example.travellikeasigma.ui.screens.EditActivityScreen
+import com.example.travellikeasigma.ui.screens.HomeScreen
+import com.example.travellikeasigma.ui.screens.ItineraryScreen
+import com.example.travellikeasigma.ui.screens.LoginScreen
+import com.example.travellikeasigma.ui.screens.NewTripScreen
+import com.example.travellikeasigma.ui.screens.PhotosScreen
+import com.example.travellikeasigma.ui.screens.PlacesScreen
+import com.example.travellikeasigma.ui.screens.PreferencesScreen
+import com.example.travellikeasigma.ui.screens.TermsScreen
+import com.example.travellikeasigma.ui.theme.ThemeMode
+import com.example.travellikeasigma.ui.viewmodels.AuthViewModel
+import com.example.travellikeasigma.ui.viewmodels.ItineraryViewModel
+import com.example.travellikeasigma.ui.viewmodels.PreferencesViewModel
+import com.example.travellikeasigma.ui.viewmodels.TripViewModel
 
 // ---------------------------------------------------------------------------
 // Helper — navigate to a bottom-nav tab from anywhere (card clicks, etc.)
-// Behaves exactly like pressing the tab in the bottom bar:
-//   • pops back to HOME so the stack stays flat
-//   • won't duplicate the destination if already there
-//   • always starts fresh (no saved scroll / state)
 // ---------------------------------------------------------------------------
 private fun NavHostController.navigateToTab(route: String) {
     navigate(route) {
@@ -44,41 +44,64 @@ private fun NavHostController.navigateToTab(route: String) {
 
 @Composable
 fun NavGraph(
-    navController: NavHostController,
-    userTrips:     SnapshotStateList<Trip>,
-    modifier:      Modifier = Modifier
+    navController:        NavHostController,
+    tripViewModel:        TripViewModel,
+    authViewModel:        AuthViewModel,
+    preferencesViewModel: PreferencesViewModel,
+    snackbarHostState:    SnackbarHostState,
+    onRecreate:           () -> Unit = {},
+    modifier:             Modifier = Modifier
 ) {
-    var tripIndex by rememberSaveable { mutableIntStateOf(0) }
-    // Clamp index if the list shrinks (e.g. after removal)
-    val safeIndex = tripIndex.coerceIn(0, (userTrips.size - 1).coerceAtLeast(0))
+    val itineraryViewModel: ItineraryViewModel = hiltViewModel()
+    val scope   = rememberCoroutineScope()
+    val context = LocalContext.current
+
+    val startDestination = if (authViewModel.isLoggedIn) Routes.HOME else Routes.LOGIN
 
     NavHost(
         navController      = navController,
-        startDestination   = Routes.HOME,
+        startDestination   = startDestination,
         modifier           = modifier,
         enterTransition    = { EnterTransition.None },
         exitTransition     = { ExitTransition.None },
         popEnterTransition = { EnterTransition.None },
         popExitTransition  = { ExitTransition.None }
     ) {
+        composable(Routes.LOGIN) {
+            LoginScreen(
+                email            = authViewModel.email,
+                password         = authViewModel.password,
+                loginError       = authViewModel.loginError,
+                onEmailChange    = { authViewModel.email = it },
+                onPasswordChange = { authViewModel.password = it },
+                onLoginClick     = {
+                    if (authViewModel.login()) {
+                        navController.navigate(Routes.HOME) {
+                            popUpTo(Routes.LOGIN) { inclusive = true }
+                        }
+                        scope.launch {
+                            snackbarHostState.showSnackbar(context.getString(R.string.snackbar_login_success))
+                        }
+                    }
+                }
+            )
+        }
         composable(Routes.HOME) {
             HomeScreen(
-                trips            = userTrips,
-                tripIndex        = safeIndex,
-                onTripIndexChange = { tripIndex = it },
+                trips            = tripViewModel.trips,
+                tripIndex        = tripViewModel.selectedTripIndex,
+                onTripIndexChange = { tripViewModel.selectTrip(it) },
                 onNewTripClick   = { navController.navigate(Routes.NEW_TRIP) },
                 onAvatarClick    = { navController.navigate(Routes.PREFERENCES) },
                 onItineraryClick = { navController.navigateToTab(Routes.ITINERARY) },
-                onPackingClick   = { navController.navigateToTab(Routes.PACKING) },
                 onPhotosClick    = { navController.navigateToTab(Routes.PHOTOS) },
                 onPlacesClick    = { navController.navigateToTab(Routes.PLACES) },
                 onDayClick       = { dayIndex ->
                     navController.navigateToTab(Routes.itineraryDay(dayIndex))
                 },
                 onDeleteTripClick = {
-                    val tripToDelete = userTrips[safeIndex]
-                    sampleUser.removeTrip(tripToDelete)
-                    userTrips.removeAt(safeIndex)
+                    tripViewModel.deleteSelectedTrip()
+                    scope.launch { snackbarHostState.showSnackbar(context.getString(R.string.snackbar_trip_deleted)) }
                 }
             )
         }
@@ -87,35 +110,38 @@ fun NavGraph(
             arguments = listOf(navArgument("day") { defaultValue = -1; type = NavType.IntType })
         ) { backStackEntry ->
             val initialDay = backStackEntry.arguments?.getInt("day") ?: -1
-            ItineraryScreen(
-                trip = userTrips[safeIndex],
-                initialDay = initialDay,
-                onAddActivityClick = { dayNumber ->
-                    navController.navigate(Routes.addActivity(dayNumber))
-                },
-                onEditActivityClick = { dayNumber, activityId ->
-                    navController.navigate(Routes.editActivity(dayNumber, activityId))
-                }
-            )
+            val trip = tripViewModel.selectedTrip
+            if (trip != null) {
+                ItineraryScreen(
+                    trip = trip,
+                    initialDay = initialDay,
+                    onAddActivityClick = { dayNumber ->
+                        navController.navigate(Routes.addActivity(dayNumber))
+                    },
+                    onEditActivityClick = { dayNumber, activityId ->
+                        navController.navigate(Routes.editActivity(dayNumber, activityId))
+                    }
+                )
+            }
         }
         composable(
             route = Routes.ADD_ACTIVITY,
             arguments = listOf(navArgument("dayNumber") { type = NavType.IntType })
         ) { backStackEntry ->
             val dayNumber = backStackEntry.arguments?.getInt("dayNumber") ?: 1
-            AddActivityScreen(
-                dayNumber = dayNumber,
-                onBackClick = { navController.popBackStack() },
-                onSave = { activity ->
-                    val trip = userTrips[safeIndex]
-                    val maxId = trip.activities.maxOfOrNull { it.id } ?: 0
-                    val date = trip.getDateForDay(dayNumber)
-                    val activityWithId = activity.copy(id = maxId + 1, date = date)
-                    trip.addActivity(activityWithId)
-                    userTrips[safeIndex] = trip.copy()
-                    navController.popBackStack()
-                }
-            )
+            val trip = tripViewModel.selectedTrip
+            if (trip != null) {
+                AddActivityScreen(
+                    dayNumber = dayNumber,
+                    onBackClick = { navController.popBackStack() },
+                    onSave = { activity ->
+                        itineraryViewModel.addActivity(trip.id, dayNumber, activity)
+                        tripViewModel.refreshTrips()
+                        navController.popBackStack()
+                        scope.launch { snackbarHostState.showSnackbar(context.getString(R.string.snackbar_activity_created)) }
+                    }
+                )
+            }
         }
         composable(
             route = Routes.EDIT_ACTIVITY,
@@ -126,41 +152,61 @@ fun NavGraph(
         ) { backStackEntry ->
             val dayNumber = backStackEntry.arguments?.getInt("dayNumber") ?: 1
             val activityId = backStackEntry.arguments?.getInt("activityId") ?: 0
-            val trip = userTrips[safeIndex]
-            val activity = trip.activities.find { it.id == activityId }
+            val trip = tripViewModel.selectedTrip
+            val activity = trip?.activities?.find { it.id == activityId }
 
-            if (activity != null) {
+            if (trip != null && activity != null) {
                 EditActivityScreen(
                     dayNumber = dayNumber,
                     activity = activity,
                     onBackClick = { navController.popBackStack() },
                     onUpdate = { updatedActivity ->
-                        trip.updateActivity(updatedActivity)
-                        userTrips[safeIndex] = trip.copy()
+                        itineraryViewModel.updateActivity(trip.id, updatedActivity)
+                        tripViewModel.refreshTrips()
                         navController.popBackStack()
+                        scope.launch { snackbarHostState.showSnackbar(context.getString(R.string.snackbar_activity_updated)) }
                     },
                     onDelete = {
+                        itineraryViewModel.removeActivity(trip.id, activity.id)
+                        tripViewModel.refreshTrips()
                         navController.popBackStack()
-                        trip.removeActivity(activity)
-                        userTrips[safeIndex] = trip.copy()
+                        scope.launch { snackbarHostState.showSnackbar(context.getString(R.string.snackbar_activity_deleted)) }
                     }
                 )
             }
         }
-        composable(Routes.PACKING) {
-            PackingScreen(trip = userTrips[safeIndex])
-        }
         composable(Routes.PHOTOS) {
-            PhotosScreen(trip = userTrips[safeIndex])
+            val trip = tripViewModel.selectedTrip
+            if (trip != null) {
+                PhotosScreen(trip = trip)
+            }
         }
         composable(Routes.PLACES) {
-            PlacesScreen(trip = userTrips[safeIndex])
+            val trip = tripViewModel.selectedTrip
+            if (trip != null) {
+                PlacesScreen(trip = trip)
+            }
         }
         composable(Routes.PREFERENCES) {
             PreferencesScreen(
-                onBackClick  = { navController.popBackStack() },
-                onTermsClick = { navController.navigate(Routes.TERMS) },
-                onAboutClick = { navController.navigate(Routes.ABOUT) }
+                onBackClick            = { navController.popBackStack() },
+                onTermsClick           = { navController.navigate(Routes.TERMS) },
+                onAboutClick           = { navController.navigate(Routes.ABOUT) },
+                onLogoutClick          = {
+                    authViewModel.logout()
+                    navController.navigate(Routes.LOGIN) {
+                        popUpTo(0) { inclusive = true }
+                    }
+                    scope.launch {
+                        snackbarHostState.showSnackbar(context.getString(R.string.snackbar_logout))
+                    }
+                },
+                themeMode              = preferencesViewModel.themeMode,
+                notificationsEnabled   = preferencesViewModel.notificationsEnabled,
+                language               = preferencesViewModel.language,
+                onThemeChange          = { preferencesViewModel.updateThemeMode(it) },
+                onNotificationsChange  = { preferencesViewModel.updateNotificationsEnabled(it) },
+                onLanguageChange       = { preferencesViewModel.updateLanguage(it); onRecreate() }
             )
         }
         composable(Routes.TERMS) {
@@ -172,11 +218,10 @@ fun NavGraph(
         composable(Routes.NEW_TRIP) {
             NewTripScreen(
                 onBackClick = { navController.popBackStack() },
-                onSave      = { newTrip ->
-                    sampleUser.createTrip(newTrip)
-                    userTrips.add(newTrip)
-                    tripIndex = userTrips.size - 1
+                onSave      = { name, startDate, endDate, destination, hotel, persons ->
+                    tripViewModel.createTrip(name, startDate, endDate, destination, hotel, persons)
                     navController.popBackStack()
+                    scope.launch { snackbarHostState.showSnackbar(context.getString(R.string.snackbar_trip_created)) }
                 }
             )
         }

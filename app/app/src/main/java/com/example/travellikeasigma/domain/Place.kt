@@ -1,4 +1,4 @@
-package com.example.travellikeasigma.model
+package com.example.travellikeasigma.domain
 
 enum class PlaceCategory { RESTAURANT, MUSEUM, PARK, TEMPLE, SHOPPING, LANDMARK, CAFE, OTHER }
 

@@ -1,4 +1,4 @@
-package com.example.travellikeasigma.ui.screen
+package com.example.travellikeasigma.ui.screens
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -51,12 +51,17 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import java.util.Locale
 import com.example.travellikeasigma.R
-import com.example.travellikeasigma.model.Trip
+import com.example.travellikeasigma.domain.Trip
+import com.example.travellikeasigma.domain.TripStatus
 import com.example.travellikeasigma.ui.components.ConfirmationDialog
 import com.example.travellikeasigma.ui.components.ProfileAvatar
+import com.example.travellikeasigma.ui.components.label
+import com.example.travellikeasigma.ui.components.translatedName
 
 // ---------------------------------------------------------------------------
 // HomeScreen
@@ -71,7 +76,6 @@ fun HomeScreen(
     onNewTripClick:   () -> Unit,
     onAvatarClick:    () -> Unit,
     onItineraryClick: () -> Unit = {},
-    onPackingClick:   () -> Unit = {},
     onPhotosClick:    () -> Unit = {},
     onPlacesClick:    () -> Unit = {},
     onDayClick:          (Int) -> Unit = {},
@@ -82,11 +86,19 @@ fun HomeScreen(
 
     // Empty state — no trips yet
     if (trips.isEmpty()) {
-        Box(
-            modifier = Modifier.fillMaxSize(),
-            contentAlignment = Alignment.Center
-        ) {
+        Box(modifier = Modifier.fillMaxSize()) {
+            // Avatar in top-right corner for preferences access
+            ProfileAvatar(
+                initials = "S",
+                size = 36.dp,
+                modifier = Modifier
+                    .align(Alignment.TopEnd)
+                    .padding(top = 48.dp, end = 16.dp)
+                    .clip(CircleShape)
+                    .clickable(onClickLabel = stringResource(R.string.cd_avatar)) { onAvatarClick() }
+            )
             Column(
+                modifier = Modifier.align(Alignment.Center),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
@@ -133,11 +145,12 @@ fun HomeScreen(
                     style      = MaterialTheme.typography.headlineSmall,
                     fontWeight = FontWeight.Bold
                 )
+                val translatedDestination = currentTrip.destination.translatedName()
                 Text(
                     text  = when (currentTrip.status()) {
-                        "Past Trip"    -> stringResource(R.string.home_subtitle_past, currentTrip.destination.destinationName)
-                        "Active Trip"  -> stringResource(R.string.home_subtitle_active, currentTrip.destination.destinationName)
-                        else           -> stringResource(R.string.home_subtitle_upcoming, currentTrip.destination.destinationName)
+                        TripStatus.PAST   -> stringResource(R.string.home_subtitle_past, translatedDestination)
+                        TripStatus.ACTIVE -> stringResource(R.string.home_subtitle_active, translatedDestination)
+                        else              -> stringResource(R.string.home_subtitle_upcoming, translatedDestination)
                     },
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
@@ -151,7 +164,7 @@ fun HomeScreen(
                     onPrev       = { if (tripIndex > 0) onTripIndexChange(tripIndex - 1) },
                     onNext       = { if (tripIndex < total - 1) onTripIndexChange(tripIndex + 1) },
                     onUpcoming   = {
-                        val idx = trips.indexOfFirst { it.status() == "Upcoming" }
+                        val idx = trips.indexOfFirst { it.status() == TripStatus.UPCOMING }
                         if (idx >= 0) onTripIndexChange(idx)
                     }
                 )
@@ -166,30 +179,32 @@ fun HomeScreen(
                     trip             = currentTrip,
                     onItineraryClick = onItineraryClick,
                     onPhotosClick    = onPhotosClick,
-                    onPackingClick   = onPackingClick,
                     onPlacesClick    = onPlacesClick
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                Text(
-                    text       = stringResource(R.string.home_upcoming_days).uppercase(),
-                    style      = MaterialTheme.typography.labelMedium,
-                    color      = MaterialTheme.colorScheme.onSurfaceVariant,
-                    fontWeight = FontWeight.SemiBold
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-
-                (1..minOf(3, currentTrip.daysCount)).forEachIndexed { index, dayNumber ->
-                    val dayActivities = currentTrip.getActivitiesByDay(dayNumber)
-                    val title = dayActivities.getOrNull(0)?.title ?: ""
-                    val subtitle = dayActivities.getOrNull(1)?.title ?: ""
-                    DayCard(
-                        day = "%02d".format(dayNumber),
-                        title = title,
-                        subtitle = subtitle,
-                        onClick = { onDayClick(index) }
+                val upcomingDays = currentTrip.getUpcomingDays()
+                if (upcomingDays.isNotEmpty()) {
+                    Text(
+                        text       = stringResource(R.string.home_upcoming_days).uppercase(),
+                        style      = MaterialTheme.typography.labelMedium,
+                        color      = MaterialTheme.colorScheme.onSurfaceVariant,
+                        fontWeight = FontWeight.SemiBold
                     )
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    upcomingDays.forEach { dayNumber ->
+                        val dayActivities = currentTrip.getActivitiesByDay(dayNumber)
+                        val title    = dayActivities.getOrNull(0)?.title ?: ""
+                        val subtitle = dayActivities.getOrNull(1)?.title ?: ""
+                        DayCard(
+                            day      = "%02d".format(dayNumber),
+                            title    = title,
+                            subtitle = subtitle,
+                            onClick  = { onDayClick(dayNumber - 1) }
+                        )
+                    }
                 }
 
                 Spacer(Modifier.height(16.dp))
@@ -297,7 +312,7 @@ private fun TripNavigator(
         ) {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Text(
-                    text  = "Your Trips",
+                    text  = stringResource(R.string.home_your_trips),
                     style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -336,6 +351,7 @@ private fun TripNavigator(
 
 @Composable
 private fun TripHeroCard(trip: Trip) {
+    val appLocale = LocalConfiguration.current.locales[0]
     val onHero = if (trip.heroColor.luminance() > 0.35f) Color.Black else Color.White
 
     Card(
@@ -346,7 +362,7 @@ private fun TripHeroCard(trip: Trip) {
     ) {
         Column(modifier = Modifier.padding(20.dp)) {
             Text(
-                text       = trip.status().uppercase(),
+                text       = trip.status().label().uppercase(),
                 style      = MaterialTheme.typography.labelSmall,
                 color      = onHero.copy(alpha = 0.70f),
                 fontWeight = FontWeight.SemiBold
@@ -359,7 +375,7 @@ private fun TripHeroCard(trip: Trip) {
                 fontWeight = FontWeight.Bold
             )
             Text(
-                text  = trip.formattedDates,
+                text  = "${trip.formattedDateRange(appLocale)} · ${stringResource(R.string.trip_date_days, trip.daysCount)}",
                 style = MaterialTheme.typography.bodySmall,
                 color = onHero.copy(alpha = 0.75f)
             )
@@ -404,29 +420,23 @@ private fun StatGrid(
     trip:             Trip,
     onItineraryClick: () -> Unit,
     onPhotosClick:    () -> Unit,
-    onPackingClick:   () -> Unit,
     onPlacesClick:    () -> Unit
 ) {
     val items = listOf(
-        StatItem("🗓", trip.daysCount.toString(),                          R.string.home_stat_days,    onItineraryClick),
-        StatItem("📸", trip.photoCount.toString(),                         R.string.home_stat_photos,  onPhotosClick),
-        StatItem("🧳", "${trip.packedPackingItems}/${trip.totalPackingItems}", R.string.home_stat_packing, onPackingClick),
-        StatItem("📍", trip.placesCount.toString(),                        R.string.home_stat_places,  onPlacesClick)
+        StatItem("🗓", trip.daysCount.toString(),   R.string.home_stat_days,   onItineraryClick),
+        StatItem("📸", trip.photoCount.toString(),  R.string.home_stat_photos, onPhotosClick),
+        StatItem("📍", trip.placesCount.toString(), R.string.home_stat_places, onPlacesClick)
     )
 
-    Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-        items.chunked(2).forEach { row ->
-            Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                row.forEach { item ->
-                    StatCard(
-                        emoji    = item.emoji,
-                        value    = item.value,
-                        label    = stringResource(item.labelRes),
-                        onClick  = item.onClick,
-                        modifier = Modifier.weight(1f)
-                    )
-                }
-            }
+    Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+        items.forEach { item ->
+            StatCard(
+                emoji    = item.emoji,
+                value    = item.value,
+                label    = stringResource(item.labelRes),
+                onClick  = item.onClick,
+                modifier = Modifier.weight(1f)
+            )
         }
     }
 }

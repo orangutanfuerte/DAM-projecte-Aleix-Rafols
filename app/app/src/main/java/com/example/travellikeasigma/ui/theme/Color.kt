@@ -114,12 +114,6 @@ val SightseeingTagText = Color(0xFF2E7D32)
 val TransitTagBackground = Color(0xFFE3F2FD)
 val TransitTagText = Color(0xFF1565C0)
 
-// Weather icon tints (ItineraryScreen)
-val WeatherSunnyTint = Color(0xFFFF9800)
-val WeatherPartlyCloudyTint = Color(0xFF78909C)
-val WeatherCloudyTint = Color(0xFF90A4AE)
-val WeatherRainyTint = Color(0xFF42A5F5)
-
 // Map placeholder (PlacesScreen)
 val MapPlaceholderBackground = Color(0xFFBBDEFB)
 val MapPlaceholderIcon = Color(0xFF1976D2)

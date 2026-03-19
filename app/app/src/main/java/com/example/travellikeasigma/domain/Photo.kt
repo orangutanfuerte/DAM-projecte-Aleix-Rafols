@@ -1,4 +1,4 @@
-package com.example.travellikeasigma.model
+package com.example.travellikeasigma.domain
 
 import androidx.compose.ui.graphics.Color
 import com.example.travellikeasigma.R

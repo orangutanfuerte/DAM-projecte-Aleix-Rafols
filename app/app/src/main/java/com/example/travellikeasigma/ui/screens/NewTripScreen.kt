@@ -1,4 +1,4 @@
-package com.example.travellikeasigma.ui.screen
+package com.example.travellikeasigma.ui.screens
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -30,8 +30,10 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.SelectableDates
 import androidx.compose.material3.rememberDateRangePickerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableLongStateOf
@@ -40,17 +42,20 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.travellikeasigma.R
-import com.example.travellikeasigma.ui.theme.heroColors
-import com.example.travellikeasigma.model.Trip
-import com.example.travellikeasigma.model.sampleDestinations
-import com.example.travellikeasigma.model.sampleHotels
+import com.example.travellikeasigma.domain.Destination
+import com.example.travellikeasigma.domain.Hotel
+import com.example.travellikeasigma.domain.sampleDestinations
+import com.example.travellikeasigma.domain.sampleHotels
 import com.example.travellikeasigma.ui.components.TripTopAppBar
+import com.example.travellikeasigma.ui.components.translatedName
 import java.text.SimpleDateFormat
 import java.time.Instant
+import java.time.LocalDate
 import java.time.ZoneOffset
 import java.util.Date
 import java.util.Locale
@@ -65,13 +70,13 @@ private val countryFlags = mapOf(
     "Brasil"  to "🇧🇷"
 )
 
-private val dateFormatter = SimpleDateFormat("MMM d, yyyy", Locale.ENGLISH)
+private fun dateFormatter(locale: Locale) = SimpleDateFormat("MMM d, yyyy", locale)
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NewTripScreen(
     onBackClick: () -> Unit,
-    onSave: (Trip) -> Unit
+    onSave: (name: String, startDate: LocalDate, endDate: LocalDate, destination: Destination, hotel: Hotel, persons: Int) -> Unit
 ) {
     var currentStep by rememberSaveable { mutableStateOf(NewTripStep.DESTINATION) }
 
@@ -92,7 +97,15 @@ fun NewTripScreen(
     val selectedHotel = sampleHotels.find { it.id == selectedHotelId }
 
     // DateRangePicker state lives outside the dialog so it persists while open
-    val dateRangeState = rememberDateRangePickerState()
+    val todayMillis = remember {
+        LocalDate.now().atStartOfDay(ZoneOffset.UTC).toInstant().toEpochMilli()
+    }
+    val dateRangeState = rememberDateRangePickerState(
+        selectableDates = object : SelectableDates {
+            override fun isSelectableDate(utcTimeMillis: Long) = utcTimeMillis >= todayMillis
+            override fun isSelectableYear(year: Int) = year >= LocalDate.now().year
+        }
+    )
 
     val stepTitle = when (currentStep) {
         NewTripStep.DESTINATION -> stringResource(R.string.new_trip_step_destination_title)
@@ -147,21 +160,7 @@ fun NewTripScreen(
                     val hotel = sampleHotels.find { it.id == selectedHotelId } ?: return@HotelStep
                     val startDate = Instant.ofEpochMilli(checkInMillis).atZone(ZoneOffset.UTC).toLocalDate()
                     val endDate   = Instant.ofEpochMilli(checkOutMillis).atZone(ZoneOffset.UTC).toLocalDate()
-                    val newTrip = Trip(
-                        id                = System.currentTimeMillis().toInt(),
-                        name              = tripName,
-                        startDate         = startDate,
-                        endDate           = endDate,
-                        activities        = mutableListOf(),
-                        packingCategories = emptyList(),
-                        places            = emptyList(),
-                        photos            = emptyList(),
-                        heroColor         = heroColors.random(),
-                        hotel             = hotel,
-                        persons           = persons,
-                        destination       = destination
-                    )
-                    onSave(newTrip)
+                    onSave(tripName, startDate, endDate, destination, hotel, persons)
                 },
                 modifier = Modifier.padding(innerPadding)
             )
@@ -241,7 +240,7 @@ private fun DestinationStep(
                             style = MaterialTheme.typography.headlineSmall
                         )
                         Text(
-                            text = destination.destinationName,
+                            text = destination.translatedName(),
                             style = MaterialTheme.typography.bodyLarge
                         )
                     }
@@ -313,12 +312,13 @@ private fun DetailsStep(
     modifier: Modifier = Modifier
 ) {
     val datesSelected = checkInMillis > 0 && checkOutMillis > 0
+    val fmt = dateFormatter(LocalConfiguration.current.locales[0])
     val checkInText = if (checkInMillis > 0)
-        dateFormatter.format(Date(checkInMillis))
+        fmt.format(Date(checkInMillis))
     else
         stringResource(R.string.new_trip_select_date)
     val checkOutText = if (checkOutMillis > 0)
-        dateFormatter.format(Date(checkOutMillis))
+        fmt.format(Date(checkOutMillis))
     else
         stringResource(R.string.new_trip_select_date)
 
@@ -423,7 +423,7 @@ private fun DetailsStep(
 @Composable
 private fun HotelStep(
     selectedHotelId: Int,
-    onHotelSelect: (com.example.travellikeasigma.model.Hotel) -> Unit,
+    onHotelSelect: (com.example.travellikeasigma.domain.Hotel) -> Unit,
     onSave: () -> Unit,
     modifier: Modifier = Modifier
 ) {

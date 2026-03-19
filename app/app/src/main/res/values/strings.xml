@@ -7,7 +7,6 @@
     <!-- Bottom Navigation -->
     <string name="nav_home">Home</string>
     <string name="nav_itinerary">Itinerary</string>
-    <string name="nav_packing">Packing</string>
     <string name="nav_photos">Photos</string>
     <string name="nav_places">Places</string>
 
@@ -18,7 +17,6 @@
     <string name="home_subtitle_past">Want to revive your trip to %1$s?</string>
     <string name="home_stat_days">Days planned</string>
     <string name="home_stat_photos">Photos saved</string>
-    <string name="home_stat_packing">Items packed</string>
     <string name="home_stat_places">Saved places</string>
     <string name="home_upcoming_days">Upcoming days</string>
     <string name="home_new_trip">New Trip</string>
@@ -34,12 +32,6 @@
     <string name="placeholder_coming_soon">Coming soon…</string>
     <string name="itinerary_title">Itinerary</string>
     <string name="itinerary_subtitle">%1$s · %2$d days</string>
-    <string name="packing_title">Packing List</string>
-    <string name="packing_subtitle">%1$s · %2$d items</string>
-    <string name="packing_progress">%1$d / %2$d items packed</string>
-    <string name="packing_add_item_placeholder">New item…</string>
-    <string name="packing_add_item">Add item</string>
-    <string name="packing_add_category">Add Category</string>
     <string name="photos_title">Photos</string>
     <string name="photos_subtitle">%1$s · %2$d photos</string>
     <string name="places_title">Saved Places</string>
@@ -147,6 +139,29 @@
     <string name="edit_activity_delete_yes">Yes</string>
     <string name="edit_activity_delete_no">No</string>
 
+    <!-- Login Screen -->
+    <string name="login_title">Travel like a Sigma</string>
+    <string name="login_email_label">Email</string>
+    <string name="login_password_label">Password</string>
+    <string name="login_button">Log In</string>
+    <string name="login_subtitle">Welcome back, explorer!</string>
+    <string name="login_error">Invalid email or password</string>
+    <string name="snackbar_login_success">Logged in successfully</string>
+
+    <!-- Logout -->
+    <string name="logout_dialog_title">Log out?</string>
+    <string name="logout_dialog_message">Are you sure you want to log out?</string>
+    <string name="logout_dialog_yes">Yes</string>
+    <string name="logout_dialog_no">No</string>
+    <string name="snackbar_logout">Logged out</string>
+
+    <!-- Snackbar messages -->
+    <string name="snackbar_trip_created">Trip created successfully</string>
+    <string name="snackbar_trip_deleted">Trip deleted</string>
+    <string name="snackbar_activity_created">Activity added successfully</string>
+    <string name="snackbar_activity_updated">Activity updated successfully</string>
+    <string name="snackbar_activity_deleted">Activity deleted</string>
+
     <!-- Photos Screen -->
     <string name="photos_delete">Delete photo</string>
     <string name="photos_delete_title">Delete photo?</string>
@@ -162,6 +177,29 @@
     <string name="places_remove_yes">Yes</string>
     <string name="places_remove_no">No</string>
     <string name="places_remove_cd">Remove place</string>
+
+    <!-- Trip status -->
+    <string name="trip_status_upcoming">Upcoming</string>
+    <string name="trip_status_past">Past Trip</string>
+    <string name="trip_status_active">Active Trip</string>
+    <string name="trip_date_days">%1$d days</string>
+
+    <!-- Activity types -->
+    <string name="activity_type_food">Food</string>
+    <string name="activity_type_sightseeing">Sightseeing</string>
+    <string name="activity_type_transit">Transit</string>
+    <string name="activity_type_others">Others</string>
+
+    <!-- Home extras -->
+    <string name="home_your_trips">Your Trips</string>
+    <string name="itinerary_day_label">Day %1$d</string>
+
+    <!-- Destinations -->
+    <string name="destination_japan">Japan</string>
+    <string name="destination_iceland">Iceland</string>
+    <string name="destination_italy">Italy</string>
+    <string name="destination_spain">Spain</string>
+    <string name="destination_brasil">Brasil</string>
 
     <!-- Content descriptions (accessibility) -->
     <string name="cd_avatar">Open preferences</string>
