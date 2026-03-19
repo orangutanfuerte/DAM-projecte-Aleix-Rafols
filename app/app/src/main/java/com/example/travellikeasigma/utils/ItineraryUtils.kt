@@ -32,6 +32,13 @@ object ItineraryUtils {
         return valid
     }
 
+    /** The day number must be within the trip's date range (1..daysCount). */
+    fun isValidDayNumber(dayNumber: Int, tripDaysCount: Int): Boolean {
+        val valid = dayNumber in 1..tripDaysCount
+        if (!valid) Log.w(TAG, "Invalid day number: $dayNumber (trip has $tripDaysCount days)")
+        return valid
+    }
+
     /**
      * Full validation for an activity.
      * Checks that both title and time are non-blank.

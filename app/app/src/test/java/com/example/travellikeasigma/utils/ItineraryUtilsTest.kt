@@ -92,4 +92,36 @@ class ItineraryUtilsTest {
     fun `validateActivity returns false when title is blank`() {
         assertFalse(ItineraryUtils.validateActivity("   ", "09:00"))
     }
+
+    // ── isValidDayNumber ─────────────────────────────────────────────────
+
+    @Test
+    fun `isValidDayNumber returns true for day 1 of a 7-day trip`() {
+        assertTrue(ItineraryUtils.isValidDayNumber(1, 7))
+    }
+
+    @Test
+    fun `isValidDayNumber returns true for the last day of a trip`() {
+        assertTrue(ItineraryUtils.isValidDayNumber(7, 7))
+    }
+
+    @Test
+    fun `isValidDayNumber returns false for day 0`() {
+        assertFalse(ItineraryUtils.isValidDayNumber(0, 7))
+    }
+
+    @Test
+    fun `isValidDayNumber returns false for a negative day`() {
+        assertFalse(ItineraryUtils.isValidDayNumber(-1, 7))
+    }
+
+    @Test
+    fun `isValidDayNumber returns false when day exceeds trip length`() {
+        assertFalse(ItineraryUtils.isValidDayNumber(8, 7))
+    }
+
+    @Test
+    fun `isValidDayNumber returns true for day 1 of a 1-day trip`() {
+        assertTrue(ItineraryUtils.isValidDayNumber(1, 1))
+    }
 }

@@ -29,6 +29,12 @@ class ItineraryViewModel @Inject constructor(
             return false
         }
 
+        // Validate that dayNumber is within the trip's date range
+        if (!ItineraryUtils.isValidDayNumber(dayNumber, trip.daysCount)) {
+            Log.w(TAG, "addActivity aborted: day $dayNumber is out of range for trip (1..${trip.daysCount})")
+            return false
+        }
+
         val nextId = (trip.activities.maxOfOrNull { it.id } ?: 0) + 1
         val date = trip.getDateForDay(dayNumber)
         val newActivity = activity.copy(id = nextId, date = date)
