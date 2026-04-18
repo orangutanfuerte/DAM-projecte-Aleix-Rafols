@@ -13,6 +13,10 @@ import com.example.travellikeasigma.domain.sampleDestinations
 import com.example.travellikeasigma.domain.sampleHotels
 import com.example.travellikeasigma.domain.samplePhotos
 import com.example.travellikeasigma.domain.samplePlaces
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import java.time.LocalDate
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -62,60 +66,63 @@ class FakeTripDataSource @Inject constructor() {
         ItineraryActivity(32, "15:00", "Gion District Walk", "Geisha quarter · Tea houses", tag = ActivityType.SIGHTSEEING, date = LocalDate.of(2027, 3, 20))
     )
 
-    private val trips = mutableListOf(
-        Trip(
-            id = 1,
-            name = "Iceland Adventure",
-            startDate = LocalDate.of(2024, 6, 1),
-            endDate = LocalDate.of(2024, 6, 8),
-            activities = emptyList(),
-            places = icelandPlaces,
-            photos = icelandPhotos,
-            heroColor = Color(0xFF3A6EA5),
-            destination = sampleDestinations[1],
-            hotel = sampleHotels[1],
-            persons = 2
-        ),
-        Trip(
-            id = 2,
-            name = "Italian Getaway",
-            startDate = LocalDate.of(2026, 9, 10),
-            endDate = LocalDate.of(2026, 9, 18),
-            activities = emptyList(),
-            places = italyPlaces,
-            photos = italyPhotos,
-            heroColor = Color(0xFFC45B28),
-            destination = sampleDestinations[2],
-            hotel = sampleHotels[2],
-            persons = 3
-        ),
-        Trip(
-            id = 3,
-            name = "Japan Highlights",
-            startDate = LocalDate.of(2027, 3, 14),
-            endDate = LocalDate.of(2027, 3, 21),
-            activities = japanActivities,
-            places = samplePlaces,
-            photos = samplePhotos,
-            heroColor = Color(0xFF4A7C59),
-            destination = sampleDestinations[0],
-            hotel = sampleHotels[0],
-            persons = 4
+    private val _trips = MutableStateFlow(
+        listOf(
+            Trip(
+                id = 1,
+                name = "Iceland Adventure",
+                startDate = LocalDate.of(2024, 6, 1),
+                endDate = LocalDate.of(2024, 6, 8),
+                activities = emptyList(),
+                places = icelandPlaces,
+                photos = icelandPhotos,
+                heroColor = Color(0xFF3A6EA5),
+                destination = sampleDestinations[1],
+                hotel = sampleHotels[1],
+                persons = 2
+            ),
+            Trip(
+                id = 2,
+                name = "Italian Getaway",
+                startDate = LocalDate.of(2026, 9, 10),
+                endDate = LocalDate.of(2026, 9, 18),
+                activities = emptyList(),
+                places = italyPlaces,
+                photos = italyPhotos,
+                heroColor = Color(0xFFC45B28),
+                destination = sampleDestinations[2],
+                hotel = sampleHotels[2],
+                persons = 3
+            ),
+            Trip(
+                id = 3,
+                name = "Japan Highlights",
+                startDate = LocalDate.of(2027, 3, 14),
+                endDate = LocalDate.of(2027, 3, 21),
+                activities = japanActivities,
+                places = samplePlaces,
+                photos = samplePhotos,
+                heroColor = Color(0xFF4A7C59),
+                destination = sampleDestinations[0],
+                hotel = sampleHotels[0],
+                persons = 4
+            )
         )
     )
 
-    fun getAllTrips(): List<Trip> = trips.toList()
+    fun getAllTrips(): Flow<List<Trip>> = _trips.asStateFlow()
 
-    fun getTripById(id: Int): Trip? = trips.find { it.id == id }
+    fun getTripById(id: Int): Trip? = _trips.value.find { it.id == id }
 
     fun addTrip(trip: Trip) {
         Log.d(TAG, "addTrip: id=${trip.id}, name='${trip.name}'")
-        trips.add(trip)
+        _trips.update { it + trip }
     }
 
     fun removeTrip(tripId: Int) {
-        val removed = trips.removeAll { it.id == tripId }
-        if (removed) {
+        val exists = _trips.value.any { it.id == tripId }
+        if (exists) {
+            _trips.update { it.filter { t -> t.id != tripId } }
             Log.d(TAG, "removeTrip: removed trip id=$tripId")
         } else {
             Log.w(TAG, "removeTrip: no trip found with id=$tripId")
@@ -123,39 +130,35 @@ class FakeTripDataSource @Inject constructor() {
     }
 
     fun addActivity(tripId: Int, activity: ItineraryActivity) {
-        val index = trips.indexOfFirst { it.id == tripId }
-        if (index != -1) {
-            val trip = trips[index]
-            trips[index] = trip.copy(activities = trip.activities + activity)
-            Log.d(TAG, "addActivity: added '${activity.title}' to trip id=$tripId")
-        } else {
-            Log.e(TAG, "addActivity: trip id=$tripId not found")
+        _trips.update { trips ->
+            trips.map { trip ->
+                if (trip.id == tripId) {
+                    Log.d(TAG, "addActivity: added '${activity.title}' to trip id=$tripId")
+                    trip.copy(activities = trip.activities + activity)
+                } else trip
+            }
         }
     }
 
     fun updateActivity(tripId: Int, activity: ItineraryActivity) {
-        val index = trips.indexOfFirst { it.id == tripId }
-        if (index != -1) {
-            val trip = trips[index]
-            trips[index] = trip.copy(
-                activities = trip.activities.map { if (it.id == activity.id) activity else it }
-            )
-            Log.d(TAG, "updateActivity: updated activity id=${activity.id} in trip id=$tripId")
-        } else {
-            Log.e(TAG, "updateActivity: trip id=$tripId not found")
+        _trips.update { trips ->
+            trips.map { trip ->
+                if (trip.id == tripId) {
+                    Log.d(TAG, "updateActivity: updated activity id=${activity.id} in trip id=$tripId")
+                    trip.copy(activities = trip.activities.map { if (it.id == activity.id) activity else it })
+                } else trip
+            }
         }
     }
 
     fun removeActivity(tripId: Int, activityId: Int) {
-        val index = trips.indexOfFirst { it.id == tripId }
-        if (index != -1) {
-            val trip = trips[index]
-            trips[index] = trip.copy(
-                activities = trip.activities.filter { it.id != activityId }
-            )
-            Log.d(TAG, "removeActivity: removed activity id=$activityId from trip id=$tripId")
-        } else {
-            Log.e(TAG, "removeActivity: trip id=$tripId not found")
+        _trips.update { trips ->
+            trips.map { trip ->
+                if (trip.id == tripId) {
+                    Log.d(TAG, "removeActivity: removed activity id=$activityId from trip id=$tripId")
+                    trip.copy(activities = trip.activities.filter { it.id != activityId })
+                } else trip
+            }
         }
     }
 

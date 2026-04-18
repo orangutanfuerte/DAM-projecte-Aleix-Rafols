@@ -7,6 +7,8 @@ import com.example.travellikeasigma.domain.Destination
 import com.example.travellikeasigma.domain.Hotel
 import com.example.travellikeasigma.domain.Trip
 import com.example.travellikeasigma.domain.TripRepository
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertNull
@@ -56,19 +58,20 @@ class TripRepositoryTest {
         destination = testDestination
     )
 
+    // Convenience: get the current list from the Flow
+    private fun allTrips() = runBlocking { repository.getAllTrips().first() }
+
     // ── getAllTrips ───────────────────────────────────────────────────────
 
     @Test
     fun `getAllTrips returns the 3 preloaded sample trips`() {
-        val trips = repository.getAllTrips()
-        assertEquals(3, trips.size)
+        assertEquals(3, allTrips().size)
     }
 
     @Test
     fun `getAllTrips returns a new list each time (defensive copy)`() {
-        val list1 = repository.getAllTrips()
-        val list2 = repository.getAllTrips()
-        // Same content but different list instances
+        val list1 = allTrips()
+        val list2 = allTrips()
         assertEquals(list1, list2)
     }
 
@@ -91,15 +94,15 @@ class TripRepositoryTest {
 
     @Test
     fun `addTrip increases trip count by 1`() {
-        val initialCount = repository.getAllTrips().size
-        repository.addTrip(createTestTrip())
-        assertEquals(initialCount + 1, repository.getAllTrips().size)
+        val initialCount = allTrips().size
+        runBlocking { repository.addTrip(createTestTrip()) }
+        assertEquals(initialCount + 1, allTrips().size)
     }
 
     @Test
     fun `addTrip makes the new trip retrievable by id`() {
         val trip = createTestTrip(id = 42, name = "My New Trip")
-        repository.addTrip(trip)
+        runBlocking { repository.addTrip(trip) }
 
         val retrieved = repository.getTripById(42)
         assertNotNull(retrieved)
@@ -111,7 +114,7 @@ class TripRepositoryTest {
         val start = LocalDate.of(2027, 5, 1)
         val end = LocalDate.of(2027, 5, 15)
         val trip = createTestTrip(id = 50, name = "Full Check", startDate = start, endDate = end)
-        repository.addTrip(trip)
+        runBlocking { repository.addTrip(trip) }
 
         val retrieved = repository.getTripById(50)!!
         assertEquals(50, retrieved.id)
@@ -128,27 +131,27 @@ class TripRepositoryTest {
 
     @Test
     fun `removeTrip decreases trip count by 1`() {
-        val initialCount = repository.getAllTrips().size
-        repository.removeTrip(1) // Remove "Iceland Adventure"
-        assertEquals(initialCount - 1, repository.getAllTrips().size)
+        val initialCount = allTrips().size
+        runBlocking { repository.removeTrip(1) } // Remove "Iceland Adventure"
+        assertEquals(initialCount - 1, allTrips().size)
     }
 
     @Test
     fun `removeTrip makes the trip no longer retrievable`() {
-        repository.removeTrip(1)
+        runBlocking { repository.removeTrip(1) }
         assertNull(repository.getTripById(1))
     }
 
     @Test
     fun `removeTrip with non-existing id does not change trip count`() {
-        val initialCount = repository.getAllTrips().size
-        repository.removeTrip(999)
-        assertEquals(initialCount, repository.getAllTrips().size)
+        val initialCount = allTrips().size
+        runBlocking { repository.removeTrip(999) }
+        assertEquals(initialCount, allTrips().size)
     }
 
     @Test
     fun `removeTrip does not affect other trips`() {
-        repository.removeTrip(1) // Remove Iceland
+        runBlocking { repository.removeTrip(1) } // Remove Iceland
         assertNotNull(repository.getTripById(2)) // Italy still exists
         assertNotNull(repository.getTripById(3)) // Japan still exists
     }
@@ -157,14 +160,14 @@ class TripRepositoryTest {
 
     @Test
     fun `create a trip then remove it returns to initial state`() {
-        val initialTrips = repository.getAllTrips()
+        val initialSize = allTrips().size
 
         val trip = createTestTrip(id = 77, name = "Temporary Trip")
-        repository.addTrip(trip)
-        assertEquals(initialTrips.size + 1, repository.getAllTrips().size)
+        runBlocking { repository.addTrip(trip) }
+        assertEquals(initialSize + 1, allTrips().size)
 
-        repository.removeTrip(77)
-        assertEquals(initialTrips.size, repository.getAllTrips().size)
+        runBlocking { repository.removeTrip(77) }
+        assertEquals(initialSize, allTrips().size)
         assertNull(repository.getTripById(77))
     }
 

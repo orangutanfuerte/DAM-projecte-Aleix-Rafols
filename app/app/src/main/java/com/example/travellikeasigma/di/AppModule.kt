@@ -1,22 +1,48 @@
 package com.example.travellikeasigma.di
 
-import com.example.travellikeasigma.data.repository.TripRepositoryImpl
+import android.content.Context
+import androidx.room.Room
+import com.example.travellikeasigma.data.repository.RoomTripRepositoryImpl
 import com.example.travellikeasigma.data.repository.UserPreferencesRepositoryImpl
+import com.example.travellikeasigma.data.room.ItineraryActivityDao
+import com.example.travellikeasigma.data.room.TravelSigmaDatabase
+import com.example.travellikeasigma.data.room.TripDao
 import com.example.travellikeasigma.domain.TripRepository
 import com.example.travellikeasigma.domain.UserPreferencesRepository
 import dagger.Binds
 import dagger.Module
+import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-abstract class AppModule {
+object DatabaseModule {
+
+    @Provides
+    @Singleton
+    fun provideDatabase(@ApplicationContext context: Context): TravelSigmaDatabase =
+        Room.databaseBuilder(context, TravelSigmaDatabase::class.java, "travel_sigma_db")
+            .build()
+
+    @Provides
+    @Singleton
+    fun provideTripDao(db: TravelSigmaDatabase): TripDao = db.tripDao()
+
+    @Provides
+    @Singleton
+    fun provideActivityDao(db: TravelSigmaDatabase): ItineraryActivityDao = db.activityDao()
+}
+
+@Module
+@InstallIn(SingletonComponent::class)
+abstract class RepositoryModule {
 
     @Binds
     @Singleton
-    abstract fun bindTripRepository(impl: TripRepositoryImpl): TripRepository
+    abstract fun bindTripRepository(impl: RoomTripRepositoryImpl): TripRepository
 
     @Binds
     @Singleton

@@ -6,6 +6,7 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.travellikeasigma.domain.Destination
 import com.example.travellikeasigma.domain.Hotel
 import com.example.travellikeasigma.domain.Trip
@@ -13,6 +14,7 @@ import com.example.travellikeasigma.domain.TripRepository
 import com.example.travellikeasigma.ui.theme.heroColors
 import com.example.travellikeasigma.utils.TripUtils
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
 import java.time.LocalDate
 import javax.inject.Inject
 
@@ -25,7 +27,7 @@ class TripViewModel @Inject constructor(
         private const val TAG = "TripViewModel"
     }
 
-    var trips by mutableStateOf(tripRepository.getAllTrips())
+    var trips by mutableStateOf<List<Trip>>(emptyList())
         private set
 
     var selectedTripIndex by mutableIntStateOf(0)
@@ -33,6 +35,24 @@ class TripViewModel @Inject constructor(
 
     val selectedTrip: Trip?
         get() = trips.getOrNull(selectedTripIndex)
+
+    // Set to true after createTrip so the Flow collector selects the new last trip
+    private var pendingSelectLast = false
+
+    init {
+        viewModelScope.launch {
+            tripRepository.getAllTrips().collect { newTrips ->
+                trips = newTrips
+                selectedTripIndex = if (pendingSelectLast) {
+                    pendingSelectLast = false
+                    (newTrips.size - 1).coerceAtLeast(0)
+                } else {
+                    selectedTripIndex.coerceIn(0, (newTrips.size - 1).coerceAtLeast(0))
+                }
+                Log.d(TAG, "Trips updated: ${newTrips.size} trips, selectedIndex=$selectedTripIndex")
+            }
+        }
+    }
 
     fun selectTrip(index: Int) {
         selectedTripIndex = index.coerceIn(0, (trips.size - 1).coerceAtLeast(0))
@@ -52,9 +72,8 @@ class TripViewModel @Inject constructor(
             return
         }
 
-        val newId = (trips.maxOfOrNull { it.id } ?: 0) + 1
         val trip = Trip(
-            id = newId,
+            id = 0,  // Room assigns the real id via autoGenerate
             name = name,
             startDate = startDate,
             endDate = endDate,
@@ -66,10 +85,11 @@ class TripViewModel @Inject constructor(
             persons = persons,
             destination = destination
         )
-        tripRepository.addTrip(trip)
-        refreshTrips()
-        selectedTripIndex = trips.size - 1
-        Log.i(TAG, "Trip created: id=$newId, name='$name', dates=$startDate..$endDate")
+        pendingSelectLast = true
+        viewModelScope.launch {
+            tripRepository.addTrip(trip)
+            Log.i(TAG, "Trip created: name='$name', dates=$startDate..$endDate")
+        }
     }
 
     fun deleteSelectedTrip() {
@@ -79,18 +99,17 @@ class TripViewModel @Inject constructor(
             return
         }
         Log.d(TAG, "Deleting trip: id=${trip.id}, name='${trip.name}'")
-        tripRepository.removeTrip(trip.id)
-        refreshTrips()
-        selectedTripIndex = selectedTripIndex.coerceIn(0, (trips.size - 1).coerceAtLeast(0))
-        Log.i(TAG, "Trip deleted. Remaining trips: ${trips.size}")
+        viewModelScope.launch {
+            tripRepository.removeTrip(trip.id)
+            Log.i(TAG, "Trip deleted: id=${trip.id}")
+        }
     }
 
     fun refreshTrips() {
-        trips = tripRepository.getAllTrips()
-        Log.d(TAG, "Trips refreshed: ${trips.size} trips loaded")
+        // No-op: the Flow from the repository keeps trips up to date automatically
+        Log.d(TAG, "refreshTrips: handled by reactive Flow")
     }
 
-    // Delegates to TripUtils for reusable validation
     fun validateNewTrip(name: String, startDate: LocalDate?, endDate: LocalDate?): Boolean {
         return TripUtils.validateNewTrip(name, startDate, endDate)
     }
