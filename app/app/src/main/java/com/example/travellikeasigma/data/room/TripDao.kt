@@ -4,13 +4,15 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Transaction
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface TripDao {
 
+    @Transaction
     @Query("SELECT * FROM trips")
-    fun getAllTrips(): Flow<List<TripEntity>>
+    fun getAllTripsWithActivities(): Flow<List<TripWithActivities>>
 
     @Query("SELECT * FROM trips WHERE id = :id")
     suspend fun getTripById(id: Int): TripEntity?

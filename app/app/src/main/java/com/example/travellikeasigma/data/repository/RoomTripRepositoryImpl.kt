@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.compose.ui.graphics.Color
 import com.example.travellikeasigma.data.room.ActivityEntity
 import com.example.travellikeasigma.data.room.ItineraryActivityDao
+import com.example.travellikeasigma.data.room.TripWithActivities
 import com.example.travellikeasigma.data.room.toDomain
 import com.example.travellikeasigma.data.room.toEntity
 import com.example.travellikeasigma.data.room.TripDao
@@ -50,14 +51,8 @@ class RoomTripRepositoryImpl @Inject constructor(
     }
 
     override fun getAllTrips(): Flow<List<Trip>> =
-        tripDao.getAllTrips()
-            .map { entities ->
-                entities.map { entity ->
-                    val activities = activityDao.getActivitiesForTrip(entity.id)
-                        .map { it.toDomain() }
-                    entity.toDomain(activities)
-                }
-            }
+        tripDao.getAllTripsWithActivities()
+            .map { rows -> rows.map { it.toDomain() } }
             .onEach { tripsCache = it }
 
     override fun getTripById(id: Int): Trip? = tripsCache.find { it.id == id }

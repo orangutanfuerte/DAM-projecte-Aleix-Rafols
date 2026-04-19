@@ -8,6 +8,9 @@ import com.example.travellikeasigma.domain.sampleDestinations
 import com.example.travellikeasigma.domain.sampleHotels
 import java.time.LocalDate
 
+fun TripWithActivities.toDomain(): Trip =
+    trip.toDomain(activities.map { it.toDomain() })
+
 fun TripEntity.toDomain(activities: List<ItineraryActivity>): Trip = Trip(
     id = id,
     name = name,
