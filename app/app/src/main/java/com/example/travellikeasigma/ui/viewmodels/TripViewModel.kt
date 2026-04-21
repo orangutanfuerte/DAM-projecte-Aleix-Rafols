@@ -15,6 +15,7 @@ import com.example.travellikeasigma.domain.UserPreferencesRepository
 import com.example.travellikeasigma.ui.theme.heroColors
 import com.example.travellikeasigma.utils.TripUtils
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import javax.inject.Inject
@@ -42,9 +43,19 @@ class TripViewModel @Inject constructor(
 
     // Set to true after createTrip so the Flow collector selects the new last trip
     private var pendingSelectLast = false
+    private var tripsCollectionJob: Job? = null
 
     init {
-        viewModelScope.launch {
+        startCollecting()
+    }
+
+    fun reloadTrips() {
+        tripsCollectionJob?.cancel()
+        startCollecting()
+    }
+
+    private fun startCollecting() {
+        tripsCollectionJob = viewModelScope.launch {
             tripRepository.getAllTrips(userId).collect { newTrips ->
                 trips = newTrips
                 selectedTripIndex = if (pendingSelectLast) {

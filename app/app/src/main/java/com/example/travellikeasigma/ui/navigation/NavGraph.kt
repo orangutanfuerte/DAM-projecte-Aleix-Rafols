@@ -71,6 +71,7 @@ fun NavGraph(
         composable(Routes.LOGIN) {
             LaunchedEffect(authViewModel.isLoggedIn) {
                 if (authViewModel.isLoggedIn) {
+                    tripViewModel.reloadTrips()
                     navController.navigate(Routes.HOME) {
                         popUpTo(Routes.LOGIN) { inclusive = true }
                     }
