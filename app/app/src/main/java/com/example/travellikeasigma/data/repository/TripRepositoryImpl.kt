@@ -18,7 +18,7 @@ class TripRepositoryImpl @Inject constructor(
         private const val TAG = "TripRepositoryImpl"
     }
 
-    override fun getAllTrips(): Flow<List<Trip>> = dataSource.getAllTrips()
+    override fun getAllTrips(userId: String): Flow<List<Trip>> = dataSource.getAllTrips(userId)
 
     override fun getTripById(id: Int): Trip? {
         val trip = dataSource.getTripById(id)
@@ -26,9 +26,9 @@ class TripRepositoryImpl @Inject constructor(
         return trip
     }
 
-    override suspend fun addTrip(trip: Trip) {
+    override suspend fun addTrip(trip: Trip, userId: String) {
         Log.d(TAG, "addTrip: id=${trip.id}, name='${trip.name}'")
-        dataSource.addTrip(trip)
+        dataSource.addTrip(trip, userId)
     }
 
     override suspend fun removeTrip(tripId: Int) {
@@ -49,5 +49,9 @@ class TripRepositoryImpl @Inject constructor(
     override suspend fun removeActivity(tripId: Int, activityId: Int) {
         Log.d(TAG, "removeActivity: tripId=$tripId, activityId=$activityId")
         dataSource.removeActivity(tripId, activityId)
+    }
+
+    override suspend fun seedIfEmpty(userId: String) {
+        dataSource.seedIfEmpty(userId)
     }
 }

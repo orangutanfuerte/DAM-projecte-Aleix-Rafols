@@ -11,11 +11,14 @@ import kotlinx.coroutines.flow.Flow
 interface TripDao {
 
     @Transaction
-    @Query("SELECT * FROM trips")
-    fun getAllTripsWithActivities(): Flow<List<TripWithActivities>>
+    @Query("SELECT * FROM trips WHERE userId = :userId")
+    fun getAllTripsWithActivities(userId: String): Flow<List<TripWithActivities>>
 
     @Query("SELECT * FROM trips WHERE id = :id")
     suspend fun getTripById(id: Int): TripEntity?
+
+    @Query("SELECT COUNT(*) FROM trips WHERE userId = :userId")
+    suspend fun countTripsForUser(userId: String): Int
 
     @Query("SELECT COUNT(*) FROM trips")
     suspend fun countTrips(): Int

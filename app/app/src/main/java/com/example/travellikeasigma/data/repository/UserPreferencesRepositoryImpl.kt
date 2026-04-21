@@ -14,9 +14,12 @@ class UserPreferencesRepositoryImpl @Inject constructor(
 
     override fun getLoggedInEmail(): String? = sharedPreferencesManager.loggedInEmail
 
-    override fun login(email: String) {
+    override fun getLoggedInUid(): String? = sharedPreferencesManager.loggedInUid
+
+    override fun login(email: String, uid: String) {
         sharedPreferencesManager.isLoggedIn = true
         sharedPreferencesManager.loggedInEmail = email
+        sharedPreferencesManager.loggedInUid = uid
     }
 
     override fun logout() {

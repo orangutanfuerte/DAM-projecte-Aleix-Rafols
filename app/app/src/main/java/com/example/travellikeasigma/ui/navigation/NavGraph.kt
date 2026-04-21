@@ -4,6 +4,7 @@ import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -68,22 +69,24 @@ fun NavGraph(
         popExitTransition  = { ExitTransition.None }
     ) {
         composable(Routes.LOGIN) {
+            LaunchedEffect(authViewModel.isLoggedIn) {
+                if (authViewModel.isLoggedIn) {
+                    navController.navigate(Routes.HOME) {
+                        popUpTo(Routes.LOGIN) { inclusive = true }
+                    }
+                    scope.launch {
+                        snackbarHostState.showSnackbar(context.getString(R.string.snackbar_login_success))
+                    }
+                }
+            }
             LoginScreen(
                 email            = authViewModel.email,
                 password         = authViewModel.password,
-                loginError       = authViewModel.loginError,
+                isLoading        = authViewModel.isLoading,
+                authError        = authViewModel.authError,
                 onEmailChange    = { authViewModel.email = it },
                 onPasswordChange = { authViewModel.password = it },
-                onLoginClick     = {
-                    if (authViewModel.login()) {
-                        navController.navigate(Routes.HOME) {
-                            popUpTo(Routes.LOGIN) { inclusive = true }
-                        }
-                        scope.launch {
-                            snackbarHostState.showSnackbar(context.getString(R.string.snackbar_login_success))
-                        }
-                    }
-                }
+                onLoginClick     = { authViewModel.login() }
             )
         }
         composable(Routes.HOME) {

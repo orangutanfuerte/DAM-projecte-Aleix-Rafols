@@ -11,6 +11,7 @@ import com.example.travellikeasigma.domain.Destination
 import com.example.travellikeasigma.domain.Hotel
 import com.example.travellikeasigma.domain.Trip
 import com.example.travellikeasigma.domain.TripRepository
+import com.example.travellikeasigma.domain.UserPreferencesRepository
 import com.example.travellikeasigma.ui.theme.heroColors
 import com.example.travellikeasigma.utils.TripUtils
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -20,7 +21,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class TripViewModel @Inject constructor(
-    private val tripRepository: TripRepository
+    private val tripRepository: TripRepository,
+    private val prefsRepository: UserPreferencesRepository
 ) : ViewModel() {
 
     companion object {
@@ -36,12 +38,14 @@ class TripViewModel @Inject constructor(
     val selectedTrip: Trip?
         get() = trips.getOrNull(selectedTripIndex)
 
+    private val userId get() = prefsRepository.getLoggedInUid() ?: ""
+
     // Set to true after createTrip so the Flow collector selects the new last trip
     private var pendingSelectLast = false
 
     init {
         viewModelScope.launch {
-            tripRepository.getAllTrips().collect { newTrips ->
+            tripRepository.getAllTrips(userId).collect { newTrips ->
                 trips = newTrips
                 selectedTripIndex = if (pendingSelectLast) {
                     pendingSelectLast = false
@@ -87,7 +91,7 @@ class TripViewModel @Inject constructor(
         )
         pendingSelectLast = true
         viewModelScope.launch {
-            tripRepository.addTrip(trip)
+            tripRepository.addTrip(trip, userId)
             Log.i(TAG, "Trip created: name='$name', dates=$startDate..$endDate")
         }
     }

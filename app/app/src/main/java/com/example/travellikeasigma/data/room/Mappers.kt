@@ -25,7 +25,7 @@ fun TripEntity.toDomain(activities: List<ItineraryActivity>): Trip = Trip(
     photos = emptyList()
 )
 
-fun Trip.toEntity(): TripEntity = TripEntity(
+fun Trip.toEntity(userId: String): TripEntity = TripEntity(
     id = id,
     name = name,
     destinationId = destination.id,
@@ -33,7 +33,8 @@ fun Trip.toEntity(): TripEntity = TripEntity(
     startDate = startDate.toString(),
     endDate = endDate.toString(),
     persons = persons,
-    heroColor = heroColor.value.toLong()
+    heroColor = heroColor.value.toLong(),
+    userId = userId
 )
 
 fun ActivityEntity.toDomain(): ItineraryActivity = ItineraryActivity(

@@ -51,7 +51,7 @@ class ItineraryRepositoryTest {
             persons = 2,
             destination = testDestination
         )
-        runBlocking { repository.addTrip(testTrip) }
+        runBlocking { repository.addTrip(testTrip, "") }
     }
 
     // ── Helper ───────────────────────────────────────────────────────────

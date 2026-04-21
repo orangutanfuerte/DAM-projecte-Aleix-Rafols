@@ -110,11 +110,13 @@ class FakeTripDataSource @Inject constructor() {
         )
     )
 
-    fun getAllTrips(): Flow<List<Trip>> = _trips.asStateFlow()
+    fun getAllTrips(userId: String = ""): Flow<List<Trip>> = _trips.asStateFlow()
 
     fun getTripById(id: Int): Trip? = _trips.value.find { it.id == id }
 
-    fun addTrip(trip: Trip) {
+    suspend fun seedIfEmpty(userId: String) { /* no-op for in-memory fake */ }
+
+    fun addTrip(trip: Trip, userId: String = "") {
         Log.d(TAG, "addTrip: id=${trip.id}, name='${trip.name}'")
         _trips.update { it + trip }
     }

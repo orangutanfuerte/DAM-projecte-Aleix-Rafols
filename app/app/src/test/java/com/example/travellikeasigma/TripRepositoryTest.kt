@@ -59,7 +59,7 @@ class TripRepositoryTest {
     )
 
     // Convenience: get the current list from the Flow
-    private fun allTrips() = runBlocking { repository.getAllTrips().first() }
+    private fun allTrips() = runBlocking { repository.getAllTrips("").first() }
 
     // ── getAllTrips ───────────────────────────────────────────────────────
 
@@ -95,14 +95,14 @@ class TripRepositoryTest {
     @Test
     fun `addTrip increases trip count by 1`() {
         val initialCount = allTrips().size
-        runBlocking { repository.addTrip(createTestTrip()) }
+        runBlocking { repository.addTrip(createTestTrip(), "") }
         assertEquals(initialCount + 1, allTrips().size)
     }
 
     @Test
     fun `addTrip makes the new trip retrievable by id`() {
         val trip = createTestTrip(id = 42, name = "My New Trip")
-        runBlocking { repository.addTrip(trip) }
+        runBlocking { repository.addTrip(trip, "") }
 
         val retrieved = repository.getTripById(42)
         assertNotNull(retrieved)
@@ -114,7 +114,7 @@ class TripRepositoryTest {
         val start = LocalDate.of(2027, 5, 1)
         val end = LocalDate.of(2027, 5, 15)
         val trip = createTestTrip(id = 50, name = "Full Check", startDate = start, endDate = end)
-        runBlocking { repository.addTrip(trip) }
+        runBlocking { repository.addTrip(trip, "") }
 
         val retrieved = repository.getTripById(50)!!
         assertEquals(50, retrieved.id)
@@ -163,7 +163,7 @@ class TripRepositoryTest {
         val initialSize = allTrips().size
 
         val trip = createTestTrip(id = 77, name = "Temporary Trip")
-        runBlocking { repository.addTrip(trip) }
+        runBlocking { repository.addTrip(trip, "") }
         assertEquals(initialSize + 1, allTrips().size)
 
         runBlocking { repository.removeTrip(77) }

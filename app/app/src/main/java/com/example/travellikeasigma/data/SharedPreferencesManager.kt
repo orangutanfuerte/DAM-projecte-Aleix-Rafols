@@ -19,6 +19,10 @@ class SharedPreferencesManager @Inject constructor(
         get() = prefs.getString(KEY_LOGGED_IN_EMAIL, null)
         set(value) = prefs.edit().putString(KEY_LOGGED_IN_EMAIL, value).apply()
 
+    var loggedInUid: String?
+        get() = prefs.getString(KEY_LOGGED_IN_UID, null)
+        set(value) = prefs.edit().putString(KEY_LOGGED_IN_UID, value).apply()
+
     var themeMode: String
         get() = prefs.getString(KEY_THEME_MODE, "system") ?: "system"
         set(value) = prefs.edit().putString(KEY_THEME_MODE, value).apply()
@@ -40,12 +44,14 @@ class SharedPreferencesManager @Inject constructor(
         prefs.edit()
             .remove(KEY_IS_LOGGED_IN)
             .remove(KEY_LOGGED_IN_EMAIL)
+            .remove(KEY_LOGGED_IN_UID)
             .apply()
     }
 
     companion object {
         private const val KEY_IS_LOGGED_IN = "is_logged_in"
         private const val KEY_LOGGED_IN_EMAIL = "logged_in_email"
+        private const val KEY_LOGGED_IN_UID = "logged_in_uid"
         private const val KEY_THEME_MODE = "theme_mode"
         private const val KEY_NOTIFICATIONS_ENABLED = "notifications_enabled"
         private const val KEY_LANGUAGE = "language"

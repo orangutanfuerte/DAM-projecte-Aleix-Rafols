@@ -4,7 +4,6 @@ import android.util.Log
 import androidx.compose.ui.graphics.Color
 import com.example.travellikeasigma.data.room.ActivityEntity
 import com.example.travellikeasigma.data.room.ItineraryActivityDao
-import com.example.travellikeasigma.data.room.TripWithActivities
 import com.example.travellikeasigma.data.room.toDomain
 import com.example.travellikeasigma.data.room.toEntity
 import com.example.travellikeasigma.data.room.TripDao
@@ -14,13 +13,9 @@ import com.example.travellikeasigma.domain.Trip
 import com.example.travellikeasigma.domain.TripRepository
 import com.example.travellikeasigma.domain.sampleDestinations
 import com.example.travellikeasigma.domain.sampleHotels
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.launch
 import java.time.LocalDate
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -35,37 +30,24 @@ class RoomTripRepositoryImpl @Inject constructor(
         private const val TAG = "RoomTripRepository"
     }
 
-    private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
-
-    // Synchronous cache populated by the Flow — used by getTripById
     @Volatile
     private var tripsCache: List<Trip> = emptyList()
 
-    init {
-        scope.launch {
-            if (tripDao.countTrips() == 0) {
-                Log.i(TAG, "Empty database — seeding initial data")
-                seedInitialData()
-            }
-        }
-    }
-
-    override fun getAllTrips(): Flow<List<Trip>> =
-        tripDao.getAllTripsWithActivities()
+    override fun getAllTrips(userId: String): Flow<List<Trip>> =
+        tripDao.getAllTripsWithActivities(userId)
             .map { rows -> rows.map { it.toDomain() } }
             .onEach { tripsCache = it }
 
     override fun getTripById(id: Int): Trip? = tripsCache.find { it.id == id }
 
-    override suspend fun addTrip(trip: Trip) {
-        Log.d(TAG, "addTrip: name='${trip.name}'")
-        tripDao.insertTrip(trip.toEntity())
+    override suspend fun addTrip(trip: Trip, userId: String) {
+        Log.d(TAG, "addTrip: name='${trip.name}', userId=$userId")
+        tripDao.insertTrip(trip.toEntity(userId))
     }
 
     override suspend fun removeTrip(tripId: Int) {
         Log.d(TAG, "removeTrip: id=$tripId")
         tripDao.deleteTripById(tripId)
-        // CASCADE on the FK automatically removes activities
     }
 
     override suspend fun addActivity(tripId: Int, activity: ItineraryActivity) {
@@ -83,9 +65,10 @@ class RoomTripRepositoryImpl @Inject constructor(
         activityDao.deleteActivityById(activityId)
     }
 
-    // ---- Seeding ----
+    override suspend fun seedIfEmpty(userId: String) {
+        if (tripDao.countTripsForUser(userId) > 0) return
+        Log.i(TAG, "Seeding initial data for userId=$userId")
 
-    private suspend fun seedInitialData() {
         val iceland = Trip(
             id = 0,
             name = "Iceland Adventure",
@@ -126,9 +109,9 @@ class RoomTripRepositoryImpl @Inject constructor(
             persons = 4
         )
 
-        tripDao.insertTrip(iceland.toEntity())
-        tripDao.insertTrip(italy.toEntity())
-        val japanId = tripDao.insertTrip(japan.toEntity()).toInt()
+        tripDao.insertTrip(iceland.toEntity(userId))
+        tripDao.insertTrip(italy.toEntity(userId))
+        val japanId = tripDao.insertTrip(japan.toEntity(userId)).toInt()
 
         val japanActivities = listOf(
             ActivityEntity(0, japanId, "10:00", "Arrive at Narita Airport", "Flight JL081 · Terminal 2", 0.0, ActivityType.TRANSIT.name, "2027-03-14"),

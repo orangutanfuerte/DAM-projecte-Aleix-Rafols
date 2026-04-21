@@ -9,8 +9,9 @@ data class TripEntity(
     val name: String,
     val destinationId: Int,
     val hotelId: Int,
-    val startDate: String,   // LocalDate.toString() ISO-8601
+    val startDate: String,
     val endDate: String,
     val persons: Int,
-    val heroColor: Long      // Color.value.toLong()
+    val heroColor: Long,
+    val userId: String
 )
