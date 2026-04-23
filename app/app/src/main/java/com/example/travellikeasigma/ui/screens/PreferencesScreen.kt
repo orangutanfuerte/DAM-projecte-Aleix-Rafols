@@ -19,8 +19,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowForwardIos
 import androidx.compose.material.icons.automirrored.filled.Logout
 import androidx.compose.material.icons.filled.DarkMode
-import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Language
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Policy
@@ -60,6 +60,7 @@ import com.example.travellikeasigma.ui.theme.ThemeMode
 @Composable
 fun PreferencesScreen(
     onBackClick:           () -> Unit,
+    onProfileClick:        () -> Unit,
     onTermsClick:          () -> Unit,
     onAboutClick:          () -> Unit,
     onLogoutClick:         () -> Unit,
@@ -239,7 +240,7 @@ fun PreferencesScreen(
                 .verticalScroll(ScrollState(0))
         ) {
             // Profile header
-            ProfileHeader()
+            ProfileHeader(onProfileClick = onProfileClick)
 
             Spacer(modifier = Modifier.height(24.dp))
 
@@ -320,7 +321,7 @@ fun PreferencesScreen(
 // Profile header — avatar initials, name, email, edit button
 // ---------------------------------------------------------------------------
 @Composable
-private fun ProfileHeader() {
+private fun ProfileHeader(onProfileClick: () -> Unit) {
     Column(
         modifier            = Modifier
             .fillMaxWidth()
@@ -344,16 +345,16 @@ private fun ProfileHeader() {
         )
         Spacer(modifier = Modifier.height(12.dp))
         Button(
-            onClick = { /* edit profile — future */ },
+            onClick = onProfileClick,
             shape   = RoundedCornerShape(20.dp)
         ) {
             Icon(
-                imageVector        = Icons.Filled.Edit,
+                imageVector        = Icons.Filled.Person,
                 contentDescription = null,
                 modifier           = Modifier.size(16.dp)
             )
             Spacer(modifier = Modifier.width(6.dp))
-            Text(stringResource(R.string.pref_edit_profile))
+            Text(stringResource(R.string.pref_view_profile))
         }
     }
 }

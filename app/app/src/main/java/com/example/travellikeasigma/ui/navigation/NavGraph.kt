@@ -26,11 +26,13 @@ import com.example.travellikeasigma.ui.screens.NewTripScreen
 import com.example.travellikeasigma.ui.screens.PhotosScreen
 import com.example.travellikeasigma.ui.screens.PlacesScreen
 import com.example.travellikeasigma.ui.screens.PreferencesScreen
+import com.example.travellikeasigma.ui.screens.ProfileScreen
 import com.example.travellikeasigma.ui.screens.TermsScreen
 import com.example.travellikeasigma.ui.theme.ThemeMode
 import com.example.travellikeasigma.ui.viewmodels.AuthViewModel
 import com.example.travellikeasigma.ui.viewmodels.ItineraryViewModel
 import com.example.travellikeasigma.ui.viewmodels.PreferencesViewModel
+import com.example.travellikeasigma.ui.viewmodels.ProfileViewModel
 import com.example.travellikeasigma.ui.viewmodels.TripViewModel
 
 // ---------------------------------------------------------------------------
@@ -194,6 +196,7 @@ fun NavGraph(
         composable(Routes.PREFERENCES) {
             PreferencesScreen(
                 onBackClick            = { navController.popBackStack() },
+                onProfileClick         = { navController.navigate(Routes.PROFILE) },
                 onTermsClick           = { navController.navigate(Routes.TERMS) },
                 onAboutClick           = { navController.navigate(Routes.ABOUT) },
                 onLogoutClick          = {
@@ -211,6 +214,13 @@ fun NavGraph(
                 onThemeChange          = { preferencesViewModel.updateThemeMode(it) },
                 onNotificationsChange  = { preferencesViewModel.updateNotificationsEnabled(it) },
                 onLanguageChange       = { preferencesViewModel.updateLanguage(it); onRecreate() }
+            )
+        }
+        composable(Routes.PROFILE) {
+            val profileViewModel: ProfileViewModel = hiltViewModel()
+            ProfileScreen(
+                user = profileViewModel.user,
+                onBackClick = { navController.popBackStack() }
             )
         }
         composable(Routes.TERMS) {

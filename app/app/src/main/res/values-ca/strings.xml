@@ -36,6 +36,7 @@
     <!-- Preferences Screen -->
     <string name="pref_title">Preferències</string>
     <string name="pref_edit_profile">Editar Perfil</string>
+    <string name="pref_view_profile">Veure perfil complet</string>
     <string name="pref_section_settings">Configuració de l\'app</string>
     <string name="pref_language">Idioma</string>
     <string name="pref_notifications">Notificacions</string>
@@ -184,6 +185,23 @@
     <string name="destination_italy">Itàlia</string>
     <string name="destination_spain">Espanya</string>
     <string name="destination_brasil">Brasil</string>
+
+    <!-- Profile Screen -->
+    <string name="profile_title">El meu perfil</string>
+    <string name="profile_section_personal">Informació personal</string>
+    <string name="profile_section_contact">Contacte</string>
+    <string name="profile_section_comms">Preferències de comunicació</string>
+    <string name="profile_field_name">Nom complet</string>
+    <string name="profile_field_username">Nom d\'usuari</string>
+    <string name="profile_field_email">Correu electrònic</string>
+    <string name="profile_field_dob">Data de naixement</string>
+    <string name="profile_field_phone">Número de telèfon</string>
+    <string name="profile_field_address">Adreça</string>
+    <string name="profile_field_country">País</string>
+    <string name="profile_field_accepts_emails">Accepta correus promocionals</string>
+    <string name="profile_empty">—</string>
+    <string name="profile_yes">Sí</string>
+    <string name="profile_no">No</string>
 
     <!-- Content descriptions (accessibility) -->
     <string name="cd_avatar">Obrir preferències</string>

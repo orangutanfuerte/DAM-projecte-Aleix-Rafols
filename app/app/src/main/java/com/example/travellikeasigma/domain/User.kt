@@ -12,5 +12,9 @@ data class User(
     val username: String,
     val email: String,
     val dateOfBirth: String,
+    val phone: String = "",
+    val address: String = "",
+    val country: String = "",
+    val acceptsReceiveEmails: Boolean = false,
     val preferences: Preferences = Preferences()
 )

@@ -2,6 +2,7 @@ package com.example.travellikeasigma.data.repository
 
 import com.example.travellikeasigma.data.room.UserDao
 import com.example.travellikeasigma.data.room.UserEntity
+import com.example.travellikeasigma.domain.Preferences
 import com.example.travellikeasigma.domain.User
 import com.example.travellikeasigma.domain.UserRepository
 import javax.inject.Inject
@@ -21,9 +22,14 @@ class UserRepositoryImpl @Inject constructor(
 
     private fun User.toEntity() = UserEntity(
         userId = uid,
+        name = name,
         email = email,
         username = username,
         dateOfBirth = dateOfBirth,
+        phone = phone,
+        address = address,
+        country = country,
+        acceptsReceiveEmails = acceptsReceiveEmails,
         language = preferences.language,
         theme = preferences.theme,
         notificationsEnabled = preferences.notificationsEnabled
@@ -31,11 +37,15 @@ class UserRepositoryImpl @Inject constructor(
 
     private fun UserEntity.toDomain() = User(
         uid = userId,
-        name = username,
+        name = name,
         email = email,
         username = username,
         dateOfBirth = dateOfBirth,
-        preferences = com.example.travellikeasigma.domain.Preferences(
+        phone = phone,
+        address = address,
+        country = country,
+        acceptsReceiveEmails = acceptsReceiveEmails,
+        preferences = Preferences(
             language = language,
             theme = theme,
             notificationsEnabled = notificationsEnabled
