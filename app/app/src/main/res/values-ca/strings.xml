@@ -131,7 +131,20 @@
     <string name="login_button">Iniciar Sessió</string>
     <string name="login_subtitle">Benvingut de nou, explorador!</string>
     <string name="login_error">Correu o contrasenya incorrectes</string>
+    <string name="login_no_account">No tens compte? Registra\'t</string>
     <string name="snackbar_login_success">Sessió iniciada correctament</string>
+
+    <!-- Register Screen -->
+    <string name="register_title">Crea un compte</string>
+    <string name="register_subtitle">Uneix-te a l\'aventura</string>
+    <string name="register_name_label">Nom complet</string>
+    <string name="register_username_label">Nom d\'usuari</string>
+    <string name="register_confirm_password_label">Confirmar contrasenya</string>
+    <string name="register_button">Crea el compte</string>
+    <string name="register_error_passwords">Les contrasenyes no coincideixen</string>
+    <string name="register_error_username_taken">Nom d\'usuari ja en ús</string>
+    <string name="register_have_account">Ja tens compte? Inicia sessió</string>
+    <string name="snackbar_register_success">Compte creat correctament</string>
 
     <!-- Logout -->
     <string name="logout_dialog_title">Tancar sessió?</string>

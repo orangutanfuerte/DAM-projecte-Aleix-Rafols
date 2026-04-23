@@ -20,6 +20,9 @@ class UserRepositoryImpl @Inject constructor(
     override suspend fun getUserById(uid: String): User? =
         userDao.getUserById(uid)?.toDomain()
 
+    override suspend fun isUsernameTaken(username: String): Boolean =
+        userDao.countByUsername(username) > 0
+
     private fun User.toEntity() = UserEntity(
         userId = uid,
         name = name,

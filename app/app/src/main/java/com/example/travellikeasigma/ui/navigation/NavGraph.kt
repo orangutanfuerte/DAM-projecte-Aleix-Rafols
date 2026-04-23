@@ -22,6 +22,7 @@ import com.example.travellikeasigma.ui.screens.EditActivityScreen
 import com.example.travellikeasigma.ui.screens.HomeScreen
 import com.example.travellikeasigma.ui.screens.ItineraryScreen
 import com.example.travellikeasigma.ui.screens.LoginScreen
+import com.example.travellikeasigma.ui.screens.RegisterScreen
 import com.example.travellikeasigma.ui.screens.NewTripScreen
 import com.example.travellikeasigma.ui.screens.PhotosScreen
 import com.example.travellikeasigma.ui.screens.PlacesScreen
@@ -89,7 +90,40 @@ fun NavGraph(
                 authError        = authViewModel.authError,
                 onEmailChange    = { authViewModel.email = it },
                 onPasswordChange = { authViewModel.password = it },
-                onLoginClick     = { authViewModel.login() }
+                onLoginClick     = { authViewModel.login() },
+                onRegisterClick  = { navController.navigate(Routes.REGISTER) }
+            )
+        }
+        composable(Routes.REGISTER) {
+            LaunchedEffect(authViewModel.isLoggedIn) {
+                if (authViewModel.isLoggedIn) {
+                    tripViewModel.reloadTrips()
+                    navController.navigate(Routes.HOME) {
+                        popUpTo(Routes.LOGIN) { inclusive = true }
+                    }
+                    scope.launch {
+                        snackbarHostState.showSnackbar(context.getString(R.string.snackbar_register_success))
+                    }
+                }
+            }
+            RegisterScreen(
+                name                    = authViewModel.registerName,
+                onNameChange            = { authViewModel.registerName = it },
+                username                = authViewModel.registerUsername,
+                onUsernameChange        = { authViewModel.registerUsername = it },
+                email                   = authViewModel.registerEmail,
+                onEmailChange           = { authViewModel.registerEmail = it },
+                password                = authViewModel.registerPassword,
+                onPasswordChange        = { authViewModel.registerPassword = it },
+                confirmPassword         = authViewModel.registerConfirmPassword,
+                onConfirmPasswordChange = { authViewModel.registerConfirmPassword = it },
+                isLoading               = authViewModel.isLoading,
+                authError               = authViewModel.authError,
+                onRegisterClick         = { authViewModel.register(context.getString(R.string.register_error_username_taken)) },
+                onLoginClick            = {
+                    authViewModel.clearRegisterFields()
+                    navController.popBackStack()
+                }
             )
         }
         composable(Routes.HOME) {

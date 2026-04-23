@@ -17,6 +17,7 @@ import com.example.travellikeasigma.R
 // ---------------------------------------------------------------------------
 object Routes {
     const val LOGIN         = "login"
+    const val REGISTER      = "register"
     const val HOME          = "home"
     const val ITINERARY     = "itinerary"
     const val PHOTOS        = "photos"

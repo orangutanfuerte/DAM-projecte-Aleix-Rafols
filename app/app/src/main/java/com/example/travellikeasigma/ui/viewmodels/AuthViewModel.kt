@@ -13,6 +13,7 @@ import com.example.travellikeasigma.domain.User
 import com.example.travellikeasigma.domain.UserPreferencesRepository
 import com.example.travellikeasigma.domain.UserRepository
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.auth.userProfileChangeRequest
 import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -42,6 +43,56 @@ class AuthViewModel @Inject constructor(
 
     var email by mutableStateOf("")
     var password by mutableStateOf("")
+
+    var registerName by mutableStateOf("")
+    var registerUsername by mutableStateOf("")
+    var registerEmail by mutableStateOf("")
+    var registerPassword by mutableStateOf("")
+    var registerConfirmPassword by mutableStateOf("")
+
+    fun register(usernameAlreadyTakenMsg: String) {
+        viewModelScope.launch {
+            isLoading = true
+            authError = null
+            try {
+                if (userRepo.isUsernameTaken(registerUsername)) {
+                    authError = usernameAlreadyTakenMsg
+                    isLoading = false
+                    return@launch
+                }
+                val result = Firebase.auth.createUserWithEmailAndPassword(registerEmail, registerPassword).await()
+                val firebaseUser = result.user!!
+                val profileUpdates = userProfileChangeRequest { displayName = registerName }
+                firebaseUser.updateProfile(profileUpdates).await()
+                prefsRepo.login(firebaseUser.email!!, firebaseUser.uid)
+                userRepo.saveUser(
+                    User(
+                        uid = firebaseUser.uid,
+                        name = registerName,
+                        username = registerUsername,
+                        email = firebaseUser.email!!,
+                        dateOfBirth = ""
+                    )
+                )
+                accessLogRepo.logAccess(firebaseUser.uid, AccessAction.LOGIN)
+                tripRepo.seedIfEmpty(firebaseUser.uid, firebaseUser.email!!)
+                isLoggedIn = true
+            } catch (e: Exception) {
+                authError = e.localizedMessage
+                Log.e(TAG, "Register failed", e)
+            } finally {
+                isLoading = false
+            }
+        }
+    }
+
+    fun clearRegisterFields() {
+        registerName = ""
+        registerUsername = ""
+        registerEmail = ""
+        registerPassword = ""
+        registerConfirmPassword = ""
+    }
 
     fun login() {
         viewModelScope.launch {
