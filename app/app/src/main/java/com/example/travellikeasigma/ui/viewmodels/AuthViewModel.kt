@@ -64,7 +64,7 @@ class AuthViewModel @Inject constructor(
                     )
                 }
                 accessLogRepo.logAccess(firebaseUser.uid, AccessAction.LOGIN)
-                tripRepo.seedIfEmpty(firebaseUser.uid)
+                tripRepo.seedIfEmpty(firebaseUser.uid, firebaseUser.email!!)
                 isLoggedIn = true
             } catch (e: Exception) {
                 authError = e.localizedMessage

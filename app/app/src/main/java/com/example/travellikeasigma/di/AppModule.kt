@@ -31,7 +31,7 @@ object DatabaseModule {
     @Singleton
     fun provideDatabase(@ApplicationContext context: Context): TravelSigmaDatabase =
         Room.databaseBuilder(context, TravelSigmaDatabase::class.java, "travel_sigma_db")
-            .addMigrations(TravelSigmaDatabase.MIGRATION_1_2)
+            .fallbackToDestructiveMigration(dropAllTables = true)
             .build()
 
     @Provides

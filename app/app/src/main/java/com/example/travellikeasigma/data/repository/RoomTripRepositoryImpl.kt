@@ -65,7 +65,8 @@ class RoomTripRepositoryImpl @Inject constructor(
         activityDao.deleteActivityById(activityId)
     }
 
-    override suspend fun seedIfEmpty(userId: String) {
+    override suspend fun seedIfEmpty(userId: String, email: String) {
+        if (email != "sofia.martinez@email.com") return
         if (tripDao.countTripsForUser(userId) > 0) return
         Log.i(TAG, "Seeding initial data for userId=$userId")
 
