@@ -69,7 +69,9 @@ fun PreferencesScreen(
     language:              String,
     onThemeChange:         (ThemeMode) -> Unit,
     onNotificationsChange: (Boolean) -> Unit,
-    onLanguageChange:      (String) -> Unit
+    onLanguageChange:      (String) -> Unit,
+    userName:              String?,
+    userEmail:             String?
 ) {
     // Dialog visibility state
     var showLanguageDialog      by remember { mutableStateOf(false) }
@@ -240,7 +242,11 @@ fun PreferencesScreen(
                 .verticalScroll(ScrollState(0))
         ) {
             // Profile header
-            ProfileHeader(onProfileClick = onProfileClick)
+            ProfileHeader(
+                name          = userName,
+                email         = userEmail,
+                onProfileClick = onProfileClick
+            )
 
             Spacer(modifier = Modifier.height(24.dp))
 
@@ -321,7 +327,12 @@ fun PreferencesScreen(
 // Profile header — avatar initials, name, email, edit button
 // ---------------------------------------------------------------------------
 @Composable
-private fun ProfileHeader(onProfileClick: () -> Unit) {
+private fun ProfileHeader(
+    name: String?,
+    email: String?,
+    onProfileClick: () -> Unit
+) {
+    val initials = name?.firstOrNull()?.uppercase() ?: "?"
     Column(
         modifier            = Modifier
             .fillMaxWidth()
@@ -329,17 +340,17 @@ private fun ProfileHeader(onProfileClick: () -> Unit) {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         ProfileAvatar(
-            initials = "S",
+            initials = initials,
             size = 72.dp
         )
         Spacer(modifier = Modifier.height(12.dp))
         Text(
-            text       = stringResource(R.string.pref_user_name),
+            text       = name ?: "—",
             style      = MaterialTheme.typography.titleLarge,
             fontWeight = FontWeight.Bold
         )
         Text(
-            text  = stringResource(R.string.pref_user_email),
+            text  = email ?: "—",
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )

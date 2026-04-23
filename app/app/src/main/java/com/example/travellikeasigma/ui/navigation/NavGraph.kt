@@ -228,6 +228,7 @@ fun NavGraph(
             }
         }
         composable(Routes.PREFERENCES) {
+            val profileViewModel: ProfileViewModel = hiltViewModel()
             PreferencesScreen(
                 onBackClick            = { navController.popBackStack() },
                 onProfileClick         = { navController.navigate(Routes.PROFILE) },
@@ -247,7 +248,9 @@ fun NavGraph(
                 language               = preferencesViewModel.language,
                 onThemeChange          = { preferencesViewModel.updateThemeMode(it) },
                 onNotificationsChange  = { preferencesViewModel.updateNotificationsEnabled(it) },
-                onLanguageChange       = { preferencesViewModel.updateLanguage(it); onRecreate() }
+                onLanguageChange       = { preferencesViewModel.updateLanguage(it); onRecreate() },
+                userName               = profileViewModel.user?.name,
+                userEmail              = profileViewModel.user?.email
             )
         }
         composable(Routes.PROFILE) {
