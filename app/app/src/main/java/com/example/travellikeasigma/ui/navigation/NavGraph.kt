@@ -19,6 +19,7 @@ import com.example.travellikeasigma.R
 import com.example.travellikeasigma.ui.screens.AboutScreen
 import com.example.travellikeasigma.ui.screens.AddActivityScreen
 import com.example.travellikeasigma.ui.screens.EditActivityScreen
+import com.example.travellikeasigma.ui.screens.EmailVerificationScreen
 import com.example.travellikeasigma.ui.screens.HomeScreen
 import com.example.travellikeasigma.ui.screens.ItineraryScreen
 import com.example.travellikeasigma.ui.screens.CompleteProfileScreen
@@ -37,9 +38,6 @@ import com.example.travellikeasigma.ui.viewmodels.PreferencesViewModel
 import com.example.travellikeasigma.ui.viewmodels.ProfileViewModel
 import com.example.travellikeasigma.ui.viewmodels.TripViewModel
 
-// ---------------------------------------------------------------------------
-// Helper — navigate to a bottom-nav tab from anywhere (card clicks, etc.)
-// ---------------------------------------------------------------------------
 private fun NavHostController.navigateToTab(route: String) {
     navigate(route) {
         popUpTo(Routes.HOME)
@@ -73,11 +71,11 @@ fun NavGraph(
         popExitTransition  = { ExitTransition.None }
     ) {
         composable(Routes.LOGIN) {
-            LaunchedEffect(authViewModel.isLoggedIn, authViewModel.needsProfileCompletion) {
+            LaunchedEffect(authViewModel.isLoggedIn, authViewModel.needsEmailVerification) {
                 if (authViewModel.isLoggedIn) {
                     tripViewModel.reloadTrips()
-                    if (authViewModel.needsProfileCompletion) {
-                        navController.navigate(Routes.COMPLETE_PROFILE) {
+                    if (authViewModel.needsEmailVerification) {
+                        navController.navigate(Routes.EMAIL_VERIFICATION) {
                             popUpTo(Routes.LOGIN) { inclusive = true }
                         }
                     } else {
@@ -91,20 +89,23 @@ fun NavGraph(
                 }
             }
             LoginScreen(
-                email            = authViewModel.email,
-                password         = authViewModel.password,
-                isLoading        = authViewModel.isLoading,
-                authError        = authViewModel.authError,
-                onEmailChange    = { authViewModel.email = it },
-                onPasswordChange = { authViewModel.password = it },
-                onLoginClick     = { authViewModel.login() },
-                onRegisterClick  = { authViewModel.authError = null; navController.navigate(Routes.REGISTER) }
+                email                = authViewModel.email,
+                password             = authViewModel.password,
+                isLoading            = authViewModel.isLoading,
+                authError            = authViewModel.authError,
+                resetPasswordSent    = authViewModel.resetPasswordSent,
+                onEmailChange        = { authViewModel.email = it },
+                onPasswordChange     = { authViewModel.password = it },
+                onLoginClick         = { authViewModel.login() },
+                onRegisterClick      = { authViewModel.authError = null; navController.navigate(Routes.REGISTER) },
+                onForgotPasswordClick = { authViewModel.sendPasswordReset(context.getString(R.string.login_forgot_password_empty_email)) },
+                onResetDismiss       = { authViewModel.dismissResetPasswordDialog() }
             )
         }
         composable(Routes.REGISTER) {
-            LaunchedEffect(authViewModel.isLoggedIn, authViewModel.needsProfileCompletion) {
-                if (authViewModel.isLoggedIn && authViewModel.needsProfileCompletion) {
-                    navController.navigate(Routes.COMPLETE_PROFILE) {
+            LaunchedEffect(authViewModel.isLoggedIn, authViewModel.needsEmailVerification) {
+                if (authViewModel.isLoggedIn && authViewModel.needsEmailVerification) {
+                    navController.navigate(Routes.EMAIL_VERIFICATION) {
                         popUpTo(Routes.LOGIN) { inclusive = true }
                     }
                 }
@@ -129,10 +130,41 @@ fun NavGraph(
                 }
             )
         }
+        composable(Routes.EMAIL_VERIFICATION) {
+            LaunchedEffect(authViewModel.needsEmailVerification) {
+                if (!authViewModel.needsEmailVerification) {
+                    navController.navigate(Routes.COMPLETE_PROFILE) {
+                        popUpTo(0) { inclusive = true }
+                    }
+                }
+            }
+            EmailVerificationScreen(
+                email           = authViewModel.emailForVerification,
+                onCheckVerified = { authViewModel.checkEmailVerified() },
+                onResendEmail   = { authViewModel.sendVerificationEmail() },
+                onBackClick     = {
+                    authViewModel.logout()
+                    navController.navigate(Routes.LOGIN) {
+                        popUpTo(0) { inclusive = true }
+                    }
+                }
+            )
+        }
         composable(Routes.COMPLETE_PROFILE) {
-            LaunchedEffect(authViewModel.needsProfileCompletion) {
-                if (!authViewModel.needsProfileCompletion) {
-                    tripViewModel.reloadTrips()
+            CompleteProfileScreen(
+                dateOfBirth           = authViewModel.profileDateOfBirth,
+                onDateOfBirthChange   = { authViewModel.profileDateOfBirth = it },
+                phone                 = authViewModel.profilePhone,
+                onPhoneChange         = { authViewModel.profilePhone = it },
+                address               = authViewModel.profileAddress,
+                onAddressChange       = { authViewModel.profileAddress = it },
+                country               = authViewModel.profileCountry,
+                onCountryChange       = { authViewModel.profileCountry = it },
+                acceptsEmails         = authViewModel.profileAcceptsEmails,
+                onAcceptsEmailsChange = { authViewModel.profileAcceptsEmails = it },
+                isLoading             = authViewModel.isLoading,
+                onSaveClick           = {
+                    authViewModel.completeProfile()
                     navController.navigate(Routes.HOME) {
                         popUpTo(0) { inclusive = true }
                     }
@@ -140,33 +172,19 @@ fun NavGraph(
                         snackbarHostState.showSnackbar(context.getString(R.string.snackbar_register_success))
                     }
                 }
-            }
-            CompleteProfileScreen(
-                dateOfBirth         = authViewModel.profileDateOfBirth,
-                onDateOfBirthChange = { authViewModel.profileDateOfBirth = it },
-                phone               = authViewModel.profilePhone,
-                onPhoneChange       = { authViewModel.profilePhone = it },
-                address             = authViewModel.profileAddress,
-                onAddressChange     = { authViewModel.profileAddress = it },
-                country             = authViewModel.profileCountry,
-                onCountryChange     = { authViewModel.profileCountry = it },
-                acceptsEmails       = authViewModel.profileAcceptsEmails,
-                onAcceptsEmailsChange = { authViewModel.profileAcceptsEmails = it },
-                isLoading           = authViewModel.isLoading,
-                onSaveClick         = { authViewModel.completeProfile() }
             )
         }
         composable(Routes.HOME) {
             HomeScreen(
-                trips            = tripViewModel.trips,
-                tripIndex        = tripViewModel.selectedTripIndex,
+                trips             = tripViewModel.trips,
+                tripIndex         = tripViewModel.selectedTripIndex,
                 onTripIndexChange = { tripViewModel.selectTrip(it) },
-                onNewTripClick   = { navController.navigate(Routes.NEW_TRIP) },
-                onAvatarClick    = { navController.navigate(Routes.PREFERENCES) },
-                onItineraryClick = { navController.navigateToTab(Routes.ITINERARY) },
-                onPhotosClick    = { navController.navigateToTab(Routes.PHOTOS) },
-                onPlacesClick    = { navController.navigateToTab(Routes.PLACES) },
-                onDayClick       = { dayIndex ->
+                onNewTripClick    = { navController.navigate(Routes.NEW_TRIP) },
+                onAvatarClick     = { navController.navigate(Routes.PREFERENCES) },
+                onItineraryClick  = { navController.navigateToTab(Routes.ITINERARY) },
+                onPhotosClick     = { navController.navigateToTab(Routes.PHOTOS) },
+                onPlacesClick     = { navController.navigateToTab(Routes.PLACES) },
+                onDayClick        = { dayIndex ->
                     navController.navigateToTab(Routes.itineraryDay(dayIndex))
                 },
                 onDeleteTripClick = {

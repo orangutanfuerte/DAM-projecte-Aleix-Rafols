@@ -14,6 +14,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.TextButton
@@ -45,12 +46,28 @@ fun LoginScreen(
     password: String,
     isLoading: Boolean,
     authError: String?,
+    resetPasswordSent: Boolean,
     onEmailChange: (String) -> Unit,
     onPasswordChange: (String) -> Unit,
     onLoginClick: () -> Unit,
-    onRegisterClick: () -> Unit
+    onRegisterClick: () -> Unit,
+    onForgotPasswordClick: () -> Unit,
+    onResetDismiss: () -> Unit
 ) {
     var passwordVisible by remember { mutableStateOf(false) }
+
+    if (resetPasswordSent) {
+        AlertDialog(
+            onDismissRequest = onResetDismiss,
+            title = { Text(stringResource(R.string.reset_password_sent_title)) },
+            text = { Text(stringResource(R.string.reset_password_sent_body)) },
+            confirmButton = {
+                TextButton(onClick = onResetDismiss) {
+                    Text(stringResource(R.string.home_delete_trip_yes))
+                }
+            }
+        )
+    }
 
     Scaffold { innerPadding ->
         Column(
@@ -117,16 +134,24 @@ fun LoginScreen(
                 enabled = !isLoading
             )
 
+            TextButton(
+                onClick = onForgotPasswordClick,
+                enabled = !isLoading,
+                modifier = Modifier.align(Alignment.End)
+            ) {
+                Text(stringResource(R.string.login_forgot_password))
+            }
+
             if (authError != null) {
-                Spacer(modifier = Modifier.height(8.dp))
                 Text(
                     text = authError,
                     color = MaterialTheme.colorScheme.error,
                     style = MaterialTheme.typography.bodySmall
                 )
+                Spacer(modifier = Modifier.height(8.dp))
+            } else {
+                Spacer(modifier = Modifier.height(24.dp))
             }
-
-            Spacer(modifier = Modifier.height(24.dp))
 
             Button(
                 onClick = onLoginClick,

@@ -133,6 +133,14 @@
     <string name="login_error">Correu o contrasenya incorrectes</string>
     <string name="login_no_account">No tens compte? Registra\'t</string>
     <string name="snackbar_login_success">Sessió iniciada correctament</string>
+    <string name="login_forgot_password">Heu oblidat la contrasenya?</string>
+    <string name="login_forgot_password_empty_email">Introduïu primer el vostre correu electrònic</string>
+    <string name="reset_password_sent_title">Correu enviat</string>
+    <string name="reset_password_sent_body">Reviseu la safata d\'entrada per a les instruccions per restablir la contrasenya.</string>
+    <string name="email_verification_title">Verifica el teu correu</string>
+    <string name="email_verification_body">Hem enviat un enllaç de verificació a %1$s. Revisa la safata i toca l\'enllaç.</string>
+    <string name="email_verification_check">Ja he verificat el meu correu</string>
+    <string name="email_verification_resend">Tornar a enviar correu</string>
 
     <!-- Register Screen -->
     <string name="register_title">Crea un compte</string>

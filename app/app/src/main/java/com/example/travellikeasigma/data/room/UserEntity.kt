@@ -16,6 +16,5 @@ data class UserEntity(
     val acceptsReceiveEmails: Boolean,
     val language: String,
     val theme: String,
-    val notificationsEnabled: Boolean,
-    val profileComplete: Boolean = false
+    val notificationsEnabled: Boolean
 )

@@ -39,8 +39,7 @@ class UserRepositoryImpl @Inject constructor(
         acceptsReceiveEmails = acceptsReceiveEmails,
         language = preferences.language,
         theme = preferences.theme,
-        notificationsEnabled = preferences.notificationsEnabled,
-        profileComplete = profileComplete
+        notificationsEnabled = preferences.notificationsEnabled
     )
 
     private fun UserEntity.toDomain() = User(
@@ -57,7 +56,6 @@ class UserRepositoryImpl @Inject constructor(
             language = language,
             theme = theme,
             notificationsEnabled = notificationsEnabled
-        ),
-        profileComplete = profileComplete
+        )
     )
 }

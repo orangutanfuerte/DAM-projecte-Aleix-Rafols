@@ -35,27 +35,32 @@ class AuthViewModel @Inject constructor(
     var isLoggedIn by mutableStateOf(prefsRepo.isLoggedIn())
         private set
 
-    var needsProfileCompletion by mutableStateOf(false)
+    var needsEmailVerification by mutableStateOf(false)
+        private set
+
+    var emailForVerification by mutableStateOf("")
+        private set
+
+    var resetPasswordSent by mutableStateOf(false)
         private set
 
     var isLoading by mutableStateOf(false)
         private set
 
     var authError by mutableStateOf<String?>(null)
-        private set
 
     // Login fields
     var email by mutableStateOf("")
     var password by mutableStateOf("")
 
-    // Register step 1 fields
+    // Register fields
     var registerName by mutableStateOf("")
     var registerUsername by mutableStateOf("")
     var registerEmail by mutableStateOf("")
     var registerPassword by mutableStateOf("")
     var registerConfirmPassword by mutableStateOf("")
 
-    // Profile completion fields (step 2, also used if login detects incomplete profile)
+    // Profile completion fields
     var profileDateOfBirth by mutableStateOf("")
     var profilePhone by mutableStateOf("")
     var profileAddress by mutableStateOf("")
@@ -74,8 +79,8 @@ class AuthViewModel @Inject constructor(
                 }
                 val result = Firebase.auth.createUserWithEmailAndPassword(registerEmail, registerPassword).await()
                 val firebaseUser = result.user!!
-                val profileUpdates = userProfileChangeRequest { displayName = registerName }
-                firebaseUser.updateProfile(profileUpdates).await()
+                firebaseUser.updateProfile(userProfileChangeRequest { displayName = registerName }).await()
+                firebaseUser.sendEmailVerification().await()
                 prefsRepo.login(firebaseUser.email!!, firebaseUser.uid)
                 userRepo.saveUser(
                     User(
@@ -83,13 +88,13 @@ class AuthViewModel @Inject constructor(
                         name = registerName,
                         username = registerUsername,
                         email = firebaseUser.email!!,
-                        dateOfBirth = "",
-                        profileComplete = false
+                        dateOfBirth = ""
                     )
                 )
                 accessLogRepo.logAccess(firebaseUser.uid, AccessAction.LOGIN)
                 tripRepo.seedIfEmpty(firebaseUser.uid, firebaseUser.email!!)
-                needsProfileCompletion = true
+                emailForVerification = firebaseUser.email!!
+                needsEmailVerification = true
                 isLoggedIn = true
             } catch (e: Exception) {
                 authError = e.localizedMessage
@@ -112,15 +117,13 @@ class AuthViewModel @Inject constructor(
                         phone = profilePhone,
                         address = profileAddress,
                         country = profileCountry,
-                        acceptsReceiveEmails = profileAcceptsEmails,
-                        profileComplete = true
+                        acceptsReceiveEmails = profileAcceptsEmails
                     )
                 )
             } catch (e: Exception) {
                 Log.e(TAG, "completeProfile failed", e)
             } finally {
                 isLoading = false
-                needsProfileCompletion = false
             }
         }
     }
@@ -147,27 +150,19 @@ class AuthViewModel @Inject constructor(
                     userRepo.saveUser(
                         User(
                             uid = firebaseUser.uid,
-                            name = firebaseUser.displayName
-                                ?: firebaseUser.email!!.substringBefore("@"),
+                            name = firebaseUser.displayName ?: firebaseUser.email!!.substringBefore("@"),
                             username = firebaseUser.email!!.substringBefore("@"),
                             email = firebaseUser.email!!,
-                            dateOfBirth = "",
-                            profileComplete = false
+                            dateOfBirth = ""
                         )
                     )
-                    needsProfileCompletion = true
-                } else {
-                    needsProfileCompletion = !existingUser.profileComplete
-                    if (needsProfileCompletion) {
-                        profileDateOfBirth = existingUser.dateOfBirth
-                        profilePhone = existingUser.phone
-                        profileAddress = existingUser.address
-                        profileCountry = existingUser.country
-                        profileAcceptsEmails = existingUser.acceptsReceiveEmails
-                    }
                 }
                 accessLogRepo.logAccess(firebaseUser.uid, AccessAction.LOGIN)
                 tripRepo.seedIfEmpty(firebaseUser.uid, firebaseUser.email!!)
+                if (!firebaseUser.isEmailVerified) {
+                    emailForVerification = firebaseUser.email!!
+                    needsEmailVerification = true
+                }
                 isLoggedIn = true
             } catch (e: Exception) {
                 authError = e.localizedMessage
@@ -178,6 +173,49 @@ class AuthViewModel @Inject constructor(
         }
     }
 
+    fun checkEmailVerified() {
+        viewModelScope.launch {
+            try {
+                Firebase.auth.currentUser?.reload()?.await()
+                if (Firebase.auth.currentUser?.isEmailVerified == true) {
+                    needsEmailVerification = false
+                }
+            } catch (e: Exception) {
+                Log.e(TAG, "checkEmailVerified failed", e)
+            }
+        }
+    }
+
+    fun sendVerificationEmail() {
+        viewModelScope.launch {
+            try {
+                Firebase.auth.currentUser?.sendEmailVerification()?.await()
+            } catch (e: Exception) {
+                Log.e(TAG, "sendVerificationEmail failed", e)
+            }
+        }
+    }
+
+    fun sendPasswordReset(emptyEmailMsg: String) {
+        viewModelScope.launch {
+            if (email.isBlank()) {
+                authError = emptyEmailMsg
+                return@launch
+            }
+            authError = null
+            try {
+                Firebase.auth.sendPasswordResetEmail(email).await()
+                resetPasswordSent = true
+            } catch (e: Exception) {
+                authError = e.localizedMessage
+            }
+        }
+    }
+
+    fun dismissResetPasswordDialog() {
+        resetPasswordSent = false
+    }
+
     fun logout() {
         val uid = prefsRepo.getLoggedInUid()
         if (uid != null) {
@@ -186,7 +224,8 @@ class AuthViewModel @Inject constructor(
         Firebase.auth.signOut()
         prefsRepo.logout()
         isLoggedIn = false
-        needsProfileCompletion = false
+        needsEmailVerification = false
+        emailForVerification = ""
         email = ""
         password = ""
     }
