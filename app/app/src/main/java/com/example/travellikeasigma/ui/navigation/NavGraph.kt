@@ -105,6 +105,7 @@ fun NavGraph(
         composable(Routes.REGISTER) {
             LaunchedEffect(authViewModel.isLoggedIn, authViewModel.needsEmailVerification) {
                 if (authViewModel.isLoggedIn && authViewModel.needsEmailVerification) {
+                    tripViewModel.reloadTrips()
                     navController.navigate(Routes.EMAIL_VERIFICATION) {
                         popUpTo(Routes.LOGIN) { inclusive = true }
                     }
