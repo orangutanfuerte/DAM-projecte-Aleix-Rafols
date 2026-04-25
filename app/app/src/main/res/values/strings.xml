@@ -156,6 +156,10 @@
     <string name="register_name_label">Full name</string>
     <string name="register_username_label">Username</string>
     <string name="register_confirm_password_label">Confirm password</string>
+    <string name="register_step_profile_title">Your info</string>
+    <string name="register_step_profile_subtitle">All fields are optional</string>
+    <string name="complete_profile_save">Save and continue</string>
+    <string name="complete_profile_skip">Skip for now</string>
     <string name="register_button">Create Account</string>
     <string name="register_error_passwords">Passwords do not match</string>
     <string name="register_error_username_taken">Username already taken</string>

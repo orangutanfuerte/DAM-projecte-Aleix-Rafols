@@ -21,6 +21,7 @@ import com.example.travellikeasigma.ui.screens.AddActivityScreen
 import com.example.travellikeasigma.ui.screens.EditActivityScreen
 import com.example.travellikeasigma.ui.screens.HomeScreen
 import com.example.travellikeasigma.ui.screens.ItineraryScreen
+import com.example.travellikeasigma.ui.screens.CompleteProfileScreen
 import com.example.travellikeasigma.ui.screens.LoginScreen
 import com.example.travellikeasigma.ui.screens.RegisterScreen
 import com.example.travellikeasigma.ui.screens.NewTripScreen
@@ -72,14 +73,20 @@ fun NavGraph(
         popExitTransition  = { ExitTransition.None }
     ) {
         composable(Routes.LOGIN) {
-            LaunchedEffect(authViewModel.isLoggedIn) {
+            LaunchedEffect(authViewModel.isLoggedIn, authViewModel.needsProfileCompletion) {
                 if (authViewModel.isLoggedIn) {
                     tripViewModel.reloadTrips()
-                    navController.navigate(Routes.HOME) {
-                        popUpTo(Routes.LOGIN) { inclusive = true }
-                    }
-                    scope.launch {
-                        snackbarHostState.showSnackbar(context.getString(R.string.snackbar_login_success))
+                    if (authViewModel.needsProfileCompletion) {
+                        navController.navigate(Routes.COMPLETE_PROFILE) {
+                            popUpTo(Routes.LOGIN) { inclusive = true }
+                        }
+                    } else {
+                        navController.navigate(Routes.HOME) {
+                            popUpTo(Routes.LOGIN) { inclusive = true }
+                        }
+                        scope.launch {
+                            snackbarHostState.showSnackbar(context.getString(R.string.snackbar_login_success))
+                        }
                     }
                 }
             }
@@ -95,14 +102,10 @@ fun NavGraph(
             )
         }
         composable(Routes.REGISTER) {
-            LaunchedEffect(authViewModel.isLoggedIn) {
-                if (authViewModel.isLoggedIn) {
-                    tripViewModel.reloadTrips()
-                    navController.navigate(Routes.HOME) {
+            LaunchedEffect(authViewModel.isLoggedIn, authViewModel.needsProfileCompletion) {
+                if (authViewModel.isLoggedIn && authViewModel.needsProfileCompletion) {
+                    navController.navigate(Routes.COMPLETE_PROFILE) {
                         popUpTo(Routes.LOGIN) { inclusive = true }
-                    }
-                    scope.launch {
-                        snackbarHostState.showSnackbar(context.getString(R.string.snackbar_register_success))
                     }
                 }
             }
@@ -124,6 +127,33 @@ fun NavGraph(
                     authViewModel.clearRegisterFields()
                     navController.popBackStack()
                 }
+            )
+        }
+        composable(Routes.COMPLETE_PROFILE) {
+            LaunchedEffect(authViewModel.needsProfileCompletion) {
+                if (!authViewModel.needsProfileCompletion) {
+                    tripViewModel.reloadTrips()
+                    navController.navigate(Routes.HOME) {
+                        popUpTo(0) { inclusive = true }
+                    }
+                    scope.launch {
+                        snackbarHostState.showSnackbar(context.getString(R.string.snackbar_register_success))
+                    }
+                }
+            }
+            CompleteProfileScreen(
+                dateOfBirth         = authViewModel.profileDateOfBirth,
+                onDateOfBirthChange = { authViewModel.profileDateOfBirth = it },
+                phone               = authViewModel.profilePhone,
+                onPhoneChange       = { authViewModel.profilePhone = it },
+                address             = authViewModel.profileAddress,
+                onAddressChange     = { authViewModel.profileAddress = it },
+                country             = authViewModel.profileCountry,
+                onCountryChange     = { authViewModel.profileCountry = it },
+                acceptsEmails       = authViewModel.profileAcceptsEmails,
+                onAcceptsEmailsChange = { authViewModel.profileAcceptsEmails = it },
+                isLoading           = authViewModel.isLoading,
+                onSaveClick         = { authViewModel.completeProfile() }
             )
         }
         composable(Routes.HOME) {

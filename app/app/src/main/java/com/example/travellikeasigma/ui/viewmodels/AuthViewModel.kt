@@ -35,20 +35,32 @@ class AuthViewModel @Inject constructor(
     var isLoggedIn by mutableStateOf(prefsRepo.isLoggedIn())
         private set
 
+    var needsProfileCompletion by mutableStateOf(false)
+        private set
+
     var isLoading by mutableStateOf(false)
         private set
 
     var authError by mutableStateOf<String?>(null)
         private set
 
+    // Login fields
     var email by mutableStateOf("")
     var password by mutableStateOf("")
 
+    // Register step 1 fields
     var registerName by mutableStateOf("")
     var registerUsername by mutableStateOf("")
     var registerEmail by mutableStateOf("")
     var registerPassword by mutableStateOf("")
     var registerConfirmPassword by mutableStateOf("")
+
+    // Profile completion fields (step 2, also used if login detects incomplete profile)
+    var profileDateOfBirth by mutableStateOf("")
+    var profilePhone by mutableStateOf("")
+    var profileAddress by mutableStateOf("")
+    var profileCountry by mutableStateOf("")
+    var profileAcceptsEmails by mutableStateOf(false)
 
     fun register(usernameAlreadyTakenMsg: String) {
         viewModelScope.launch {
@@ -71,17 +83,44 @@ class AuthViewModel @Inject constructor(
                         name = registerName,
                         username = registerUsername,
                         email = firebaseUser.email!!,
-                        dateOfBirth = ""
+                        dateOfBirth = "",
+                        profileComplete = false
                     )
                 )
                 accessLogRepo.logAccess(firebaseUser.uid, AccessAction.LOGIN)
                 tripRepo.seedIfEmpty(firebaseUser.uid, firebaseUser.email!!)
+                needsProfileCompletion = true
                 isLoggedIn = true
             } catch (e: Exception) {
                 authError = e.localizedMessage
                 Log.e(TAG, "Register failed", e)
             } finally {
                 isLoading = false
+            }
+        }
+    }
+
+    fun completeProfile() {
+        viewModelScope.launch {
+            isLoading = true
+            try {
+                val uid = prefsRepo.getLoggedInUid() ?: return@launch
+                val existing = userRepo.getUserById(uid) ?: return@launch
+                userRepo.updateUser(
+                    existing.copy(
+                        dateOfBirth = profileDateOfBirth,
+                        phone = profilePhone,
+                        address = profileAddress,
+                        country = profileCountry,
+                        acceptsReceiveEmails = profileAcceptsEmails,
+                        profileComplete = true
+                    )
+                )
+            } catch (e: Exception) {
+                Log.e(TAG, "completeProfile failed", e)
+            } finally {
+                isLoading = false
+                needsProfileCompletion = false
             }
         }
     }
@@ -102,7 +141,8 @@ class AuthViewModel @Inject constructor(
                 val result = Firebase.auth.signInWithEmailAndPassword(email, password).await()
                 val firebaseUser = result.user!!
                 prefsRepo.login(firebaseUser.email!!, firebaseUser.uid)
-                if (userRepo.getUserById(firebaseUser.uid) == null) {
+                val existingUser = userRepo.getUserById(firebaseUser.uid)
+                if (existingUser == null) {
                     userRepo.saveUser(
                         User(
                             uid = firebaseUser.uid,
@@ -110,9 +150,20 @@ class AuthViewModel @Inject constructor(
                                 ?: firebaseUser.email!!.substringBefore("@"),
                             username = firebaseUser.email!!.substringBefore("@"),
                             email = firebaseUser.email!!,
-                            dateOfBirth = ""
+                            dateOfBirth = "",
+                            profileComplete = false
                         )
                     )
+                    needsProfileCompletion = true
+                } else {
+                    needsProfileCompletion = !existingUser.profileComplete
+                    if (needsProfileCompletion) {
+                        profileDateOfBirth = existingUser.dateOfBirth
+                        profilePhone = existingUser.phone
+                        profileAddress = existingUser.address
+                        profileCountry = existingUser.country
+                        profileAcceptsEmails = existingUser.acceptsReceiveEmails
+                    }
                 }
                 accessLogRepo.logAccess(firebaseUser.uid, AccessAction.LOGIN)
                 tripRepo.seedIfEmpty(firebaseUser.uid, firebaseUser.email!!)
@@ -134,6 +185,7 @@ class AuthViewModel @Inject constructor(
         Firebase.auth.signOut()
         prefsRepo.logout()
         isLoggedIn = false
+        needsProfileCompletion = false
         email = ""
         password = ""
     }

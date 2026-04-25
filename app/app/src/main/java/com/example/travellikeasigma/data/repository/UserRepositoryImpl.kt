@@ -20,6 +20,10 @@ class UserRepositoryImpl @Inject constructor(
     override suspend fun getUserById(uid: String): User? =
         userDao.getUserById(uid)?.toDomain()
 
+    override suspend fun updateUser(user: User) {
+        userDao.insertUser(user.toEntity())
+    }
+
     override suspend fun isUsernameTaken(username: String): Boolean =
         userDao.countByUsername(username) > 0
 
@@ -35,7 +39,8 @@ class UserRepositoryImpl @Inject constructor(
         acceptsReceiveEmails = acceptsReceiveEmails,
         language = preferences.language,
         theme = preferences.theme,
-        notificationsEnabled = preferences.notificationsEnabled
+        notificationsEnabled = preferences.notificationsEnabled,
+        profileComplete = profileComplete
     )
 
     private fun UserEntity.toDomain() = User(
@@ -52,6 +57,7 @@ class UserRepositoryImpl @Inject constructor(
             language = language,
             theme = theme,
             notificationsEnabled = notificationsEnabled
-        )
+        ),
+        profileComplete = profileComplete
     )
 }

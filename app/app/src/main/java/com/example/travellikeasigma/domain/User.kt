@@ -16,5 +16,6 @@ data class User(
     val address: String = "",
     val country: String = "",
     val acceptsReceiveEmails: Boolean = false,
-    val preferences: Preferences = Preferences()
+    val preferences: Preferences = Preferences(),
+    val profileComplete: Boolean = false
 )

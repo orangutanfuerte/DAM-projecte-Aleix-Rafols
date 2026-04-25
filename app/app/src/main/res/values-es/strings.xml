@@ -140,6 +140,10 @@
     <string name="register_name_label">Nombre completo</string>
     <string name="register_username_label">Nombre de usuario</string>
     <string name="register_confirm_password_label">Confirmar contraseña</string>
+    <string name="register_step_profile_title">Tu información</string>
+    <string name="register_step_profile_subtitle">Todos los campos son opcionales</string>
+    <string name="complete_profile_save">Guardar y continuar</string>
+    <string name="complete_profile_skip">Omitir por ahora</string>
     <string name="register_button">Crear cuenta</string>
     <string name="register_error_passwords">Las contraseñas no coinciden</string>
     <string name="register_error_username_taken">Nombre de usuario ya en uso</string>
