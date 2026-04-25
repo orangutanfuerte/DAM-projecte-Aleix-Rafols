@@ -59,7 +59,11 @@ fun NavGraph(
     val scope   = rememberCoroutineScope()
     val context = LocalContext.current
 
-    val startDestination = if (authViewModel.isLoggedIn) Routes.HOME else Routes.LOGIN
+    val startDestination = when {
+        !authViewModel.isLoggedIn              -> Routes.LOGIN
+        authViewModel.needsEmailVerification   -> Routes.EMAIL_VERIFICATION
+        else                                   -> Routes.HOME
+    }
 
     NavHost(
         navController      = navController,
@@ -96,7 +100,7 @@ fun NavGraph(
                 resetPasswordSent    = authViewModel.resetPasswordSent,
                 onEmailChange        = { authViewModel.email = it },
                 onPasswordChange     = { authViewModel.password = it },
-                onLoginClick         = { authViewModel.login() },
+                onLoginClick         = { authViewModel.login(context.getString(R.string.login_error_no_local_data)) },
                 onRegisterClick      = { authViewModel.authError = null; navController.navigate(Routes.REGISTER) },
                 onForgotPasswordClick = { authViewModel.sendPasswordReset(context.getString(R.string.login_forgot_password_empty_email)) },
                 onResetDismiss       = { authViewModel.dismissResetPasswordDialog() }
@@ -132,8 +136,8 @@ fun NavGraph(
             )
         }
         composable(Routes.EMAIL_VERIFICATION) {
-            LaunchedEffect(authViewModel.needsEmailVerification) {
-                if (!authViewModel.needsEmailVerification) {
+            LaunchedEffect(authViewModel.needsEmailVerification, authViewModel.isLoggedIn) {
+                if (authViewModel.isLoggedIn && !authViewModel.needsEmailVerification) {
                     navController.navigate(Routes.COMPLETE_PROFILE) {
                         popUpTo(0) { inclusive = true }
                     }

@@ -146,6 +146,7 @@
     <string name="login_subtitle">Welcome back, explorer!</string>
     <string name="login_error">Invalid email or password</string>
     <string name="login_no_account">Don\'t have an account? Register</string>
+    <string name="login_error_no_local_data">Account data not found. Please contact us for assistance.</string>
     <string name="snackbar_login_success">Logged in successfully</string>
     <string name="login_forgot_password">Forgot your password?</string>
     <string name="login_forgot_password_empty_email">Enter your email address first</string>

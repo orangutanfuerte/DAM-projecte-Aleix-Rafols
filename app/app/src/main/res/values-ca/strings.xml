@@ -132,6 +132,7 @@
     <string name="login_subtitle">Benvingut de nou, explorador!</string>
     <string name="login_error">Correu o contrasenya incorrectes</string>
     <string name="login_no_account">No tens compte? Registra\'t</string>
+    <string name="login_error_no_local_data">Dades del compte no trobades. Si us plau, contacta\'ns per rebre ajuda.</string>
     <string name="snackbar_login_success">Sessió iniciada correctament</string>
     <string name="login_forgot_password">Heu oblidat la contrasenya?</string>
     <string name="login_forgot_password_empty_email">Introduïu primer el vostre correu electrònic</string>

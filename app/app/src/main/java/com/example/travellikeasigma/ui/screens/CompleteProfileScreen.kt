@@ -146,8 +146,7 @@ fun CompleteProfileScreen(
     Scaffold(
         topBar = {
             TripTopAppBar(
-                title = stringResource(R.string.register_step_profile_title),
-                onBackClick = onSaveClick
+                title = stringResource(R.string.register_step_profile_title)
             )
         }
     ) { innerPadding ->

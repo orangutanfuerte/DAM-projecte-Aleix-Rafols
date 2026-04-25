@@ -41,6 +41,14 @@ class AuthViewModel @Inject constructor(
     var emailForVerification by mutableStateOf("")
         private set
 
+    init {
+        val currentUser = Firebase.auth.currentUser
+        if (currentUser != null && isLoggedIn && !currentUser.isEmailVerified) {
+            emailForVerification = currentUser.email ?: ""
+            needsEmailVerification = true
+        }
+    }
+
     var resetPasswordSent by mutableStateOf(false)
         private set
 
@@ -137,30 +145,26 @@ class AuthViewModel @Inject constructor(
         authError = null
     }
 
-    fun login() {
+    fun login(noLocalDataMsg: String) {
         viewModelScope.launch {
             isLoading = true
             authError = null
             try {
                 val result = Firebase.auth.signInWithEmailAndPassword(email, password).await()
                 val firebaseUser = result.user!!
-                prefsRepo.login(firebaseUser.email!!, firebaseUser.uid)
-                val existingUser = userRepo.getUserById(firebaseUser.uid)
+                firebaseUser.reload().await()
+                val freshUser = Firebase.auth.currentUser!!
+                val existingUser = userRepo.getUserById(freshUser.uid)
                 if (existingUser == null) {
-                    userRepo.saveUser(
-                        User(
-                            uid = firebaseUser.uid,
-                            name = firebaseUser.displayName ?: firebaseUser.email!!.substringBefore("@"),
-                            username = firebaseUser.email!!.substringBefore("@"),
-                            email = firebaseUser.email!!,
-                            dateOfBirth = ""
-                        )
-                    )
+                    Firebase.auth.signOut()
+                    authError = noLocalDataMsg
+                    return@launch
                 }
-                accessLogRepo.logAccess(firebaseUser.uid, AccessAction.LOGIN)
-                tripRepo.seedIfEmpty(firebaseUser.uid)
-                if (!firebaseUser.isEmailVerified) {
-                    emailForVerification = firebaseUser.email!!
+                prefsRepo.login(freshUser.email!!, freshUser.uid)
+                accessLogRepo.logAccess(freshUser.uid, AccessAction.LOGIN)
+                tripRepo.seedIfEmpty(freshUser.uid)
+                if (!freshUser.isEmailVerified) {
+                    emailForVerification = freshUser.email!!
                     needsEmailVerification = true
                 }
                 isLoggedIn = true
