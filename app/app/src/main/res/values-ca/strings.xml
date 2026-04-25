@@ -216,6 +216,8 @@
     <string name="profile_field_address">Adreça</string>
     <string name="profile_field_country">País</string>
     <string name="profile_field_accepts_emails">Accepta correus promocionals</string>
+    <string name="country_picker_title">Seleccionar país</string>
+    <string name="country_search_hint">Cercar…</string>
     <string name="profile_empty">—</string>
     <string name="profile_yes">Sí</string>
     <string name="profile_no">No</string>

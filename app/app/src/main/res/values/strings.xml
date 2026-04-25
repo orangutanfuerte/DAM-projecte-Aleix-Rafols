@@ -232,6 +232,8 @@
     <string name="profile_field_address">Address</string>
     <string name="profile_field_country">Country</string>
     <string name="profile_field_accepts_emails">Accepts promotional emails</string>
+    <string name="country_picker_title">Select country</string>
+    <string name="country_search_hint">Search…</string>
     <string name="profile_empty">—</string>
     <string name="profile_yes">Yes</string>
     <string name="profile_no">No</string>
