@@ -92,7 +92,7 @@ class AuthViewModel @Inject constructor(
                     )
                 )
                 accessLogRepo.logAccess(firebaseUser.uid, AccessAction.LOGIN)
-                tripRepo.seedIfEmpty(firebaseUser.uid, firebaseUser.email!!)
+                tripRepo.seedIfEmpty(firebaseUser.uid)
                 emailForVerification = firebaseUser.email!!
                 needsEmailVerification = true
                 isLoggedIn = true
@@ -158,7 +158,7 @@ class AuthViewModel @Inject constructor(
                     )
                 }
                 accessLogRepo.logAccess(firebaseUser.uid, AccessAction.LOGIN)
-                tripRepo.seedIfEmpty(firebaseUser.uid, firebaseUser.email!!)
+                tripRepo.seedIfEmpty(firebaseUser.uid)
                 if (!firebaseUser.isEmailVerified) {
                     emailForVerification = firebaseUser.email!!
                     needsEmailVerification = true

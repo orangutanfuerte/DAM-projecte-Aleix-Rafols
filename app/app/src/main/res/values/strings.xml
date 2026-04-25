@@ -11,7 +11,7 @@
     <string name="nav_places">Places</string>
 
     <!-- Home Screen -->
-    <string name="home_greeting">Bon Voyage, Sofia!</string>
+    <string name="home_greeting">Bon Voyage, %1$s!</string>
     <string name="home_subtitle_upcoming">Your trip to %1$s is coming up!</string>
     <string name="home_subtitle_active">Have a happy trip to %1$s!</string>
     <string name="home_subtitle_past">Want to revive your trip to %1$s?</string>
@@ -39,9 +39,7 @@
 
     <!-- Preferences Screen -->
     <string name="pref_title">Preferences</string>
-    <string name="pref_user_name">Sofia Martínez</string>
-    <string name="pref_user_email">sofia.martinez@email.com</string>
-    <string name="pref_edit_profile">Edit Profile</string>
+<string name="pref_edit_profile">Edit Profile</string>
     <string name="pref_view_profile">View Full Profile</string>
     <string name="pref_section_settings">App Settings</string>
     <string name="pref_language">Language</string>

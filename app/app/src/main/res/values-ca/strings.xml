@@ -7,7 +7,7 @@
     <string name="nav_places">Llocs</string>
 
     <!-- Home Screen -->
-    <string name="home_greeting">Bon Voyage, Sofia!</string>
+    <string name="home_greeting">Bon Voyage, %1$s!</string>
     <string name="home_subtitle_upcoming">El teu viatge a %1$s s\'acosta!</string>
     <string name="home_subtitle_active">Gaudeix del teu viatge a %1$s!</string>
     <string name="home_subtitle_past">Vols reviure el teu viatge a %1$s?</string>

@@ -51,7 +51,7 @@ class TripRepositoryImpl @Inject constructor(
         dataSource.removeActivity(tripId, activityId)
     }
 
-    override suspend fun seedIfEmpty(userId: String, email: String) {
+    override suspend fun seedIfEmpty(userId: String) {
         dataSource.seedIfEmpty(userId)
     }
 }

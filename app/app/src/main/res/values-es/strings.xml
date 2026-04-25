@@ -7,7 +7,7 @@
     <string name="nav_places">Lugares</string>
 
     <!-- Home Screen -->
-    <string name="home_greeting">Bon Voyage, Sofia!</string>
+    <string name="home_greeting">Bon Voyage, %1$s!</string>
     <string name="home_subtitle_upcoming">Tu viaje a %1$s se acerca!</string>
     <string name="home_subtitle_active">Disfruta de tu viaje a %1$s!</string>
     <string name="home_subtitle_past">Quieres revivir tu viaje a %1$s?</string>

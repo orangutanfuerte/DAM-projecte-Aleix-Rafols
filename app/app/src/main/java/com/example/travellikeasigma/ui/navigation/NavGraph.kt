@@ -175,9 +175,11 @@ fun NavGraph(
             )
         }
         composable(Routes.HOME) {
+            val homeProfileViewModel: ProfileViewModel = hiltViewModel()
             HomeScreen(
                 trips             = tripViewModel.trips,
                 tripIndex         = tripViewModel.selectedTripIndex,
+                userName          = homeProfileViewModel.user?.name ?: "",
                 onTripIndexChange = { tripViewModel.selectTrip(it) },
                 onNewTripClick    = { navController.navigate(Routes.NEW_TRIP) },
                 onAvatarClick     = { navController.navigate(Routes.PREFERENCES) },

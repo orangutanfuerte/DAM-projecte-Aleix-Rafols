@@ -72,6 +72,7 @@ import com.example.travellikeasigma.ui.components.translatedName
 fun HomeScreen(
     trips:            List<Trip>,
     tripIndex:        Int,
+    userName:         String,
     onTripIndexChange: (Int) -> Unit,
     onNewTripClick:   () -> Unit,
     onAvatarClick:    () -> Unit,
@@ -82,6 +83,7 @@ fun HomeScreen(
     onDeleteTripClick:   () -> Unit = {}
 ) {
     val total = trips.size
+    val initials = userName.firstOrNull()?.uppercaseChar()?.toString() ?: "?"
     var showDeleteDialog by remember { mutableStateOf(false) }
 
     // Empty state — no trips yet
@@ -89,7 +91,7 @@ fun HomeScreen(
         Box(modifier = Modifier.fillMaxSize()) {
             // Avatar in top-right corner for preferences access
             ProfileAvatar(
-                initials = "S",
+                initials = initials,
                 size = 36.dp,
                 modifier = Modifier
                     .align(Alignment.TopEnd)
@@ -125,6 +127,7 @@ fun HomeScreen(
     Scaffold(
         topBar = {
             HomeTopBar(
+                initials       = initials,
                 onNewTripClick = onNewTripClick,
                 onAvatarClick  = onAvatarClick
             )
@@ -141,7 +144,7 @@ fun HomeScreen(
                 Spacer(modifier = Modifier.height(8.dp))
 
                 Text(
-                    text       = stringResource(R.string.home_greeting),
+                    text       = stringResource(R.string.home_greeting, userName),
                     style      = MaterialTheme.typography.headlineSmall,
                     fontWeight = FontWeight.Bold
                 )
@@ -244,6 +247,7 @@ fun HomeScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun HomeTopBar(
+    initials:       String,
     onNewTripClick: () -> Unit,
     onAvatarClick:  () -> Unit
 ) {
@@ -270,7 +274,7 @@ private fun HomeTopBar(
             }
 
             ProfileAvatar(
-                initials = "S",
+                initials = initials,
                 size = 36.dp,
                 modifier = Modifier
                     .clip(CircleShape)
