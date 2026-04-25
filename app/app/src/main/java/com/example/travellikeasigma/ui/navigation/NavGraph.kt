@@ -98,7 +98,7 @@ fun NavGraph(
                 onEmailChange    = { authViewModel.email = it },
                 onPasswordChange = { authViewModel.password = it },
                 onLoginClick     = { authViewModel.login() },
-                onRegisterClick  = { navController.navigate(Routes.REGISTER) }
+                onRegisterClick  = { authViewModel.authError = null; navController.navigate(Routes.REGISTER) }
             )
         }
         composable(Routes.REGISTER) {

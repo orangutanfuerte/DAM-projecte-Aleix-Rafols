@@ -131,6 +131,7 @@ class AuthViewModel @Inject constructor(
         registerEmail = ""
         registerPassword = ""
         registerConfirmPassword = ""
+        authError = null
     }
 
     fun login() {
