@@ -188,6 +188,8 @@
     <string name="snackbar_activity_created">Activity added successfully</string>
     <string name="snackbar_activity_updated">Activity updated successfully</string>
     <string name="snackbar_activity_deleted">Activity deleted</string>
+    <string name="snackbar_profile_updated">Profile updated</string>
+    <string name="profile_save_changes">Save Changes</string>
 
     <!-- Photos Screen -->
     <string name="photos_delete">Delete photo</string>

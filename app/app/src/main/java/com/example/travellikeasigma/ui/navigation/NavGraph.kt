@@ -5,7 +5,9 @@ import androidx.compose.animation.ExitTransition
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
@@ -29,6 +31,7 @@ import com.example.travellikeasigma.ui.screens.NewTripScreen
 import com.example.travellikeasigma.ui.screens.PhotosScreen
 import com.example.travellikeasigma.ui.screens.PlacesScreen
 import com.example.travellikeasigma.ui.screens.PreferencesScreen
+import com.example.travellikeasigma.ui.screens.EditProfileScreen
 import com.example.travellikeasigma.ui.screens.ProfileScreen
 import com.example.travellikeasigma.ui.screens.TermsScreen
 import com.example.travellikeasigma.ui.theme.ThemeMode
@@ -312,8 +315,35 @@ fun NavGraph(
         }
         composable(Routes.PROFILE) {
             val profileViewModel: ProfileViewModel = hiltViewModel()
+            val currentEntry by navController.currentBackStackEntryAsState()
+            LaunchedEffect(currentEntry) {
+                if (currentEntry?.destination?.route == Routes.PROFILE) {
+                    profileViewModel.reload()
+                }
+            }
             ProfileScreen(
                 user = profileViewModel.user,
+                onBackClick = { navController.popBackStack() },
+                onEditClick = { navController.navigate(Routes.EDIT_PROFILE) }
+            )
+        }
+        composable(Routes.EDIT_PROFILE) {
+            val profileViewModel: ProfileViewModel = hiltViewModel()
+            EditProfileScreen(
+                phone                 = profileViewModel.editPhone,
+                onPhoneChange         = { profileViewModel.editPhone = it },
+                address               = profileViewModel.editAddress,
+                onAddressChange       = { profileViewModel.editAddress = it },
+                country               = profileViewModel.editCountry,
+                onCountryChange       = { profileViewModel.editCountry = it },
+                acceptsEmails         = profileViewModel.editAcceptsEmails,
+                onAcceptsEmailsChange = { profileViewModel.editAcceptsEmails = it },
+                isSaving              = profileViewModel.isSaving,
+                onSaveClick           = {
+                    profileViewModel.saveEditedProfile()
+                    navController.popBackStack()
+                    scope.launch { snackbarHostState.showSnackbar(context.getString(R.string.snackbar_profile_updated)) }
+                },
                 onBackClick = { navController.popBackStack() }
             )
         }

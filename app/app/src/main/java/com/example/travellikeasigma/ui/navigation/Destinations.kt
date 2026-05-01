@@ -26,6 +26,7 @@ object Routes {
     const val PLACES        = "places"
     const val PREFERENCES   = "preferences"
     const val PROFILE       = "profile"
+    const val EDIT_PROFILE  = "edit_profile"
     const val TERMS         = "terms"
     const val ABOUT         = "about"
     const val NEW_TRIP      = "new_trip"

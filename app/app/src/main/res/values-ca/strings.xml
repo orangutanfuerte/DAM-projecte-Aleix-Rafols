@@ -174,6 +174,8 @@
     <string name="snackbar_activity_created">Activitat afegida correctament</string>
     <string name="snackbar_activity_updated">Activitat actualitzada correctament</string>
     <string name="snackbar_activity_deleted">Activitat eliminada</string>
+    <string name="snackbar_profile_updated">Perfil actualitzat</string>
+    <string name="profile_save_changes">Desar canvis</string>
 
     <!-- Photos Screen -->
     <string name="photos_delete">Eliminar foto</string>

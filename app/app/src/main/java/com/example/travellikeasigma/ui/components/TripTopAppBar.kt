@@ -22,6 +22,7 @@ fun TripTopAppBar(
     title: String,
     subtitle: String? = null,
     onBackClick: (() -> Unit)? = null,
+    actions: @Composable () -> Unit = {},
     colors: TopAppBarColors = TopAppBarDefaults.topAppBarColors()
 ) {
     TopAppBar(
@@ -53,6 +54,7 @@ fun TripTopAppBar(
                 }
             }
         },
+        actions = { actions() },
         colors = colors
     )
 }

@@ -9,9 +9,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -31,13 +35,19 @@ import com.example.travellikeasigma.ui.components.TripTopAppBar
 @Composable
 fun ProfileScreen(
     user: User?,
-    onBackClick: () -> Unit
+    onBackClick: () -> Unit,
+    onEditClick: () -> Unit
 ) {
     Scaffold(
         topBar = {
             TripTopAppBar(
                 title = stringResource(R.string.profile_title),
-                onBackClick = onBackClick
+                onBackClick = onBackClick,
+                actions = {
+                    IconButton(onClick = onEditClick) {
+                        Icon(Icons.Default.Edit, contentDescription = stringResource(R.string.pref_edit_profile))
+                    }
+                }
             )
         }
     ) { innerPadding ->
