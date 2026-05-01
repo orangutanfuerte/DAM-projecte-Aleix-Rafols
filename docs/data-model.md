@@ -5,27 +5,22 @@ classDiagram
     direction TB
 
     class User {
-        +Int id
+        +String uid
+        +String name
+        +String username
         +String email
-        +String password
-        +Authentication authentication
+        +String dateOfBirth
+        +String phone
+        +String address
+        +String country
+        +Boolean acceptsReceiveEmails
         +Preferences preferences
-        +List~Trip~ trips
-        +createTrip(Trip)
-        +removeTrip(Trip)
-        +updatePreferences(Preferences)
-    }
-
-    class Authentication {
-        +login(String email, String password)
-        +logout()
-        +resetPassword(String email)
     }
 
     class Preferences {
-        +Boolean notificationsEnabled
+        +String language
         +String theme
-        +String preferredLanguage
+        +Boolean notificationsEnabled
     }
 
     class Trip {
@@ -43,19 +38,20 @@ classDiagram
         +Int daysCount
         +Int photoCount
         +Int placesCount
-        +String formattedDates
+        +formattedDateRange() String
         +progress() Float
-        +status() String
-        +addImage(Photo)
-        +removeImage(Photo)
-        +addPlace(Place)
-        +removePlace(Place)
-        +getUpcomingDays() List~Int~
+        +status() TripStatus
         +getDateForDay(Int) LocalDate
         +getActivitiesByDay(Int) List~ItineraryActivity~
-        +addActivity(Int, ItineraryActivity)
-        +removeActivity(Int, ItineraryActivity)
+        +getUpcomingDays(Int) List~Int~
         +totalCost() Double
+    }
+
+    class TripStatus {
+        <<enumeration>>
+        UPCOMING
+        ACTIVE
+        PAST
     }
 
     class Destination {
@@ -86,7 +82,6 @@ classDiagram
         SIGHTSEEING
         TRANSIT
         OTHERS
-        +displayName() String
     }
 
     class Photo {
@@ -113,10 +108,24 @@ classDiagram
         OTHER
     }
 
-    User "1" --> "1" Authentication
+    class AccessLogEntry {
+        +Int id
+        +String userId
+        +AccessAction action
+        +String dateTime
+    }
+
+    class AccessAction {
+        <<enumeration>>
+        LOGIN
+        LOGOUT
+    }
+
     User "1" --> "1" Preferences
     User "1" --> "*" Trip
+    User "1" --> "*" AccessLogEntry
 
+    Trip --> TripStatus
     Trip "1" --> "1" Destination
     Trip "1" --> "1" Hotel
     Trip "1" --> "*" ItineraryActivity
@@ -124,8 +133,7 @@ classDiagram
     Trip "1" --> "*" Place
 
     Hotel "1" --> "1" Destination
-
     ItineraryActivity --> ActivityType
-
     Place --> PlaceCategory
+    AccessLogEntry --> AccessAction
 ```
