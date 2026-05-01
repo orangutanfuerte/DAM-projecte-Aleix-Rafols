@@ -11,4 +11,5 @@ interface TripRepository {
     suspend fun updateActivity(tripId: Int, activity: ItineraryActivity)
     suspend fun removeActivity(tripId: Int, activityId: Int)
     suspend fun seedIfEmpty(userId: String)
+    suspend fun isTripNameTaken(userId: String, name: String): Boolean
 }

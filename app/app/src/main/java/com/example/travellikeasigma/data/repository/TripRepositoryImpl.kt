@@ -6,6 +6,7 @@ import com.example.travellikeasigma.domain.ItineraryActivity
 import com.example.travellikeasigma.domain.Trip
 import com.example.travellikeasigma.domain.TripRepository
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -54,4 +55,7 @@ class TripRepositoryImpl @Inject constructor(
     override suspend fun seedIfEmpty(userId: String) {
         dataSource.seedIfEmpty(userId)
     }
+
+    override suspend fun isTripNameTaken(userId: String, name: String): Boolean =
+        dataSource.getAllTrips(userId).first().any { it.name == name }
 }

@@ -100,8 +100,12 @@ class TripViewModel @Inject constructor(
             persons = persons,
             destination = destination
         )
-        pendingSelectLast = true
         viewModelScope.launch {
+            if (tripRepository.isTripNameTaken(userId, name)) {
+                Log.w(TAG, "createTrip aborted: duplicate name '$name' for userId=$userId")
+                return@launch
+            }
+            pendingSelectLast = true
             tripRepository.addTrip(trip, userId)
             Log.i(TAG, "Trip created: name='$name', dates=$startDate..$endDate")
         }

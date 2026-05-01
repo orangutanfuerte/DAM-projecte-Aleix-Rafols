@@ -2,7 +2,7 @@
 <resources>
     <!-- App -->
     <string name="app_name" translatable="false">Travel like a Sigma</string>
-    <string name="app_version" translatable="false">2.1.0</string>
+    <string name="app_version" translatable="false">3.0.0</string>
 
     <!-- Bottom Navigation -->
     <string name="nav_home">Home</string>

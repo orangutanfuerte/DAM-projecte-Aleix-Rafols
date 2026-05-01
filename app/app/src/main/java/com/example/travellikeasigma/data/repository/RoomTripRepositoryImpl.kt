@@ -65,6 +65,12 @@ class RoomTripRepositoryImpl @Inject constructor(
         activityDao.deleteActivityById(activityId)
     }
 
+    override suspend fun isTripNameTaken(userId: String, name: String): Boolean {
+        val taken = tripDao.countTripsWithName(userId, name) > 0
+        if (taken) Log.w(TAG, "isTripNameTaken: '$name' already exists for userId=$userId")
+        return taken
+    }
+
     override suspend fun seedIfEmpty(userId: String) {
         if (tripDao.countTripsForUser(userId) > 0) return
         Log.i(TAG, "Seeding initial data for userId=$userId")

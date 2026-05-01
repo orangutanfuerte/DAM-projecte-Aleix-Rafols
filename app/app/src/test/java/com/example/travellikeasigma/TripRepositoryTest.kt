@@ -10,6 +10,7 @@ import com.example.travellikeasigma.domain.TripRepository
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
@@ -169,6 +170,21 @@ class TripRepositoryTest {
         runBlocking { repository.removeTrip(77) }
         assertEquals(initialSize, allTrips().size)
         assertNull(repository.getTripById(77))
+    }
+
+    // ── isTripNameTaken ──────────────────────────────────────────────────
+
+    @Test
+    fun `isTripNameTaken returns true when name already exists`() {
+        // "Iceland Adventure" is one of the 3 preloaded trips
+        val taken = runBlocking { repository.isTripNameTaken("", "Iceland Adventure") }
+        assertTrue(taken)
+    }
+
+    @Test
+    fun `isTripNameTaken returns false for a unique name`() {
+        val taken = runBlocking { repository.isTripNameTaken("", "A Brand New Trip") }
+        assertFalse(taken)
     }
 
     // ── Trip data class computed properties ──────────────────────────────
