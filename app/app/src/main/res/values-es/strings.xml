@@ -142,6 +142,8 @@
     <string name="email_verification_body">Enviamos un enlace de verificación a %1$s. Revisa tu bandeja y toca el enlace.</string>
     <string name="email_verification_check">Ya he verificado mi correo</string>
     <string name="email_verification_resend">Reenviar correo</string>
+    <string name="email_verification_not_verified_error">Tu correo aún no está verificado. Revisa tu bandeja de entrada.</string>
+    <string name="email_verification_too_many_requests">Demasiadas solicitudes. Espera un momento antes de intentarlo de nuevo.</string>
 
     <!-- Register Screen -->
     <string name="register_title">Crear cuenta</string>

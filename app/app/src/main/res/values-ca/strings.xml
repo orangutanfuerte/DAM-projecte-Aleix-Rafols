@@ -142,6 +142,8 @@
     <string name="email_verification_body">Hem enviat un enllaç de verificació a %1$s. Revisa la safata i toca l\'enllaç.</string>
     <string name="email_verification_check">Ja he verificat el meu correu</string>
     <string name="email_verification_resend">Tornar a enviar correu</string>
+    <string name="email_verification_not_verified_error">El teu correu encara no s\'ha verificat. Revisa la safata d\'entrada.</string>
+    <string name="email_verification_too_many_requests">Masses sol·licituds. Espera un moment abans de tornar-ho a intentar.</string>
 
     <!-- Register Screen -->
     <string name="register_title">Crea un compte</string>

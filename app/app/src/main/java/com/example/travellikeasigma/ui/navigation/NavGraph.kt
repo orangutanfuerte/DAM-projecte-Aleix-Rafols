@@ -119,7 +119,9 @@ fun NavGraph(
                 name                    = authViewModel.registerName,
                 onNameChange            = { authViewModel.registerName = it },
                 username                = authViewModel.registerUsername,
-                onUsernameChange        = { authViewModel.registerUsername = it },
+                onUsernameChange        = { authViewModel.registerUsername = it.filter { c -> !c.isWhitespace() } },
+                dateOfBirth             = authViewModel.registerDateOfBirth,
+                onDateOfBirthChange     = { authViewModel.registerDateOfBirth = it },
                 email                   = authViewModel.registerEmail,
                 onEmailChange           = { authViewModel.registerEmail = it },
                 password                = authViewModel.registerPassword,
@@ -144,10 +146,12 @@ fun NavGraph(
                 }
             }
             EmailVerificationScreen(
-                email           = authViewModel.emailForVerification,
-                onCheckVerified = { authViewModel.checkEmailVerified() },
-                onResendEmail   = { authViewModel.sendVerificationEmail() },
-                onBackClick     = {
+                email                = authViewModel.emailForVerification,
+                onCheckVerified      = { authViewModel.checkEmailVerified() },
+                onCheckVerifiedClick = { authViewModel.checkEmailVerifiedManual(context.getString(R.string.email_verification_not_verified_error)) },
+                onResendEmail        = { authViewModel.sendVerificationEmail(context.getString(R.string.email_verification_too_many_requests)) },
+                verificationError    = authViewModel.verificationError,
+                onBackClick          = {
                     authViewModel.logout()
                     navController.navigate(Routes.LOGIN) {
                         popUpTo(0) { inclusive = true }
@@ -157,8 +161,6 @@ fun NavGraph(
         }
         composable(Routes.COMPLETE_PROFILE) {
             CompleteProfileScreen(
-                dateOfBirth           = authViewModel.profileDateOfBirth,
-                onDateOfBirthChange   = { authViewModel.profileDateOfBirth = it },
                 phone                 = authViewModel.profilePhone,
                 onPhoneChange         = { authViewModel.profilePhone = it },
                 address               = authViewModel.profileAddress,

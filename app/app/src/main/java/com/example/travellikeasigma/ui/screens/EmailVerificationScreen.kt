@@ -34,8 +34,10 @@ import kotlinx.coroutines.delay
 fun EmailVerificationScreen(
     email: String,
     onCheckVerified: () -> Unit,
+    onCheckVerifiedClick: () -> Unit,
     onResendEmail: () -> Unit,
-    onBackClick: () -> Unit
+    onBackClick: () -> Unit,
+    verificationError: String?
 ) {
     LaunchedEffect(Unit) {
         while (true) {
@@ -87,7 +89,7 @@ fun EmailVerificationScreen(
             Spacer(modifier = Modifier.height(40.dp))
 
             Button(
-                onClick = onCheckVerified,
+                onClick = onCheckVerifiedClick,
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(14.dp)
             ) {
@@ -101,6 +103,16 @@ fun EmailVerificationScreen(
 
             TextButton(onClick = onResendEmail) {
                 Text(stringResource(R.string.email_verification_resend))
+            }
+
+            if (verificationError != null) {
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(
+                    text = verificationError,
+                    color = MaterialTheme.colorScheme.error,
+                    style = MaterialTheme.typography.bodySmall,
+                    textAlign = TextAlign.Center
+                )
             }
         }
     }

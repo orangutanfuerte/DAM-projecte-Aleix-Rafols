@@ -38,6 +38,9 @@ class AuthViewModel @Inject constructor(
     var needsEmailVerification by mutableStateOf(false)
         private set
 
+    var verificationError by mutableStateOf<String?>(null)
+        private set
+
     var emailForVerification by mutableStateOf("")
         private set
 
@@ -67,9 +70,9 @@ class AuthViewModel @Inject constructor(
     var registerEmail by mutableStateOf("")
     var registerPassword by mutableStateOf("")
     var registerConfirmPassword by mutableStateOf("")
+    var registerDateOfBirth by mutableStateOf("")
 
     // Profile completion fields
-    var profileDateOfBirth by mutableStateOf("")
     var profilePhone by mutableStateOf("")
     var profileAddress by mutableStateOf("")
     var profileCountry by mutableStateOf("")
@@ -96,7 +99,7 @@ class AuthViewModel @Inject constructor(
                         name = registerName,
                         username = registerUsername,
                         email = firebaseUser.email!!,
-                        dateOfBirth = ""
+                        dateOfBirth = registerDateOfBirth
                     )
                 )
                 accessLogRepo.logAccess(firebaseUser.uid, AccessAction.LOGIN)
@@ -121,7 +124,6 @@ class AuthViewModel @Inject constructor(
                 val existing = userRepo.getUserById(uid) ?: return@launch
                 userRepo.updateUser(
                     existing.copy(
-                        dateOfBirth = profileDateOfBirth,
                         phone = profilePhone,
                         address = profileAddress,
                         country = profileCountry,
@@ -142,6 +144,7 @@ class AuthViewModel @Inject constructor(
         registerEmail = ""
         registerPassword = ""
         registerConfirmPassword = ""
+        registerDateOfBirth = ""
         authError = null
     }
 
@@ -190,11 +193,29 @@ class AuthViewModel @Inject constructor(
         }
     }
 
-    fun sendVerificationEmail() {
+    fun checkEmailVerifiedManual(notVerifiedMsg: String) {
         viewModelScope.launch {
+            verificationError = null
+            try {
+                Firebase.auth.currentUser?.reload()?.await()
+                if (Firebase.auth.currentUser?.isEmailVerified == true) {
+                    needsEmailVerification = false
+                } else {
+                    verificationError = notVerifiedMsg
+                }
+            } catch (e: Exception) {
+                Log.e(TAG, "checkEmailVerified failed", e)
+            }
+        }
+    }
+
+    fun sendVerificationEmail(tooManyRequestsMsg: String) {
+        viewModelScope.launch {
+            verificationError = null
             try {
                 Firebase.auth.currentUser?.sendEmailVerification()?.await()
             } catch (e: Exception) {
+                verificationError = tooManyRequestsMsg
                 Log.e(TAG, "sendVerificationEmail failed", e)
             }
         }
@@ -232,5 +253,6 @@ class AuthViewModel @Inject constructor(
         emailForVerification = ""
         email = ""
         password = ""
+        clearRegisterFields()
     }
 }

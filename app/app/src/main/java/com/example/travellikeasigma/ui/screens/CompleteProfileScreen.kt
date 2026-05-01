@@ -19,22 +19,17 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
-import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.DatePicker
-import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SelectableDates
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -48,8 +43,6 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.example.travellikeasigma.R
 import com.example.travellikeasigma.ui.components.TripTopAppBar
-import java.text.SimpleDateFormat
-import java.util.Date
 import java.util.Locale
 
 private val COUNTRIES: List<String> by lazy {
@@ -62,8 +55,6 @@ private val COUNTRIES: List<String> by lazy {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CompleteProfileScreen(
-    dateOfBirth: String,
-    onDateOfBirthChange: (String) -> Unit,
     phone: String,
     onPhoneChange: (String) -> Unit,
     address: String,
@@ -75,39 +66,9 @@ fun CompleteProfileScreen(
     isLoading: Boolean,
     onSaveClick: () -> Unit
 ) {
-    var showDatePicker by remember { mutableStateOf(false) }
-    val datePickerState = rememberDatePickerState(
-        selectableDates = object : SelectableDates {
-            override fun isSelectableDate(utcTimeMillis: Long): Boolean =
-                utcTimeMillis < System.currentTimeMillis()
-        }
-    )
-
     var showCountryPicker by remember { mutableStateOf(false) }
     var countrySearch by remember { mutableStateOf("") }
     val filteredCountries = COUNTRIES.filter { it.contains(countrySearch, ignoreCase = true) }
-
-    if (showDatePicker) {
-        DatePickerDialog(
-            onDismissRequest = { showDatePicker = false },
-            confirmButton = {
-                TextButton(onClick = {
-                    datePickerState.selectedDateMillis?.let { millis ->
-                        val formatted = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(Date(millis))
-                        onDateOfBirthChange(formatted)
-                    }
-                    showDatePicker = false
-                }) { Text(stringResource(R.string.new_trip_date_confirm)) }
-            },
-            dismissButton = {
-                TextButton(onClick = { showDatePicker = false }) {
-                    Text(stringResource(R.string.new_trip_date_cancel))
-                }
-            }
-        ) {
-            DatePicker(state = datePickerState)
-        }
-    }
 
     if (showCountryPicker) {
         AlertDialog(
@@ -167,24 +128,6 @@ fun CompleteProfileScreen(
             )
 
             Spacer(modifier = Modifier.height(28.dp))
-
-            Box {
-                OutlinedTextField(
-                    value = dateOfBirth,
-                    onValueChange = {},
-                    readOnly = true,
-                    label = { Text(stringResource(R.string.profile_field_dob)) },
-                    trailingIcon = { Icon(Icons.Default.DateRange, contentDescription = null) },
-                    singleLine = true,
-                    modifier = Modifier.fillMaxWidth(),
-                    enabled = !isLoading
-                )
-                if (!isLoading) {
-                    Box(modifier = Modifier.matchParentSize().clickable { showDatePicker = true })
-                }
-            }
-
-            Spacer(modifier = Modifier.height(12.dp))
 
             OutlinedTextField(
                 value = phone,
