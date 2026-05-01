@@ -30,7 +30,15 @@ Room DAOs             Firebase Auth / Firestore
 
 ---
 
-## Esquema de la Base de Dades Room (versió 3)
+## Model de Dades
+
+![](domain_model.png)
+
+
+
+---
+
+## Esquema de la Base de Dades Room
 
 La base de dades (`travel_sigma_db`) conté quatre taules. La versió canvia amb cada migració; l'estratègia actual és `fallbackToDestructiveMigration` (veure secció Migració).
 
