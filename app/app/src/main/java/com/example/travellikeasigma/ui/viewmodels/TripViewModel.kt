@@ -132,4 +132,7 @@ class TripViewModel @Inject constructor(
     fun validateNewTrip(name: String, startDate: LocalDate?, endDate: LocalDate?): Boolean {
         return TripUtils.validateNewTrip(name, startDate, endDate)
     }
+
+    suspend fun isNameAvailable(name: String): Boolean =
+        !tripRepository.isTripNameTaken(userId, name)
 }

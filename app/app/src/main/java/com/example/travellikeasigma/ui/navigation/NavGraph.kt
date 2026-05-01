@@ -355,8 +355,9 @@ fun NavGraph(
         }
         composable(Routes.NEW_TRIP) {
             NewTripScreen(
-                onBackClick = { navController.popBackStack() },
-                onSave      = { name, startDate, endDate, destination, hotel, persons ->
+                onBackClick    = { navController.popBackStack() },
+                onValidateName = { name -> tripViewModel.isNameAvailable(name) },
+                onSave         = { name, startDate, endDate, destination, hotel, persons ->
                     tripViewModel.createTrip(name, startDate, endDate, destination, hotel, persons)
                     navController.popBackStack()
                     scope.launch { snackbarHostState.showSnackbar(context.getString(R.string.snackbar_trip_created)) }

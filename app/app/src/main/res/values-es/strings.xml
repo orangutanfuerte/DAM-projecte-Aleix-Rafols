@@ -92,6 +92,7 @@
     <string name="new_trip_step_details_title">Viajeros y Fechas</string>
     <string name="new_trip_name_label">Nombre del viaje</string>
     <string name="new_trip_name_placeholder">p. ej. Aventura en Japón 2025</string>
+    <string name="new_trip_name_duplicate_error">Ya existe un viaje con este nombre</string>
     <string name="new_trip_persons_label">Viajeros</string>
     <string name="new_trip_cta_next">Siguiente</string>
     <string name="new_trip_cta_save">Guardar Viaje</string>

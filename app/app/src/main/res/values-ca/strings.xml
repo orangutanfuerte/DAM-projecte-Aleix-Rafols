@@ -92,6 +92,7 @@
     <string name="new_trip_step_details_title">Viatgers i Dates</string>
     <string name="new_trip_name_label">Nom del viatge</string>
     <string name="new_trip_name_placeholder">p. ex. Aventura al Japó 2025</string>
+    <string name="new_trip_name_duplicate_error">Ja existeix un viatge amb aquest nom</string>
     <string name="new_trip_persons_label">Viatgers</string>
     <string name="new_trip_cta_next">Següent</string>
     <string name="new_trip_cta_save">Desar Viatge</string>

@@ -106,6 +106,7 @@
     <string name="new_trip_step_details_title">Travellers &amp; Dates</string>
     <string name="new_trip_name_label">Trip name</string>
     <string name="new_trip_name_placeholder">e.g. Japan Adventure 2025</string>
+    <string name="new_trip_name_duplicate_error">A trip with this name already exists</string>
     <string name="new_trip_persons_label">Travellers</string>
     <string name="new_trip_cta_next">Next</string>
     <string name="new_trip_cta_save">Save Trip</string>

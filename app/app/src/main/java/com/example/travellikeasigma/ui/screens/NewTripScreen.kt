@@ -38,8 +38,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import kotlinx.coroutines.launch
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
@@ -76,6 +78,7 @@ private fun dateFormatter(locale: Locale) = SimpleDateFormat("MMM d, yyyy", loca
 @Composable
 fun NewTripScreen(
     onBackClick: () -> Unit,
+    onValidateName: suspend (String) -> Boolean,
     onSave: (name: String, startDate: LocalDate, endDate: LocalDate, destination: Destination, hotel: Hotel, persons: Int) -> Unit
 ) {
     var currentStep by rememberSaveable { mutableStateOf(NewTripStep.DESTINATION) }
@@ -140,6 +143,7 @@ fun NewTripScreen(
             NewTripStep.NAME -> NameStep(
                 tripName = tripName,
                 onTripNameChange = { tripName = it },
+                onValidateName = onValidateName,
                 onNext = { currentStep = NewTripStep.DETAILS },
                 modifier = Modifier.padding(innerPadding)
             )
@@ -267,9 +271,15 @@ private fun DestinationStep(
 private fun NameStep(
     tripName: String,
     onTripNameChange: (String) -> Unit,
+    onValidateName: suspend (String) -> Boolean,
     onNext: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val scope = rememberCoroutineScope()
+    var isChecking by remember { mutableStateOf(false) }
+    var nameError by remember { mutableStateOf<String?>(null) }
+    val duplicateError = stringResource(R.string.new_trip_name_duplicate_error)
+
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -278,9 +288,14 @@ private fun NameStep(
     ) {
         OutlinedTextField(
             value = tripName,
-            onValueChange = onTripNameChange,
+            onValueChange = {
+                onTripNameChange(it)
+                nameError = null
+            },
             label = { Text(stringResource(R.string.new_trip_name_label)) },
             placeholder = { Text(stringResource(R.string.new_trip_name_placeholder)) },
+            isError = nameError != null,
+            supportingText = nameError?.let { err -> { Text(err) } },
             modifier = Modifier.fillMaxWidth(),
             singleLine = true
         )
@@ -288,8 +303,20 @@ private fun NameStep(
         Spacer(modifier = Modifier.weight(1f))
 
         Button(
-            onClick = onNext,
-            enabled = tripName.isNotBlank(),
+            onClick = {
+                scope.launch {
+                    isChecking = true
+                    val available = onValidateName(tripName)
+                    isChecking = false
+                    if (available) {
+                        nameError = null
+                        onNext()
+                    } else {
+                        nameError = duplicateError
+                    }
+                }
+            },
+            enabled = tripName.isNotBlank() && !isChecking,
             modifier = Modifier.fillMaxWidth()
         ) {
             Text(stringResource(R.string.new_trip_cta_next))
