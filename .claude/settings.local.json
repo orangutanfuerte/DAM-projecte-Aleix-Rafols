@@ -10,7 +10,8 @@
       "Bash(cat /home/aleixrb/Projectes/DAM/DAM-projecte-Aleix-Rafols/app/app/build/test-results/testDebugUnitTest/*.xml)",
       "Bash(./gradlew test *)",
       "Bash(./gradlew compileDebugKotlin)",
-      "Bash(grep -E \"\\\\.\\(kt|java\\)$\")"
+      "Bash(grep -E \"\\\\.\\(kt|java\\)$\")",
+      "Bash(awk '{s+=$1} END {print \"Total tests:\", s}')"
     ]
   }
 }
