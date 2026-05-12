@@ -3,9 +3,7 @@ package com.example.travellikeasigma.domain
 data class Destination(val id: Int, val destinationName: String)
 
 val sampleDestinations = listOf(
-    Destination(1, "Japan"),
-    Destination(2, "Iceland"),
-    Destination(3, "Italy"),
-    Destination(4, "Spain"),
-    Destination(5, "Brasil")
+    Destination(1, "Barcelona"),
+    Destination(2, "London"),
+    Destination(3, "Paris")
 )

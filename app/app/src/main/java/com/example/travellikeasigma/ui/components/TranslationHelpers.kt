@@ -24,10 +24,8 @@ fun ActivityType.label(): String = when (this) {
 
 @Composable
 fun Destination.translatedName(): String = when (destinationName) {
-    "Japan"   -> stringResource(R.string.destination_japan)
-    "Iceland" -> stringResource(R.string.destination_iceland)
-    "Italy"   -> stringResource(R.string.destination_italy)
-    "Spain"   -> stringResource(R.string.destination_spain)
-    "Brasil"  -> stringResource(R.string.destination_brasil)
-    else      -> destinationName
+    "Barcelona" -> stringResource(R.string.destination_barcelona)
+    "London"    -> stringResource(R.string.destination_london)
+    "Paris"     -> stringResource(R.string.destination_paris)
+    else        -> destinationName
 }

@@ -65,11 +65,9 @@ import java.util.Locale
 private enum class NewTripStep { DESTINATION, NAME, DETAILS, HOTEL }
 
 private val countryFlags = mapOf(
-    "Japan"   to "🇯🇵",
-    "Iceland" to "🇮🇸",
-    "Italy"   to "🇮🇹",
-    "Spain"   to "🇪🇸",
-    "Brasil"  to "🇧🇷"
+    "Barcelona" to "🇪🇸",
+    "London"    to "🇬🇧",
+    "Paris"     to "🇫🇷"
 )
 
 private fun dateFormatter(locale: Locale) = SimpleDateFormat("MMM d, yyyy", locale)

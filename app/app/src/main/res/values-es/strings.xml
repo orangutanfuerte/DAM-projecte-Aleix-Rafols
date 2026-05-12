@@ -211,11 +211,9 @@
     <string name="itinerary_day_label">Día %1$d</string>
 
     <!-- Destinations -->
-    <string name="destination_japan">Japón</string>
-    <string name="destination_iceland">Islandia</string>
-    <string name="destination_italy">Italia</string>
-    <string name="destination_spain">España</string>
-    <string name="destination_brasil">Brasil</string>
+    <string name="destination_barcelona">Barcelona</string>
+    <string name="destination_london">Londres</string>
+    <string name="destination_paris">París</string>
 
     <!-- Profile Screen -->
     <string name="profile_title">Mi perfil</string>
