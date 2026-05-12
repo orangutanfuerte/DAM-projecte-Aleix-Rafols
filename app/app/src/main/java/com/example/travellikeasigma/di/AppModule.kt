@@ -2,7 +2,9 @@ package com.example.travellikeasigma.di
 
 import android.content.Context
 import androidx.room.Room
+import com.example.travellikeasigma.data.remote.HotelApiService
 import com.example.travellikeasigma.data.repository.AccessLogRepositoryImpl
+import com.example.travellikeasigma.data.repository.HotelRepositoryImpl
 import com.example.travellikeasigma.data.repository.RoomTripRepositoryImpl
 import com.example.travellikeasigma.data.repository.UserPreferencesRepositoryImpl
 import com.example.travellikeasigma.data.repository.UserRepositoryImpl
@@ -12,6 +14,7 @@ import com.example.travellikeasigma.data.room.TravelSigmaDatabase
 import com.example.travellikeasigma.data.room.TripDao
 import com.example.travellikeasigma.data.room.UserDao
 import com.example.travellikeasigma.domain.AccessLogRepository
+import com.example.travellikeasigma.domain.HotelRepository
 import com.example.travellikeasigma.domain.TripRepository
 import com.example.travellikeasigma.domain.UserPreferencesRepository
 import com.example.travellikeasigma.domain.UserRepository
@@ -21,6 +24,10 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
 
 @Module
@@ -53,6 +60,34 @@ object DatabaseModule {
 
 @Module
 @InstallIn(SingletonComponent::class)
+object NetworkModule {
+
+    @Provides
+    @Singleton
+    fun provideOkHttpClient(): OkHttpClient =
+        OkHttpClient.Builder()
+            .addInterceptor(HttpLoggingInterceptor().apply {
+                level = HttpLoggingInterceptor.Level.BODY
+            })
+            .build()
+
+    @Provides
+    @Singleton
+    fun provideRetrofit(client: OkHttpClient): Retrofit =
+        Retrofit.Builder()
+            .baseUrl("http://15.224.84.148:8090/")
+            .client(client)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+
+    @Provides
+    @Singleton
+    fun provideHotelApiService(retrofit: Retrofit): HotelApiService =
+        retrofit.create(HotelApiService::class.java)
+}
+
+@Module
+@InstallIn(SingletonComponent::class)
 abstract class RepositoryModule {
 
     @Binds
@@ -70,4 +105,8 @@ abstract class RepositoryModule {
     @Binds
     @Singleton
     abstract fun bindAccessLogRepository(impl: AccessLogRepositoryImpl): AccessLogRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindHotelRepository(impl: HotelRepositoryImpl): HotelRepository
 }

@@ -11,7 +11,11 @@
       "Bash(./gradlew test *)",
       "Bash(./gradlew compileDebugKotlin)",
       "Bash(grep -E \"\\\\.\\(kt|java\\)$\")",
-      "Bash(awk '{s+=$1} END {print \"Total tests:\", s}')"
+      "Bash(awk '{s+=$1} END {print \"Total tests:\", s}')",
+      "Bash(curl -s \"http://15.224.84.148:8090/hotels/G01/hotels\")",
+      "Bash(python3 -m json.tool)",
+      "Bash(curl *)",
+      "Bash(./gradlew :app:testDebugUnitTest --tests \"com.example.travellikeasigma.HotelRepositoryTest\")"
     ]
   }
 }
