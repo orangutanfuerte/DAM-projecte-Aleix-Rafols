@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.room.Room
 import com.example.travellikeasigma.data.remote.HotelApiService
 import com.example.travellikeasigma.data.repository.AccessLogRepositoryImpl
+import com.example.travellikeasigma.data.repository.AuthRepositoryImpl
 import com.example.travellikeasigma.data.repository.HotelRepositoryImpl
 import com.example.travellikeasigma.data.repository.RoomTripRepositoryImpl
 import com.example.travellikeasigma.data.repository.UserPreferencesRepositoryImpl
@@ -14,10 +15,12 @@ import com.example.travellikeasigma.data.room.TravelSigmaDatabase
 import com.example.travellikeasigma.data.room.TripDao
 import com.example.travellikeasigma.data.room.UserDao
 import com.example.travellikeasigma.domain.AccessLogRepository
+import com.example.travellikeasigma.domain.AuthRepository
 import com.example.travellikeasigma.domain.HotelRepository
 import com.example.travellikeasigma.domain.TripRepository
 import com.example.travellikeasigma.domain.UserPreferencesRepository
 import com.example.travellikeasigma.domain.UserRepository
+import com.google.firebase.auth.FirebaseAuth
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -29,6 +32,15 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
+
+@Module
+@InstallIn(SingletonComponent::class)
+object FirebaseModule {
+
+    @Provides
+    @Singleton
+    fun provideFirebaseAuth(): FirebaseAuth = FirebaseAuth.getInstance()
+}
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -109,4 +121,8 @@ abstract class RepositoryModule {
     @Binds
     @Singleton
     abstract fun bindHotelRepository(impl: HotelRepositoryImpl): HotelRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindAuthRepository(impl: AuthRepositoryImpl): AuthRepository
 }

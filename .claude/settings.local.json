@@ -15,7 +15,8 @@
       "Bash(curl -s \"http://15.224.84.148:8090/hotels/G01/hotels\")",
       "Bash(python3 -m json.tool)",
       "Bash(curl *)",
-      "Bash(./gradlew :app:testDebugUnitTest --tests \"com.example.travellikeasigma.HotelRepositoryTest\")"
+      "Bash(./gradlew :app:testDebugUnitTest --tests \"com.example.travellikeasigma.HotelRepositoryTest\")",
+      "Bash(grep -E \"\\\\.kt$\")"
     ]
   }
 }

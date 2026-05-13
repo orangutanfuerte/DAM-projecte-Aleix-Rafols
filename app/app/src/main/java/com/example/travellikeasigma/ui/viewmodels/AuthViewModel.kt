@@ -8,16 +8,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.travellikeasigma.domain.AccessAction
 import com.example.travellikeasigma.domain.AccessLogRepository
+import com.example.travellikeasigma.domain.AuthRepository
 import com.example.travellikeasigma.domain.TripRepository
 import com.example.travellikeasigma.domain.User
 import com.example.travellikeasigma.domain.UserPreferencesRepository
 import com.example.travellikeasigma.domain.UserRepository
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.auth.userProfileChangeRequest
-import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
 @HiltViewModel
@@ -25,7 +22,8 @@ class AuthViewModel @Inject constructor(
     private val prefsRepo: UserPreferencesRepository,
     private val userRepo: UserRepository,
     private val tripRepo: TripRepository,
-    private val accessLogRepo: AccessLogRepository
+    private val accessLogRepo: AccessLogRepository,
+    private val authRepo: AuthRepository
 ) : ViewModel() {
 
     companion object {
@@ -45,9 +43,9 @@ class AuthViewModel @Inject constructor(
         private set
 
     init {
-        val currentUser = Firebase.auth.currentUser
+        val currentUser = authRepo.getCurrentUser()
         if (currentUser != null && isLoggedIn && !currentUser.isEmailVerified) {
-            emailForVerification = currentUser.email ?: ""
+            emailForVerification = currentUser.email
             needsEmailVerification = true
         }
     }
@@ -88,23 +86,20 @@ class AuthViewModel @Inject constructor(
                     isLoading = false
                     return@launch
                 }
-                val result = Firebase.auth.createUserWithEmailAndPassword(registerEmail, registerPassword).await()
-                val firebaseUser = result.user!!
-                firebaseUser.updateProfile(userProfileChangeRequest { displayName = registerName }).await()
-                firebaseUser.sendEmailVerification().await()
-                prefsRepo.login(firebaseUser.email!!, firebaseUser.uid)
+                val authUser = authRepo.register(registerEmail, registerPassword, registerName)
+                prefsRepo.login(authUser.email, authUser.uid)
                 userRepo.saveUser(
                     User(
-                        uid = firebaseUser.uid,
+                        uid = authUser.uid,
                         name = registerName,
                         username = registerUsername,
-                        email = firebaseUser.email!!,
+                        email = authUser.email,
                         dateOfBirth = registerDateOfBirth
                     )
                 )
-                accessLogRepo.logAccess(firebaseUser.uid, AccessAction.LOGIN)
-                tripRepo.seedIfEmpty(firebaseUser.uid)
-                emailForVerification = firebaseUser.email!!
+                accessLogRepo.logAccess(authUser.uid, AccessAction.LOGIN)
+                tripRepo.seedIfEmpty(authUser.uid)
+                emailForVerification = authUser.email
                 needsEmailVerification = true
                 isLoggedIn = true
             } catch (e: Exception) {
@@ -153,21 +148,18 @@ class AuthViewModel @Inject constructor(
             isLoading = true
             authError = null
             try {
-                val result = Firebase.auth.signInWithEmailAndPassword(email, password).await()
-                val firebaseUser = result.user!!
-                firebaseUser.reload().await()
-                val freshUser = Firebase.auth.currentUser!!
-                val existingUser = userRepo.getUserById(freshUser.uid)
+                val authUser = authRepo.login(email, password)
+                val existingUser = userRepo.getUserById(authUser.uid)
                 if (existingUser == null) {
-                    Firebase.auth.signOut()
+                    authRepo.signOut()
                     authError = noLocalDataMsg
                     return@launch
                 }
-                prefsRepo.login(freshUser.email!!, freshUser.uid)
-                accessLogRepo.logAccess(freshUser.uid, AccessAction.LOGIN)
-                tripRepo.seedIfEmpty(freshUser.uid)
-                if (!freshUser.isEmailVerified) {
-                    emailForVerification = freshUser.email!!
+                prefsRepo.login(authUser.email, authUser.uid)
+                accessLogRepo.logAccess(authUser.uid, AccessAction.LOGIN)
+                tripRepo.seedIfEmpty(authUser.uid)
+                if (!authUser.isEmailVerified) {
+                    emailForVerification = authUser.email
                     needsEmailVerification = true
                 }
                 isLoggedIn = true
@@ -183,8 +175,8 @@ class AuthViewModel @Inject constructor(
     fun checkEmailVerified() {
         viewModelScope.launch {
             try {
-                Firebase.auth.currentUser?.reload()?.await()
-                if (Firebase.auth.currentUser?.isEmailVerified == true) {
+                authRepo.reloadCurrentUser()
+                if (authRepo.getCurrentUser()?.isEmailVerified == true) {
                     needsEmailVerification = false
                 }
             } catch (e: Exception) {
@@ -197,8 +189,8 @@ class AuthViewModel @Inject constructor(
         viewModelScope.launch {
             verificationError = null
             try {
-                Firebase.auth.currentUser?.reload()?.await()
-                if (Firebase.auth.currentUser?.isEmailVerified == true) {
+                authRepo.reloadCurrentUser()
+                if (authRepo.getCurrentUser()?.isEmailVerified == true) {
                     needsEmailVerification = false
                 } else {
                     verificationError = notVerifiedMsg
@@ -213,7 +205,7 @@ class AuthViewModel @Inject constructor(
         viewModelScope.launch {
             verificationError = null
             try {
-                Firebase.auth.currentUser?.sendEmailVerification()?.await()
+                authRepo.sendEmailVerification()
             } catch (e: Exception) {
                 verificationError = tooManyRequestsMsg
                 Log.e(TAG, "sendVerificationEmail failed", e)
@@ -229,7 +221,7 @@ class AuthViewModel @Inject constructor(
             }
             authError = null
             try {
-                Firebase.auth.sendPasswordResetEmail(email).await()
+                authRepo.sendPasswordResetEmail(email)
                 resetPasswordSent = true
             } catch (e: Exception) {
                 authError = e.localizedMessage
@@ -246,7 +238,7 @@ class AuthViewModel @Inject constructor(
         if (uid != null) {
             viewModelScope.launch { accessLogRepo.logAccess(uid, AccessAction.LOGOUT) }
         }
-        Firebase.auth.signOut()
+        authRepo.signOut()
         prefsRepo.logout()
         isLoggedIn = false
         needsEmailVerification = false
