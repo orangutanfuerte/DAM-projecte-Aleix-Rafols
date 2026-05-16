@@ -4,7 +4,6 @@ import androidx.compose.ui.graphics.Color
 import com.example.travellikeasigma.data.fakeDB.FakeTripDataSource
 import com.example.travellikeasigma.data.repository.TripRepositoryImpl
 import com.example.travellikeasigma.domain.Destination
-import com.example.travellikeasigma.domain.Hotel
 import com.example.travellikeasigma.domain.Trip
 import com.example.travellikeasigma.domain.TripRepository
 import kotlinx.coroutines.flow.first
@@ -27,15 +26,16 @@ class TripRepositoryTest {
     private lateinit var dataSource: FakeTripDataSource
     private lateinit var repository: TripRepository
 
-    // Reusable test data
     private val testDestination = Destination(99, "Test Country")
-    private val testHotel = Hotel(99, "Test Hotel", 100.0, testDestination)
 
     @Before
     fun setUp() {
-        // FakeTripDataSource loads 3 sample trips on construction (ids: 1, 2, 3)
         dataSource = FakeTripDataSource()
         repository = TripRepositoryImpl(dataSource)
+        // Seed 3 trips matching the names the tests reference
+        dataSource.addTrip(createTestTrip(id = 1, name = "Iceland Adventure"), "")
+        dataSource.addTrip(createTestTrip(id = 2, name = "Italian Getaway"), "")
+        dataSource.addTrip(createTestTrip(id = 3, name = "Japan Highlights"), "")
     }
 
     // ── Helper ───────────────────────────────────────────────────────────
@@ -54,8 +54,6 @@ class TripRepositoryTest {
         places = emptyList(),
         photos = emptyList(),
         heroColor = Color(0xFF000000),
-        hotel = testHotel,
-        persons = 2,
         destination = testDestination
     )
 
@@ -122,8 +120,6 @@ class TripRepositoryTest {
         assertEquals("Full Check", retrieved.name)
         assertEquals(start, retrieved.startDate)
         assertEquals(end, retrieved.endDate)
-        assertEquals(2, retrieved.persons)
-        assertEquals("Test Hotel", retrieved.hotel.name)
         assertEquals("Test Country", retrieved.destination.destinationName)
         assertTrue(retrieved.activities.isEmpty())
     }

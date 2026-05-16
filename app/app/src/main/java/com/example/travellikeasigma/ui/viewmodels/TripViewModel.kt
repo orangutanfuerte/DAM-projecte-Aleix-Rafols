@@ -8,7 +8,6 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.travellikeasigma.domain.Destination
-import com.example.travellikeasigma.domain.Hotel
 import com.example.travellikeasigma.domain.Trip
 import com.example.travellikeasigma.domain.TripRepository
 import com.example.travellikeasigma.domain.UserPreferencesRepository
@@ -78,9 +77,7 @@ class TripViewModel @Inject constructor(
         name: String,
         startDate: LocalDate,
         endDate: LocalDate,
-        destination: Destination,
-        hotel: Hotel,
-        persons: Int
+        destination: Destination
     ) {
         if (!validateNewTrip(name, startDate, endDate)) {
             Log.w(TAG, "createTrip aborted: validation failed for name='$name', start=$startDate, end=$endDate")
@@ -96,8 +93,6 @@ class TripViewModel @Inject constructor(
             places = emptyList(),
             photos = emptyList(),
             heroColor = heroColors.random(),
-            hotel = hotel,
-            persons = persons,
             destination = destination
         )
         viewModelScope.launch {

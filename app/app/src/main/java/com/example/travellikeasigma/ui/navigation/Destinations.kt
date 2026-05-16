@@ -7,6 +7,7 @@ import androidx.annotation.StringRes
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Hotel
 import androidx.compose.material.icons.filled.Photo
 import androidx.compose.material.icons.filled.Place
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -29,6 +30,7 @@ object Routes {
     const val EDIT_PROFILE  = "edit_profile"
     const val TERMS         = "terms"
     const val ABOUT         = "about"
+    const val RESERVATIONS   = "reservations"
     const val NEW_TRIP      = "new_trip"
     const val ADD_ACTIVITY  = "add_activity/{dayNumber}"
     fun addActivity(dayNumber: Int): String = "add_activity/$dayNumber"
@@ -46,8 +48,9 @@ sealed class BottomNavDestination(
     data object Itinerary : BottomNavDestination(Routes.ITINERARY, Icons.Filled.CalendarMonth, R.string.nav_itinerary)
     data object Photos : BottomNavDestination(Routes.PHOTOS, Icons.Filled.Photo, R.string.nav_photos)
     data object Places : BottomNavDestination(Routes.PLACES, Icons.Filled.Place, R.string.nav_places)
+    data object Reservations : BottomNavDestination(Routes.RESERVATIONS, Icons.Filled.Hotel, R.string.nav_reservations)
 
     companion object {
-        val all = listOf(Home, Itinerary, Photos, Places)
+        val all = listOf(Home, Itinerary, Photos, Places, Reservations)
     }
 }

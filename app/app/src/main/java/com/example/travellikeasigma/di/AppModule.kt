@@ -6,17 +6,20 @@ import com.example.travellikeasigma.data.remote.HotelApiService
 import com.example.travellikeasigma.data.repository.AccessLogRepositoryImpl
 import com.example.travellikeasigma.data.repository.AuthRepositoryImpl
 import com.example.travellikeasigma.data.repository.HotelRepositoryImpl
+import com.example.travellikeasigma.data.repository.ReservationRepositoryImpl
 import com.example.travellikeasigma.data.repository.RoomTripRepositoryImpl
 import com.example.travellikeasigma.data.repository.UserPreferencesRepositoryImpl
 import com.example.travellikeasigma.data.repository.UserRepositoryImpl
 import com.example.travellikeasigma.data.room.AccessLogDao
 import com.example.travellikeasigma.data.room.ItineraryActivityDao
+import com.example.travellikeasigma.data.room.ReservationDao
 import com.example.travellikeasigma.data.room.TravelSigmaDatabase
 import com.example.travellikeasigma.data.room.TripDao
 import com.example.travellikeasigma.data.room.UserDao
 import com.example.travellikeasigma.domain.AccessLogRepository
 import com.example.travellikeasigma.domain.AuthRepository
 import com.example.travellikeasigma.domain.HotelRepository
+import com.example.travellikeasigma.domain.ReservationRepository
 import com.example.travellikeasigma.domain.TripRepository
 import com.example.travellikeasigma.domain.UserPreferencesRepository
 import com.example.travellikeasigma.domain.UserRepository
@@ -68,6 +71,10 @@ object DatabaseModule {
     @Provides
     @Singleton
     fun provideAccessLogDao(db: TravelSigmaDatabase): AccessLogDao = db.accessLogDao()
+
+    @Provides
+    @Singleton
+    fun provideReservationDao(db: TravelSigmaDatabase): ReservationDao = db.reservationDao()
 }
 
 @Module
@@ -121,6 +128,10 @@ abstract class RepositoryModule {
     @Binds
     @Singleton
     abstract fun bindHotelRepository(impl: HotelRepositoryImpl): HotelRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindReservationRepository(impl: ReservationRepositoryImpl): ReservationRepository
 
     @Binds
     @Singleton

@@ -16,7 +16,9 @@
       "Bash(python3 -m json.tool)",
       "Bash(curl *)",
       "Bash(./gradlew :app:testDebugUnitTest --tests \"com.example.travellikeasigma.HotelRepositoryTest\")",
-      "Bash(grep -E \"\\\\.kt$\")"
+      "Bash(grep -E \"\\\\.kt$\")",
+      "Bash(xargs ls -1)",
+      "Bash(./gradlew :app:testDebugUnitTest)"
     ]
   }
 }

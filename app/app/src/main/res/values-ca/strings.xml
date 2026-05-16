@@ -5,6 +5,7 @@
     <string name="nav_itinerary">Itinerari</string>
     <string name="nav_photos">Fotos</string>
     <string name="nav_places">Llocs</string>
+    <string name="nav_reservations">Reserves</string>
 
     <!-- Home Screen -->
     <string name="home_greeting">Bon Voyage, %1$s!</string>
@@ -89,16 +90,31 @@
     <string name="new_trip_checkout">Sortida</string>
     <string name="new_trip_select_date">Seleccionar data</string>
     <string name="new_trip_step_name_title">Nom del Viatge</string>
-    <string name="new_trip_step_details_title">Viatgers i Dates</string>
+    <string name="new_trip_step_details_title">Dates</string>
     <string name="new_trip_name_label">Nom del viatge</string>
     <string name="new_trip_name_placeholder">p. ex. Aventura al Japó 2025</string>
     <string name="new_trip_name_duplicate_error">Ja existeix un viatge amb aquest nom</string>
     <string name="new_trip_persons_label">Viatgers</string>
     <string name="new_trip_cta_next">Següent</string>
     <string name="new_trip_cta_save">Desar Viatge</string>
+    <string name="new_trip_cta_back">Enrere</string>
     <string name="new_trip_per_night">/ nit</string>
     <string name="new_trip_date_confirm">OK</string>
     <string name="new_trip_date_cancel">Cancel·lar</string>
+
+    <!-- Reservations -->
+    <string name="reservations_title">Les Meves Reserves</string>
+    <string name="reservations_empty">Sense reserves</string>
+    <string name="reservations_new">Reservar un Hotel</string>
+    <string name="hotel_search_title">Cerca un Hotel</string>
+    <string name="hotel_search_button">Cercar</string>
+    <string name="booking_guest_name">Nom del hoste</string>
+    <string name="booking_guest_email">Email del hoste</string>
+    <string name="booking_persons">Persones</string>
+    <string name="booking_confirm">Confirmar Reserva</string>
+    <string name="booking_skip">Ometre (sense hotel)</string>
+    <string name="booking_success">Reserva confirmada!</string>
+    <string name="booking_error">Error en reservar. Torna-ho a provar.</string>
 
     <!-- Add Activity Screen -->
     <string name="add_activity_title">Nova Activitat</string>

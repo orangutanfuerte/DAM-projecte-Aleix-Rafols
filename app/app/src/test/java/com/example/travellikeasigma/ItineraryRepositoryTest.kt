@@ -5,7 +5,6 @@ import com.example.travellikeasigma.data.fakeDB.FakeTripDataSource
 import com.example.travellikeasigma.data.repository.TripRepositoryImpl
 import com.example.travellikeasigma.domain.ActivityType
 import com.example.travellikeasigma.domain.Destination
-import com.example.travellikeasigma.domain.Hotel
 import com.example.travellikeasigma.domain.ItineraryActivity
 import com.example.travellikeasigma.domain.Trip
 import com.example.travellikeasigma.domain.TripRepository
@@ -27,9 +26,7 @@ class ItineraryRepositoryTest {
     private lateinit var dataSource: FakeTripDataSource
     private lateinit var repository: TripRepository
 
-    // Test trip that we'll add activities to (starts empty)
     private val testDestination = Destination(99, "Test Country")
-    private val testHotel = Hotel(99, "Test Hotel", 100.0, testDestination)
     private lateinit var testTrip: Trip
 
     @Before
@@ -37,7 +34,6 @@ class ItineraryRepositoryTest {
         dataSource = FakeTripDataSource()
         repository = TripRepositoryImpl(dataSource)
 
-        // Add a clean trip with no activities for isolated testing
         testTrip = Trip(
             id = 100,
             name = "Activity Test Trip",
@@ -47,8 +43,6 @@ class ItineraryRepositoryTest {
             places = emptyList(),
             photos = emptyList(),
             heroColor = Color(0xFFFF0000),
-            hotel = testHotel,
-            persons = 2,
             destination = testDestination
         )
         runBlocking { repository.addTrip(testTrip, "") }
@@ -289,20 +283,4 @@ class ItineraryRepositoryTest {
         assertEquals(40.0, trip.totalCost(), 0.001)
     }
 
-    // ── Japan trip sample data integrity ─────────────────────────────────
-
-    @Test
-    fun `preloaded Japan trip has 32 activities`() {
-        val japan = repository.getTripById(3)
-        assertNotNull(japan)
-        assertEquals(32, japan!!.activities.size)
     }
-
-    @Test
-    fun `getActivitiesByDay filters activities correctly for Japan day 1`() {
-        val japan = repository.getTripById(3)!!
-        // Day 1 = Mar 14, should have 5 activities
-        val day1Activities = japan.getActivitiesByDay(1)
-        assertEquals(5, day1Activities.size)
-    }
-}

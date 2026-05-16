@@ -5,6 +5,7 @@
     <string name="nav_itinerary">Itinerario</string>
     <string name="nav_photos">Fotos</string>
     <string name="nav_places">Lugares</string>
+    <string name="nav_reservations">Reservas</string>
 
     <!-- Home Screen -->
     <string name="home_greeting">Bon Voyage, %1$s!</string>
@@ -89,16 +90,31 @@
     <string name="new_trip_checkout">Salida</string>
     <string name="new_trip_select_date">Seleccionar fecha</string>
     <string name="new_trip_step_name_title">Nombre del Viaje</string>
-    <string name="new_trip_step_details_title">Viajeros y Fechas</string>
+    <string name="new_trip_step_details_title">Fechas</string>
     <string name="new_trip_name_label">Nombre del viaje</string>
     <string name="new_trip_name_placeholder">p. ej. Aventura en Japón 2025</string>
     <string name="new_trip_name_duplicate_error">Ya existe un viaje con este nombre</string>
     <string name="new_trip_persons_label">Viajeros</string>
     <string name="new_trip_cta_next">Siguiente</string>
     <string name="new_trip_cta_save">Guardar Viaje</string>
+    <string name="new_trip_cta_back">Atrás</string>
     <string name="new_trip_per_night">/ noche</string>
     <string name="new_trip_date_confirm">OK</string>
     <string name="new_trip_date_cancel">Cancelar</string>
+
+    <!-- Reservations -->
+    <string name="reservations_title">Mis Reservas</string>
+    <string name="reservations_empty">Sin reservas</string>
+    <string name="reservations_new">Reservar un Hotel</string>
+    <string name="hotel_search_title">Busca un Hotel</string>
+    <string name="hotel_search_button">Buscar</string>
+    <string name="booking_guest_name">Nombre del huésped</string>
+    <string name="booking_guest_email">Email del huésped</string>
+    <string name="booking_persons">Personas</string>
+    <string name="booking_confirm">Confirmar Reserva</string>
+    <string name="booking_skip">Omitir (sin hotel)</string>
+    <string name="booking_success">¡Reserva confirmada!</string>
+    <string name="booking_error">Error al reservar. Inténtalo de nuevo.</string>
 
     <!-- Add Activity Screen -->
     <string name="add_activity_title">Nueva Actividad</string>

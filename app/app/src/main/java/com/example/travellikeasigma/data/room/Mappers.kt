@@ -3,9 +3,9 @@ package com.example.travellikeasigma.data.room
 import androidx.compose.ui.graphics.Color
 import com.example.travellikeasigma.domain.ActivityType
 import com.example.travellikeasigma.domain.ItineraryActivity
+import com.example.travellikeasigma.domain.LocalReservation
 import com.example.travellikeasigma.domain.Trip
 import com.example.travellikeasigma.domain.sampleDestinations
-import com.example.travellikeasigma.domain.sampleHotels
 import java.time.LocalDate
 
 fun TripWithActivities.toDomain(): Trip =
@@ -15,10 +15,8 @@ fun TripEntity.toDomain(activities: List<ItineraryActivity>): Trip = Trip(
     id = id,
     name = name,
     destination = sampleDestinations.find { it.id == destinationId } ?: sampleDestinations.first(),
-    hotel = sampleHotels.find { it.id == hotelId } ?: sampleHotels.first(),
     startDate = LocalDate.parse(startDate),
     endDate = LocalDate.parse(endDate),
-    persons = persons,
     heroColor = Color(heroColor.toULong()),
     activities = activities,
     places = emptyList(),
@@ -29,10 +27,8 @@ fun Trip.toEntity(userId: String): TripEntity = TripEntity(
     id = id,
     name = name,
     destinationId = destination.id,
-    hotelId = hotel.id,
     startDate = startDate.toString(),
     endDate = endDate.toString(),
-    persons = persons,
     heroColor = heroColor.value.toLong(),
     userId = userId
 )
@@ -56,4 +52,41 @@ fun ItineraryActivity.toEntity(tripId: Int): ActivityEntity = ActivityEntity(
     cost = cost,
     tag = tag?.name,
     date = date.toString()
+)
+
+fun ReservationEntity.toDomain(): LocalReservation = LocalReservation(
+    id = id,
+    hotelId = hotelId,
+    hotelName = hotelName,
+    hotelAddress = hotelAddress,
+    hotelRating = hotelRating,
+    hotelImageUrl = hotelImageUrl,
+    roomId = roomId,
+    roomType = roomType,
+    pricePerNight = pricePerNight,
+    roomImages = roomImages.split(",").filter { it.isNotEmpty() },
+    startDate = startDate,
+    endDate = endDate,
+    guestName = guestName,
+    guestEmail = guestEmail,
+    persons = persons
+)
+
+fun LocalReservation.toEntity(userId: String): ReservationEntity = ReservationEntity(
+    id = id,
+    hotelId = hotelId,
+    hotelName = hotelName,
+    hotelAddress = hotelAddress,
+    hotelRating = hotelRating,
+    hotelImageUrl = hotelImageUrl,
+    roomId = roomId,
+    roomType = roomType,
+    pricePerNight = pricePerNight,
+    roomImages = roomImages.joinToString(","),
+    startDate = startDate,
+    endDate = endDate,
+    guestName = guestName,
+    guestEmail = guestEmail,
+    persons = persons,
+    userId = userId
 )

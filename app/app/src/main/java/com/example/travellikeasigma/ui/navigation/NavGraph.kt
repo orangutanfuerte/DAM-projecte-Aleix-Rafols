@@ -33,9 +33,11 @@ import com.example.travellikeasigma.ui.screens.PlacesScreen
 import com.example.travellikeasigma.ui.screens.PreferencesScreen
 import com.example.travellikeasigma.ui.screens.EditProfileScreen
 import com.example.travellikeasigma.ui.screens.ProfileScreen
+import com.example.travellikeasigma.ui.screens.ReservationsScreen
 import com.example.travellikeasigma.ui.screens.TermsScreen
 import com.example.travellikeasigma.ui.theme.ThemeMode
 import com.example.travellikeasigma.ui.viewmodels.AuthViewModel
+import com.example.travellikeasigma.ui.viewmodels.HotelViewModel
 import com.example.travellikeasigma.ui.viewmodels.ItineraryViewModel
 import com.example.travellikeasigma.ui.viewmodels.PreferencesViewModel
 import com.example.travellikeasigma.ui.viewmodels.ProfileViewModel
@@ -354,15 +356,21 @@ fun NavGraph(
             AboutScreen(onBackClick = { navController.popBackStack() })
         }
         composable(Routes.NEW_TRIP) {
+            val hotelViewModel: HotelViewModel = hiltViewModel()
             NewTripScreen(
+                hotelViewModel = hotelViewModel,
                 onBackClick    = { navController.popBackStack() },
                 onValidateName = { name -> tripViewModel.isNameAvailable(name) },
-                onSave         = { name, startDate, endDate, destination, hotel, persons ->
-                    tripViewModel.createTrip(name, startDate, endDate, destination, hotel, persons)
+                onSave         = { name, startDate, endDate, destination ->
+                    tripViewModel.createTrip(name, startDate, endDate, destination)
                     navController.popBackStack()
                     scope.launch { snackbarHostState.showSnackbar(context.getString(R.string.snackbar_trip_created)) }
                 }
             )
+        }
+        composable(Routes.RESERVATIONS) {
+            val hotelViewModel: HotelViewModel = hiltViewModel()
+            ReservationsScreen(hotelViewModel = hotelViewModel)
         }
     }
 }

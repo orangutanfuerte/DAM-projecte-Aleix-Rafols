@@ -17,8 +17,6 @@ data class Trip(
     val places:            List<Place>,
     val photos:            List<Photo>,
     val heroColor:         Color,
-    val hotel:             Hotel,
-    val persons:           Int,
     val destination:       Destination
 ) {
     val daysCount: Int get() = ChronoUnit.DAYS.between(startDate, endDate).toInt() + 1

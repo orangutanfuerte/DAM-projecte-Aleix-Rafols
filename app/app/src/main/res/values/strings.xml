@@ -9,6 +9,7 @@
     <string name="nav_itinerary">Itinerary</string>
     <string name="nav_photos">Photos</string>
     <string name="nav_places">Places</string>
+    <string name="nav_reservations">Reservations</string>
 
     <!-- Home Screen -->
     <string name="home_greeting">Bon Voyage, %1$s!</string>
@@ -103,16 +104,31 @@
 
     <!-- New Trip – additional strings -->
     <string name="new_trip_step_name_title">Trip Name</string>
-    <string name="new_trip_step_details_title">Travellers &amp; Dates</string>
+    <string name="new_trip_step_details_title">Dates</string>
     <string name="new_trip_name_label">Trip name</string>
     <string name="new_trip_name_placeholder">e.g. Japan Adventure 2025</string>
     <string name="new_trip_name_duplicate_error">A trip with this name already exists</string>
     <string name="new_trip_persons_label">Travellers</string>
     <string name="new_trip_cta_next">Next</string>
     <string name="new_trip_cta_save">Save Trip</string>
+    <string name="new_trip_cta_back">Back</string>
     <string name="new_trip_per_night">/ night</string>
     <string name="new_trip_date_confirm">OK</string>
     <string name="new_trip_date_cancel">Cancel</string>
+
+    <!-- Reservations -->
+    <string name="reservations_title">My Reservations</string>
+    <string name="reservations_empty">No reservations yet</string>
+    <string name="reservations_new">Book a Hotel</string>
+    <string name="hotel_search_title">Find a Hotel</string>
+    <string name="hotel_search_button">Search</string>
+    <string name="booking_guest_name">Guest name</string>
+    <string name="booking_guest_email">Guest email</string>
+    <string name="booking_persons">Guests</string>
+    <string name="booking_confirm">Confirm Booking</string>
+    <string name="booking_skip">Skip (no hotel)</string>
+    <string name="booking_success">Reservation confirmed!</string>
+    <string name="booking_error">Booking failed. Please try again.</string>
 
     <!-- Add Activity Screen -->
     <string name="add_activity_title">New Activity</string>

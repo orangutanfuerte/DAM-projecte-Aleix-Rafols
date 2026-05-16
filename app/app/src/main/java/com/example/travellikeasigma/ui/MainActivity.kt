@@ -82,17 +82,18 @@ fun TravelSigmaApp(onRecreate: () -> Unit = {}) {
     // Theme driven by PreferencesViewModel (persisted in SharedPreferences)
     TravelLikeASigmaTheme(themeMode = preferencesViewModel.themeMode) {
 
-        // Only show the bottom bar on the 5 main tab screens and only when there are trips
         val bottomBarRoutes = setOf(
             Routes.HOME,
             Routes.ITINERARY,
             "${Routes.ITINERARY}?day={day}",
             Routes.PHOTOS,
-            Routes.PLACES
+            Routes.PLACES,
+            Routes.RESERVATIONS
         )
         val backStackEntry by navController.currentBackStackEntryAsState()
         val currentRoute   = backStackEntry?.destination?.route
-        val showBottomBar  = currentRoute in bottomBarRoutes && tripViewModel.trips.isNotEmpty()
+        val showBottomBar  = currentRoute in bottomBarRoutes &&
+            (tripViewModel.trips.isNotEmpty() || currentRoute == Routes.RESERVATIONS)
 
         Scaffold(
             contentWindowInsets = WindowInsets(0),
