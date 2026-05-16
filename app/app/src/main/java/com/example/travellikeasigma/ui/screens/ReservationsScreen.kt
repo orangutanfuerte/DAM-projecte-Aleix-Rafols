@@ -14,8 +14,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Hotel
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Button
@@ -27,12 +29,14 @@ import androidx.compose.material3.DateRangePicker
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SelectableDates
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
@@ -129,7 +133,10 @@ fun ReservationsScreen(
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 items(reservations, key = { it.id }) { reservation ->
-                    ReservationCard(reservation = reservation)
+                    ReservationCard(
+                        reservation = reservation,
+                        onCancel = { hotelViewModel.cancelReservation(reservation, {}, {}) }
+                    )
                 }
             }
         }
@@ -157,19 +164,60 @@ fun ReservationsScreen(
 }
 
 @Composable
-private fun ReservationCard(reservation: LocalReservation, modifier: Modifier = Modifier) {
+private fun ReservationCard(
+    reservation: LocalReservation,
+    onCancel: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    var showConfirmDialog by remember { mutableStateOf(false) }
+
     Card(
         modifier = modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
     ) {
-        AsyncImage(
-            model = HotelViewModel.BASE_IMAGE_URL + reservation.hotelImageUrl,
-            contentDescription = reservation.hotelName,
-            contentScale = ContentScale.Crop,
-            modifier = Modifier.fillMaxWidth().height(120.dp)
-        )
+        // Two images side by side: hotel + first room image
+        Row(modifier = Modifier.fillMaxWidth().height(140.dp)) {
+            AsyncImage(
+                model = HotelViewModel.BASE_IMAGE_URL + reservation.hotelImageUrl,
+                contentDescription = reservation.hotelName,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier.weight(1f).height(140.dp)
+            )
+            val roomImageUrl = reservation.roomImages.firstOrNull()
+            if (roomImageUrl != null) {
+                AsyncImage(
+                    model = HotelViewModel.BASE_IMAGE_URL + roomImageUrl,
+                    contentDescription = reservation.roomType,
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier.weight(1f).height(140.dp)
+                )
+            }
+        }
         Column(modifier = Modifier.padding(12.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
-            Text(text = reservation.hotelName, style = MaterialTheme.typography.titleMedium)
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Text(
+                    text = reservation.hotelName,
+                    style = MaterialTheme.typography.titleMedium,
+                    modifier = Modifier.weight(1f)
+                )
+                IconButton(onClick = { showConfirmDialog = true }, modifier = Modifier.size(32.dp)) {
+                    Icon(Icons.Filled.Delete, contentDescription = null, tint = MaterialTheme.colorScheme.error, modifier = Modifier.size(18.dp))
+                }
+            }
+            if (reservation.tripName != null) {
+                Surface(
+                    shape = RoundedCornerShape(20.dp),
+                    color = MaterialTheme.colorScheme.primaryContainer,
+                    modifier = Modifier.padding(bottom = 2.dp)
+                ) {
+                    Text(
+                        text = "🗺 ${reservation.tripName}",
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.onPrimaryContainer,
+                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 3.dp)
+                    )
+                }
+            }
             Row(verticalAlignment = Alignment.CenterVertically) {
                 repeat(reservation.hotelRating) {
                     Icon(Icons.Filled.Star, contentDescription = null, tint = Color(0xFFFFC107), modifier = Modifier.size(14.dp))
@@ -190,6 +238,24 @@ private fun ReservationCard(reservation: LocalReservation, modifier: Modifier = 
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
         }
+    }
+
+    if (showConfirmDialog) {
+        androidx.compose.material3.AlertDialog(
+            onDismissRequest = { showConfirmDialog = false },
+            title = { Text(stringResource(R.string.reservation_cancel_title)) },
+            text = { Text(stringResource(R.string.reservation_cancel_message, reservation.hotelName)) },
+            confirmButton = {
+                TextButton(onClick = { showConfirmDialog = false; onCancel() }) {
+                    Text(stringResource(R.string.reservation_cancel_yes), color = MaterialTheme.colorScheme.error)
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showConfirmDialog = false }) {
+                    Text(stringResource(R.string.reservation_cancel_no))
+                }
+            }
+        )
     }
 }
 

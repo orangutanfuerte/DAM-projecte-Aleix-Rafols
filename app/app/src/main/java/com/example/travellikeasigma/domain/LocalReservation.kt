@@ -15,5 +15,6 @@ data class LocalReservation(
     val endDate: String,
     val guestName: String,
     val guestEmail: String,
-    val persons: Int
+    val persons: Int,
+    val tripName: String? = null
 )

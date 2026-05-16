@@ -250,6 +250,15 @@
     <string name="profile_yes">Sí</string>
     <string name="profile_no">No</string>
 
+    <!-- Home hotel reservation card -->
+    <string name="home_hotel_reservation">Reserva d\'hotel</string>
+
+    <!-- Cancel reservation dialog -->
+    <string name="reservation_cancel_title">Cancel·lar reserva?</string>
+    <string name="reservation_cancel_message">Eliminar %1$s de les teves reserves?</string>
+    <string name="reservation_cancel_yes">Eliminar</string>
+    <string name="reservation_cancel_no">Conserva</string>
+
     <!-- Content descriptions (accessibility) -->
     <string name="cd_avatar">Obrir preferències</string>
     <string name="cd_back">Tornar</string>

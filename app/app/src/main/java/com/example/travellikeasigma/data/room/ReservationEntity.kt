@@ -20,5 +20,6 @@ data class ReservationEntity(
     val guestName: String,
     val guestEmail: String,
     val persons: Int,
-    val userId: String
+    val userId: String,
+    val tripName: String? = null
 )

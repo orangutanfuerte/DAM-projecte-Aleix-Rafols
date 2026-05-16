@@ -69,7 +69,8 @@ fun ReservationEntity.toDomain(): LocalReservation = LocalReservation(
     endDate = endDate,
     guestName = guestName,
     guestEmail = guestEmail,
-    persons = persons
+    persons = persons,
+    tripName = tripName
 )
 
 fun LocalReservation.toEntity(userId: String): ReservationEntity = ReservationEntity(
@@ -88,5 +89,6 @@ fun LocalReservation.toEntity(userId: String): ReservationEntity = ReservationEn
     guestName = guestName,
     guestEmail = guestEmail,
     persons = persons,
-    userId = userId
+    userId = userId,
+    tripName = tripName
 )

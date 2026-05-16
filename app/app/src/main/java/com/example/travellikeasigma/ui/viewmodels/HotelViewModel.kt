@@ -44,6 +44,8 @@ class HotelViewModel @Inject constructor(
         private set
     var bookingError by mutableStateOf<String?>(null)
         private set
+    var isCancelLoading by mutableStateOf(false)
+        private set
 
     val reservations: StateFlow<List<LocalReservation>> = reservationRepository
         .getReservations(userId)
@@ -75,6 +77,7 @@ class HotelViewModel @Inject constructor(
         guestName: String,
         guestEmail: String,
         persons: Int,
+        tripName: String? = null,
         onSuccess: (LocalReservation) -> Unit,
         onError: () -> Unit
     ) {
@@ -82,7 +85,7 @@ class HotelViewModel @Inject constructor(
             isBookingLoading = true
             bookingError = null
             try {
-                Log.d(TAG, "bookRoom: hotel=${hotel.id}, room=${room.id}, guest=$guestEmail")
+                Log.d(TAG, "bookRoom: hotel=${hotel.id}, room=${room.id}, guest=$guestEmail, trip=$tripName")
                 val apiReservation = hotelRepository.reserve(
                     GROUP_ID, hotel.id, room.id, startDate, endDate, guestName, guestEmail
                 )
@@ -101,7 +104,8 @@ class HotelViewModel @Inject constructor(
                     endDate = endDate,
                     guestName = guestName,
                     guestEmail = guestEmail,
-                    persons = persons
+                    persons = persons,
+                    tripName = tripName
                 )
                 reservationRepository.saveReservation(local, userId)
                 Log.i(TAG, "bookRoom: reservation ${apiReservation.id} saved")
@@ -112,6 +116,32 @@ class HotelViewModel @Inject constructor(
                 onError()
             } finally {
                 isBookingLoading = false
+            }
+        }
+    }
+
+    fun cancelReservation(
+        reservation: LocalReservation,
+        onSuccess: () -> Unit,
+        onError: () -> Unit
+    ) {
+        viewModelScope.launch {
+            isCancelLoading = true
+            try {
+                try {
+                    hotelRepository.cancelReservation(reservation.id)
+                    Log.i(TAG, "cancelReservation: API cancelled ${reservation.id}")
+                } catch (e: Exception) {
+                    Log.w(TAG, "cancelReservation: API call failed — ${e.message}, deleting locally anyway")
+                }
+                reservationRepository.deleteReservation(reservation.id)
+                Log.i(TAG, "cancelReservation: local reservation ${reservation.id} removed")
+                onSuccess()
+            } catch (e: Exception) {
+                Log.e(TAG, "cancelReservation: failed — ${e.message}")
+                onError()
+            } finally {
+                isCancelLoading = false
             }
         }
     }

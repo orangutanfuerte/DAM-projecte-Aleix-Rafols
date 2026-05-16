@@ -36,6 +36,7 @@ import com.example.travellikeasigma.ui.screens.ProfileScreen
 import com.example.travellikeasigma.ui.screens.ReservationsScreen
 import com.example.travellikeasigma.ui.screens.TermsScreen
 import com.example.travellikeasigma.ui.theme.ThemeMode
+import androidx.compose.runtime.collectAsState
 import com.example.travellikeasigma.ui.viewmodels.AuthViewModel
 import com.example.travellikeasigma.ui.viewmodels.HotelViewModel
 import com.example.travellikeasigma.ui.viewmodels.ItineraryViewModel
@@ -61,6 +62,7 @@ fun NavGraph(
     modifier:             Modifier = Modifier
 ) {
     val itineraryViewModel: ItineraryViewModel = hiltViewModel()
+    val hotelViewModel: HotelViewModel = hiltViewModel()
     val scope   = rememberCoroutineScope()
     val context = LocalContext.current
 
@@ -188,6 +190,8 @@ fun NavGraph(
         }
         composable(Routes.HOME) {
             val homeProfileViewModel: ProfileViewModel = hiltViewModel()
+            val reservations by hotelViewModel.reservations.collectAsState()
+            val tripReservation = reservations.find { it.tripName == tripViewModel.selectedTrip?.name }
             HomeScreen(
                 trips             = tripViewModel.trips,
                 tripIndex         = tripViewModel.selectedTripIndex,
@@ -204,7 +208,8 @@ fun NavGraph(
                 onDeleteTripClick = {
                     tripViewModel.deleteSelectedTrip()
                     scope.launch { snackbarHostState.showSnackbar(context.getString(R.string.snackbar_trip_deleted)) }
-                }
+                },
+                tripReservation   = tripReservation
             )
         }
         composable(
@@ -356,7 +361,6 @@ fun NavGraph(
             AboutScreen(onBackClick = { navController.popBackStack() })
         }
         composable(Routes.NEW_TRIP) {
-            val hotelViewModel: HotelViewModel = hiltViewModel()
             NewTripScreen(
                 hotelViewModel = hotelViewModel,
                 onBackClick    = { navController.popBackStack() },
@@ -369,7 +373,6 @@ fun NavGraph(
             )
         }
         composable(Routes.RESERVATIONS) {
-            val hotelViewModel: HotelViewModel = hiltViewModel()
             ReservationsScreen(hotelViewModel = hotelViewModel)
         }
     }

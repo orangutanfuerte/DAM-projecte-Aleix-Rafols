@@ -5,7 +5,7 @@ import androidx.room.RoomDatabase
 
 @Database(
     entities = [TripEntity::class, ActivityEntity::class, UserEntity::class, AccessLogEntity::class, ReservationEntity::class],
-    version = 4,
+    version = 5,
     exportSchema = false
 )
 abstract class TravelSigmaDatabase : RoomDatabase() {

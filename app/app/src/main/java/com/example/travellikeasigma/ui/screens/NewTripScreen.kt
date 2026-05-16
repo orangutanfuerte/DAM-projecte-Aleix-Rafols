@@ -162,6 +162,7 @@ fun NewTripScreen(
                     city = selectedCountry,
                     startDate = startDateStr,
                     endDate = endDateStr,
+                    tripName = tripName,
                     hotelViewModel = hotelViewModel,
                     onDone = {
                         val destination = sampleDestinations.find { it.destinationName == selectedCountry }
@@ -424,6 +425,7 @@ private fun ApiHotelStep(
     city: String,
     startDate: String,
     endDate: String,
+    tripName: String,
     hotelViewModel: HotelViewModel,
     onDone: () -> Unit,
     modifier: Modifier = Modifier
@@ -468,6 +470,7 @@ private fun ApiHotelStep(
             room = selectedRoom!!,
             startDate = startDate,
             endDate = endDate,
+            tripName = tripName,
             guestName = guestName,
             onGuestNameChange = { guestName = it },
             guestEmail = guestEmail,
@@ -582,6 +585,7 @@ private fun BookingFormSubStep(
     room: ApiRoom,
     startDate: String,
     endDate: String,
+    tripName: String,
     guestName: String,
     onGuestNameChange: (String) -> Unit,
     guestEmail: String,
@@ -646,6 +650,7 @@ private fun BookingFormSubStep(
                     guestName = guestName,
                     guestEmail = guestEmail,
                     persons = persons,
+                    tripName = tripName.ifBlank { null },
                     onSuccess = { onBooked() },
                     onError = {}
                 )

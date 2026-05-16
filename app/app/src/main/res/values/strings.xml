@@ -264,6 +264,15 @@
     <string name="profile_yes">Yes</string>
     <string name="profile_no">No</string>
 
+    <!-- Home hotel reservation card -->
+    <string name="home_hotel_reservation">Hotel Reservation</string>
+
+    <!-- Cancel reservation dialog -->
+    <string name="reservation_cancel_title">Cancel reservation?</string>
+    <string name="reservation_cancel_message">Remove %1$s from your reservations?</string>
+    <string name="reservation_cancel_yes">Remove</string>
+    <string name="reservation_cancel_no">Keep</string>
+
     <!-- Content descriptions (accessibility) -->
     <string name="cd_avatar">Open preferences</string>
     <string name="cd_back">Go back</string>

@@ -55,13 +55,18 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import java.util.Locale
+import androidx.compose.foundation.layout.height
+import androidx.compose.ui.layout.ContentScale
+import coil.compose.AsyncImage
 import com.example.travellikeasigma.R
+import com.example.travellikeasigma.domain.LocalReservation
 import com.example.travellikeasigma.domain.Trip
 import com.example.travellikeasigma.domain.TripStatus
 import com.example.travellikeasigma.ui.components.ConfirmationDialog
 import com.example.travellikeasigma.ui.components.ProfileAvatar
 import com.example.travellikeasigma.ui.components.label
 import com.example.travellikeasigma.ui.components.translatedName
+import com.example.travellikeasigma.ui.viewmodels.HotelViewModel
 
 // ---------------------------------------------------------------------------
 // HomeScreen
@@ -80,7 +85,8 @@ fun HomeScreen(
     onPhotosClick:    () -> Unit = {},
     onPlacesClick:    () -> Unit = {},
     onDayClick:          (Int) -> Unit = {},
-    onDeleteTripClick:   () -> Unit = {}
+    onDeleteTripClick:   () -> Unit = {},
+    tripReservation:     LocalReservation? = null
 ) {
     val total = trips.size
     val initials = userName.firstOrNull()?.uppercaseChar()?.toString() ?: "?"
@@ -184,6 +190,11 @@ fun HomeScreen(
                     onPhotosClick    = onPhotosClick,
                     onPlacesClick    = onPlacesClick
                 )
+
+                if (tripReservation != null) {
+                    Spacer(modifier = Modifier.height(16.dp))
+                    TripHotelCard(reservation = tripReservation)
+                }
 
                 Spacer(modifier = Modifier.height(16.dp))
 
@@ -464,6 +475,62 @@ private fun StatCard(
             Spacer(modifier = Modifier.height(6.dp))
             Text(text = value, style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold)
             Text(text = label, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+        }
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Hotel reservation card — shown on Home if trip has a booking
+// ---------------------------------------------------------------------------
+
+@Composable
+private fun TripHotelCard(reservation: LocalReservation) {
+    Text(
+        text       = stringResource(R.string.home_hotel_reservation).uppercase(),
+        style      = MaterialTheme.typography.labelMedium,
+        color      = MaterialTheme.colorScheme.onSurfaceVariant,
+        fontWeight = FontWeight.SemiBold
+    )
+    Spacer(modifier = Modifier.height(8.dp))
+    Card(
+        modifier  = Modifier.fillMaxWidth(),
+        shape     = RoundedCornerShape(14.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)
+    ) {
+        Row(modifier = Modifier.fillMaxWidth().height(100.dp)) {
+            AsyncImage(
+                model = HotelViewModel.BASE_IMAGE_URL + reservation.hotelImageUrl,
+                contentDescription = reservation.hotelName,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier.weight(1f)
+            )
+            val roomImageUrl = reservation.roomImages.firstOrNull()
+            if (roomImageUrl != null) {
+                AsyncImage(
+                    model = HotelViewModel.BASE_IMAGE_URL + roomImageUrl,
+                    contentDescription = reservation.roomType,
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier.weight(1f)
+                )
+            }
+        }
+        Column(modifier = Modifier.padding(12.dp), verticalArrangement = Arrangement.spacedBy(2.dp)) {
+            Text(text = reservation.hotelName, style = MaterialTheme.typography.titleSmall, fontWeight = FontWeight.SemiBold)
+            Text(
+                text = reservation.roomType.replaceFirstChar { it.uppercase() },
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+            Text(
+                text = "${reservation.startDate} → ${reservation.endDate}",
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+            Text(
+                text = "€%.2f / night".format(reservation.pricePerNight),
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
         }
     }
 }
